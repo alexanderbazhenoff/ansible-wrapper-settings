@@ -1,7 +1,8 @@
 ANSIBLE WRAPPER SETTINGS
 ========================
 
-#### WARNING! This repository and ansible wrapper pipelines currently is under development progress. There is no up-to-date README.
+**WARNING! This repository and ansible wrapper pipelines currently is under development progress. There is no up-to-date
+README and properly working code**.
 
 YAML settings for ansible wrapper pipeline(s).
 
@@ -12,10 +13,16 @@ write a custom pipelines for every ansible role.
 
 ## USAGE
 
-An abstract example of usage looks like:
+An abstract example of yaml settings for a wrapper looks like:
 
 ```yaml
 ---
+
+
+settings:
+  repo_refix: 'settings/'
+  repo_postfix: ''
+
 
 parameters:
   required:
@@ -39,18 +46,26 @@ parameters:
       description: 'Description of PARAM3'
 
 stages:
+  - git_clone_stage
+  - ansible_galaxy_install_stage
   - stage_name1
   - stage_name2
   - stage_name3
   - stage_name4
 
 actions:
+  git_clone_stage:
+    repo_url: ssh://git@gitlab.domain/group/project-name.git
+    repo_branch: main
+    directory: sub_directory_in_workspace_for_repository 
+  ansible_galaxy_install_stage:
+    collection: ansible.galaxy.collection_name_to_install
   action_name1:
-    stage: stage_name1
     playbook: playbook1
-  action_name2:
     stage: stage_name1
+  action_name2:
     playbook: playbook2
+    stage: stage_name1
   action_name3:
     stage: stage_name2
     pipeline: name-of-jenkins-pipeline
@@ -62,11 +77,13 @@ actions:
   action_name4:
     stage: stage_name4
     script: script_name1
+
     
 scripts:
   script_name1: |
     // some groovy code here
     println String.format('PARAM2 on value executing %s action is awesome: %s', env.PARAM1, env.PARAM2)
+
 
 playbooks:
   - name: playbook1
@@ -100,4 +117,18 @@ playbooks:
             vars:
               role_action: action_name2
               some_role_parameter: $PARAM2
+
+
+inventories:
+  default: |
+    [all]
+    $IP_ADDRESSES
+
+    [all:vars]
+    ansible_connection=ssh
+    ansible_become_user=root
+    ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+    ansible_ssh_user=$SSH_LOGIN
+    ansible_ssh_pass=$SSH_PASSWORD
+    ansible_become_pass=$SSH_SUDO_PASSWORD
 ```
