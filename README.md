@@ -18,12 +18,6 @@ An abstract example of yaml settings for a wrapper looks like:
 ```yaml
 ---
 
-
-settings:
-  repo_refix: 'settings/'
-  repo_postfix: ''
-
-
 parameters:
   required:
     - name: PARAM1
