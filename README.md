@@ -1,6 +1,8 @@
 ANSIBLE WRAPPER SETTINGS
 ========================
 
+#### WARNING! This repository and ansible wrapper pipelines currently is under development progress. There is no up-to-date README.
+
 YAML settings for ansible wrapper pipeline(s).
 
 ## TLDR
