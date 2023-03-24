@@ -1,0 +1,18 @@
+---
+
+# Gitlab CI for ansible wrappers GitLab project
+
+stages:
+  - yamllint
+
+yamllint:
+  stage: yamllint
+  rules:
+    - if: '$CI_COMMIT_MESSAGE !~ /^(?i)WIP(.?)*/ && $CI_PIPELINE_SOURCE == "push"'
+      when: always
+  tags:
+    - ansible-lint
+  before_script:
+    - yamllint -v
+  script:
+    - yamllint -s -f colored .
