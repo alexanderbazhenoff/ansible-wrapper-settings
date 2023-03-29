@@ -1,10 +1,5 @@
 ---
 
-settings:
-  repo_refix: 'settings/'
-  repo_postfix: ''
-
-
 parameters:
   required:
     - name: IP_ADDRESSES
