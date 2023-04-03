@@ -1,0 +1,148 @@
+---
+
+parameters:
+  required:
+    - name: IP_ADDRESSES
+      type: string
+      description: Space separated IP or DNS list of the host(s) to perform PIPELINE_ACTION and ROLE_SUBJECT.
+    - name: SSH_LOGIN
+      type: string
+      description: Login for SSH connection for install/uninstall components and copy configs (The same for all hosts).
+    - name: SSH_PASSWORD
+      type: password
+      description: SSH password for install/uninstall components and copy configs (The same for all hosts).
+    - name: SSH_SUDO_PASSWORD
+      type: password
+      description: |
+        SSH sudo password or root password for install/uninstall components and copy configs (The same for all hosts).
+        If this parameter is empy SSH_PASSWORD will be used.
+    - name: PIPELINE_ACTION
+      action: True
+      type: choice
+      choices:
+        - install lxc action name
+        - show ansible hostname action name
+        - run jenkins downstream job action name
+  optional:
+    - name: PERFORM_PING
+      type: boolean
+      default: False
+      description: 'Perform ping'
+    - name: PARAMETER_1
+      type: string
+      default: 'default string'
+      trim: False
+      description: 'Description of PARAMETER_2'
+    - name: PARAMETER_2
+      type: boolean
+      default: False
+      description: 'Description of PARAMETER3'
+
+stages:
+  block_1:
+    - git_clone_stage_name
+    - ansible_galaxy_install_stage_name
+    - run playbook or pipeline stage name
+  block_2:
+    - run custom code as a part of pipeline stage name
+    - run bash script stage name
+  parallel: True
+  block_3:
+    - run bash final script stage name
+
+actions:
+  git_clone_stage_name:
+    repo_url: https://github.com/alexanderbazhenoff/ansible-collection-linux.git
+    repo_branch: main
+    directory: subdirectory_in_workspace_for_repository
+  ansible_galaxy_install_stage_name:
+    collection: alexanderbazhenoff.linux
+  install lxc action name:
+    playbook: playbook1
+    stage: run playbook or pipeline stage name
+  show ansible hostname action name:
+    playbook: playbook2
+    stage: run playbook or pipeline stage name
+  run jenkins downstream job action name:
+    stage: run playbook or pipeline stage name
+    pipeline: name_of_jenkins_pipeline
+    parameters:
+      - name: DOWNSTREAM_JOB_PARAMETER_1
+        parameter: PARAMETER_1
+      - name: DOWNSTREAM_PARAMETER3
+        parameter: PARAMETER_2
+  run custom code as a part of pipeline action name:
+    stage: run custom code as a part of pipeline stage name
+    script: script_name_1
+  run bash script stage name:
+    stage: run bash script stage name
+    script: script_name_2
+  run bash final script action name:
+    stage: run bash final script stage name
+    script: script_name_3
+
+
+scripts:
+  script_name_1:
+    pipeline: |
+      // some groovy code here
+      println String.format('PARAMETER_2 on value executing %s action is awesome: %s', env.PIPELINE_ACTION, 
+              env.PARAMETER_2)
+  script_name_2:
+    script:
+      #!/usr/bin/env bash
+      println "Here is some output of PARAMETER1: %s\n" "$PARAMETER1"
+      println "while the whole environment variables looks like: %s\n" "$(env)"
+
+  script_name_3:
+    script:
+      #!/usr/bin/env bash
+      echo "That's all"
+
+
+playbooks:
+  - name: playbook1
+    playbook: |
+      - hosts: all
+        become: True
+        become_method: sudo
+        gather_facts: True
+      
+        tasks:
+      
+          - name: "Some ansible playbook call on action_name1 choice during stage_name_1"
+            ansible.builtin.include_role:
+              name: some.role.name
+            vars:
+              PIPELINE_ACTION: action_name1
+              some_role_parameter: $PARAMETER_2
+              another_role_parameter: True
+  - name: playbook2
+    playbook: |
+      - hosts: all
+        become: True
+        become_method: sudo
+        gather_facts: True
+      
+        tasks:
+      
+          - name: "Some ansible playbook call on action_name2 choice during stage_name_1"
+            ansible.builtin.include_role:
+              name: some.role.name
+            vars:
+              PIPELINE_ACTION: action_name2
+              some_role_parameter: $PARAMETER_2
+
+
+inventories:
+  default: |
+    [all]
+    $IP_ADDRESSES
+
+    [all:vars]
+    ansible_connection=ssh
+    ansible_become_user=root
+    ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+    ansible_ssh_user=$SSH_LOGIN
+    ansible_ssh_pass=$SSH_PASSWORD
+    ansible_become_pass=$SSH_SUDO_PASSWORD
