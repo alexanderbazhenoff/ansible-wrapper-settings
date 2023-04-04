@@ -13,4 +13,4 @@ write a custom pipelines for every ansible role.
 
 ## USAGE
 
-An abstract example of yaml settings for a wrapper looks like [**example.yaml**](settings/example.yaml).
+An abstract example of yaml settings for a wrapper looks like [**example.yaml**](settings/example-pipeline.yaml).
