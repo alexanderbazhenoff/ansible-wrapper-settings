@@ -29,16 +29,16 @@ parameters:
     - name: PERFORM_PING
       type: boolean
       default: False
-      description: 'Perform ping'
+      description: Perform ping
     - name: EMAIL
       type: string
-      default: 'my-email@domain.net'
+      default: my-email@domain.net
       trim: False
-      description: 'Email to send report.'
+      description: Email to send report.
     - name: LXCFS
       type: boolean
       default: False
-      description: 'Install lxcfs instead of lxc.'
+      description: Install lxcfs instead of lxc.
 
 
 stages:
@@ -127,10 +127,10 @@ actions:
     subject: Test email report
     body: |
       Hi,
-      
+
       I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME
       So I don't want to bother you, please ignore this automatic email report.
-      
+
       Sincerely,
       Your Jenkins.
 
@@ -169,9 +169,9 @@ playbooks:
         become: True
         become_method: sudo
         gather_facts: True
-      
+
         tasks:
-      
+
           - name: "Ping host(s)"
             ansible.builtin.ping:
             when: $PERFORM_PING
@@ -182,9 +182,9 @@ playbooks:
         become: True
         become_method: sudo
         gather_facts: True
-      
+
         tasks:
-      
+
           - name: "Ping host(s)"
             ansible.builtin.ping:
             when: $PERFORM_PING
