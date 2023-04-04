@@ -283,40 +283,31 @@ parameters:
 
 
 stages:
-  - run postgresql role
+  - name: run postgresql role
+    action: $ROLE_ACTION
 
 
 actions:
   install:
     playbook: install_uninstall_configure
-    stage: run postgresql role
   uninstall:
     playbook: install_uninstall_configure
-    stage: run postgresql role
   configure:
     playbook: install_uninstall_configure
-    stage: run postgresql role
   create:
     playbook: db_instance_management
-    stage: run postgresql role
   grant:
     playbook: db_instance_management
-    stage: run postgresql role
   drop:
     playbook: db_instance_management
-    stage: run postgresql role
   revoke:
     playbook: db_instance_management
-    stage: run postgresql role
   dump:
     playbook: db_instance_management
-    stage: run postgresql role
   rename:
     playbook: db_instance_management
-    stage: run postgresql role
   restore:
     playbook: db_instance_management
-    stage: run postgresql role
 
 
 playbooks:
