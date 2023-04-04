@@ -1,6 +1,7 @@
 ---
 
 parameters:
+
   required:
     - name: IP_ADDRESSES
       type: string
@@ -23,62 +24,124 @@ parameters:
         - install lxc action name
         - show ansible hostname action name
         - run jenkins downstream job action name
+
   optional:
     - name: PERFORM_PING
       type: boolean
       default: False
       description: 'Perform ping'
-    - name: PARAMETER_1
+    - name: EMAIL
       type: string
-      default: 'default string'
+      default: 'my-email@domain.net'
       trim: False
-      description: 'Description of PARAMETER_2'
-    - name: PARAMETER_2
+      description: 'Email to send report.'
+    - name: LXCFS
       type: boolean
       default: False
-      description: 'Description of PARAMETER3'
+      description: 'Install lxcfs instead of lxc.'
+
 
 stages:
-  block_1:
-    - git_clone_stage_name
-    - ansible_galaxy_install_stage_name
-    - run playbook or pipeline stage name
-  block_2:
-    - run custom code as a part of pipeline stage name
-    - run bash script stage name
+
+  stage_1:
+    - name: Clone sources
+      action: git_clone_action_name
+    - name: Install ansible galaxy collection
+      action: ansible_galaxy_install_action_name
+    - name: Run playbook or pipeline
+      action: $PIPELINE_ACTION
+    - name: Stash files
+      action: stash files action name
+    - name: Unstash files
+      action: unstash files action name
+      node:
+        label: ansible29
+    - name: Archive artifacts
+      action: action archive artifacts action name
+
+  stage_2:
+    - name: Run custom part of pipeline
+      action: run custom code as a part of pipeline action name
+    - name: Run script
+      action: run bash script action name
+    - name: Email report
+      action: email report action name
+    - name: Mattermost report
+      action: mattermost report action name
   parallel: True
-  block_3:
-    - run bash final script stage name
+
+  stage_3:
+    - name: Run final script
+      action:  run bash final script action name
 
 actions:
-  git_clone_stage_name:
+
+  git_clone_action_name:
     repo_url: https://github.com/alexanderbazhenoff/ansible-collection-linux.git
     repo_branch: main
     directory: subdirectory_in_workspace_for_repository
-  ansible_galaxy_install_stage_name:
+
+  ansible_galaxy_install_action_name:
     collection: alexanderbazhenoff.linux
+
   install lxc action name:
-    playbook: playbook1
-    stage: run playbook or pipeline stage name
+    playbook: ping_playbook_name
+
   show ansible hostname action name:
-    playbook: playbook2
-    stage: run playbook or pipeline stage name
+    playbook: run_role_playbook_name
+
   run jenkins downstream job action name:
-    stage: run playbook or pipeline stage name
     pipeline: name_of_jenkins_pipeline
     parameters:
       - name: DOWNSTREAM_JOB_PARAMETER_1
         parameter: PARAMETER_1
       - name: DOWNSTREAM_PARAMETER3
         parameter: PARAMETER_2
+    copy_artifacts:
+      filter: test_file.txt
+      fingerprint: True
+      directory: downstream_job_artifacts_folder_name
+
+  stash files action name:
+    stash: stash_name
+    includes: subdirectory_in_workspace_for_repository/**/*
+
+  unstash files action name:
+    unstash: stash_name
+
+  action archive artifacts action name:
+    artifacts: subdirectory_in_workspace_for_repository/**/roles/*, test_file.txt
+    excludes: subdirectory_in_workspace_for_repository/**/roles/.*
+    allow_empty: True
+
   run custom code as a part of pipeline action name:
-    stage: run custom code as a part of pipeline stage name
     script: script_name_1
-  run bash script stage name:
-    stage: run bash script stage name
+
+  run bash script action name:
     script: script_name_2
+
+  email report action name:
+    report: email
+    to: $EMAIL
+    reply_to: $EMAIL
+    subject: Test email report
+    body: |
+      Hi,
+      
+      I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME
+      So I don't want to bother you, please ignore this automatic email report.
+      
+      Sincerely,
+      Your Jenkins.
+
+  mattermost report action name:
+    report: mattermost
+    url: https://mattermost.com/hooks/<token>
+    text: |
+      Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME. 
+      Please ignore this automatic email report.
+
   run bash final script action name:
-    stage: run bash final script stage name
     script: script_name_3
 
 
@@ -86,22 +149,21 @@ scripts:
   script_name_1:
     pipeline: |
       // some groovy code here
-      println String.format('PARAMETER_2 on value executing %s action is awesome: %s', env.PIPELINE_ACTION, 
-              env.PARAMETER_2)
+      println String.format('EMAIL executing %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
   script_name_2:
     script:
       #!/usr/bin/env bash
-      println "Here is some output of PARAMETER1: %s\n" "$PARAMETER1"
+      println "Here is some output of LXCFS environment variable, which also a pipeline parameter: %s\n" "$LXCFS"
       println "while the whole environment variables looks like: %s\n" "$(env)"
 
   script_name_3:
     script:
       #!/usr/bin/env bash
-      echo "That's all"
+      echo "All done."
 
 
 playbooks:
-  - name: playbook1
+  - name: ping_playbook_name
     playbook: |
       - hosts: all
         become: True
@@ -110,14 +172,11 @@ playbooks:
       
         tasks:
       
-          - name: "Some ansible playbook call on action_name1 choice during stage_name_1"
-            ansible.builtin.include_role:
-              name: some.role.name
-            vars:
-              PIPELINE_ACTION: action_name1
-              some_role_parameter: $PARAMETER_2
-              another_role_parameter: True
-  - name: playbook2
+          - name: "Ping host(s)"
+            ansible.builtin.ping:
+            when: $PERFORM_PING
+
+  - name:  run_role_playbook_name
     playbook: |
       - hosts: all
         become: True
@@ -126,12 +185,15 @@ playbooks:
       
         tasks:
       
-          - name: "Some ansible playbook call on action_name2 choice during stage_name_1"
+          - name: "Ping host(s)"
+            ansible.builtin.ping:
+            when: $PERFORM_PING
+
+          - name: "Install lxc(fs)"
             ansible.builtin.include_role:
-              name: some.role.name
+              name: alexanderbazhenoff.linux.lxcfs
             vars:
-              PIPELINE_ACTION: action_name2
-              some_role_parameter: $PARAMETER_2
+              lxc_technology: {{ $LXCFS | ternary ('lxcfs', 'lxc') }}
 
 
 inventories:
