@@ -46,8 +46,10 @@ stages:
   stage_1:
     - name: Clone sources
       action: git_clone_action_name
-    - name: Install ansible galaxy collection
+      message: Clone sources to make an artifacts just for example
+    - name: Installing ansible galaxy collection
       action: ansible_galaxy_install_action_name
+      message: Installing collection to run lxfs ansible role
     - name: Run playbook or pipeline
       action: $PIPELINE_ACTION
     - name: Stash files
