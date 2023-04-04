@@ -94,9 +94,11 @@ actions:
     pipeline: name_of_jenkins_pipeline
     parameters:
       - name: DOWNSTREAM_JOB_PARAMETER_1
-        parameter: PARAMETER_1
+        parameter: $PERFORM_PING
+        type: boolean
       - name: DOWNSTREAM_PARAMETER3
-        parameter: PARAMETER_2
+        parameter: $EMAIL
+        type: string
     copy_artifacts:
       filter: test_file.txt
       fingerprint: True
