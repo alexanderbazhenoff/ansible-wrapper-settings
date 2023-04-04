@@ -180,7 +180,7 @@ playbooks:
             ansible.builtin.ping:
             when: $PERFORM_PING
 
-  - name:  run_role_playbook_name
+  - name: run_role_playbook_name
     playbook: |
       - hosts: all
         become: True
