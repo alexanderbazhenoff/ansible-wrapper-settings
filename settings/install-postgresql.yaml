@@ -81,6 +81,10 @@ parameters:
       description: 'pgadmin installation type: web, desktop or all (both web and desktop)'
     - name: PGADMIN_EMAIL
       type: string
+      regex: '([^][()<>@,;:\\". \x00-\x1F\x7F]+|"(\n|(\\\r)*([^"\\\r\n]|\\[^\r]))*(\\\r)*")(\.'
+        '([^][()<>@,;:\\". \x00-\x1F\x7F]+|"(\n|(\\\r)*([^"\\\r\n]|\\[^\r]))*(\\\r)*"))*@([^]'
+        '[()<>@,;:\\". \x00-\x1F\x7F]+|\[(\n|(\\\r)*([^][\\\r\n]|\\[^\r]))*(\\\r)*])(\.([^]'
+        '[()<>@,;:\\". \x00-\x1F\x7F]+|\[(\n|(\\\r)*([^][\\\r\n]|\\[^\r]))*(\\\r)*]))*'
       description: pgadmin4 email for administrator login via web UI.
     - name: PGADMIN_PASSWORD
       type: password
