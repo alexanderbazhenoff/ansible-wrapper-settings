@@ -20,6 +20,9 @@ parameters:
       description: |
         SSH sudo password or root password for install/uninstall components and copy configs (The same for all hosts).
         If this parameter is empy SSH_PASSWORD will be used.
+      on_empty:
+        assign: $SSH_PASSWORD
+        fail_on_empty: True
     - name: ROLE_ACTION
       action: True
       type: choice
