@@ -1,14 +1,14 @@
-ANSIBLE WRAPPER SETTINGS
-========================
+UNIVERSAL WRAPPER PIPELINE SETTINGS
+===================================
 
-**WARNING! This repository and ansible wrapper pipelines currently is under development progress. There is no up-to-date
-README and properly working code**.
+**WARNING! This repository and universal wrapper pipeline currently is under development progress. There is no README 
+and the pipeline code is unfinished**.
 
-YAML settings for ansible wrapper pipeline(s).
+YAML settings for universal wrapper pipeline.
 
 ## TLDR
 
-A set of yaml settings for 'universal-ansible-wrapper' pipeline with a format like GitLab CI. The main idea is not to 
+A set of yaml settings for 'universal-wrapper-pipeline' with a format like GitLab CI. The main idea is not to 
 write a custom pipelines for every ansible role.
 
 ## USAGE

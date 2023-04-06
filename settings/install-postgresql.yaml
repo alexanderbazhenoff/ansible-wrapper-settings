@@ -1,5 +1,8 @@
 ---
 
+# This is an 'install-postgresql' pipeline settings for 'universal-wrapper-pipeline', a wrapper for
+# alexanderbazhenoff.linux.postgresql ansible role: https://galaxy.ansible.com/alexanderbazhenoff/linux
+
 parameters:
   required:
     - name: IP_ADDRESSES

@@ -1,6 +1,8 @@
 ---
 
-# Based on ansible-lint config
+# yamllint settings for 'unversal wrapper pipeline settings':
+# https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings
+
 extends: default
 ignore: |
   README.md

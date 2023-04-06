@@ -1,5 +1,7 @@
 ---
 
+# Example settings for 'universal wrapper pipeline'.
+
 parameters:
 
   required:

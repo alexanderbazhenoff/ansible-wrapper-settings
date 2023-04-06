@@ -1,6 +1,7 @@
 ---
 
-# Gitlab CI for ansible wrappers GitLab project
+# Gitlab CI for 'universal wrapper pipeline settings' project:
+# https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings
 
 stages:
   - yamllint
