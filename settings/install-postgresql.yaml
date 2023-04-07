@@ -22,7 +22,7 @@ parameters:
         If this parameter is empy SSH_PASSWORD will be used.
       on_empty:
         assign: $SSH_PASSWORD
-        fail_on_empty: True
+        fail: True
     - name: ROLE_ACTION
       action: True
       type: choice
