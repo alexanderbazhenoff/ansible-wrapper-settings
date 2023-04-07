@@ -39,6 +39,8 @@ parameters:
     - name: EMAIL
       type: string
       default: my-email@domain.net
+      on_empty:
+        warn: True
       regex:
         - '(?:(?:\r\n)?[ \t])*(?:(?:(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t]'
         - ')+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:'
