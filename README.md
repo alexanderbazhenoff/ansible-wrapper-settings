@@ -1,8 +1,8 @@
 UNIVERSAL WRAPPER PIPELINE SETTINGS
 ===================================
 
-**WARNING! This repository and universal wrapper pipeline currently is under development progress. There is no README 
-and the pipeline code is unfinished**.
+**WARNING! This repository and universal wrapper pipeline currently is under development progress. There is no complete
+README and the pipeline code is unfinished**.
 
 YAML settings for universal wrapper pipeline.
 
