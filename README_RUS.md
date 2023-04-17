@@ -198,7 +198,7 @@ parameters:
 - **actions** `[список]` *(обязательный)* - список действий в текущей стадии, каждый элемент которого имеет ключи:
   - **before_message** `[строка]` *(необязательный)* - строка сообщения перед началом действия (см. следующий ключ 
     `action`).
-  - **action** `[строка]` *(обязательный)* - имя действия, которое ссылается на одноименное действие в ключе файла
+  - **action** `[строка]` *(обязательный)* - имя действия, которое задается в ключе [actions](#ключ-actions) файла
     настроек pipeline (см. [ключ actions](#ключ-actions)). Допускается подстановка в качестве значения параметра
     pipeline (см. [Пример 7](#пример-7)).
   - **after_message** `[строка]` *(необязательный)* - строка сообщения по завершению действия, будет выведена вне
@@ -215,14 +215,13 @@ parameters:
       [Пример 8](#пример-8)). Если флаг выключен, то нода будет выбрана только при полном совпадении имени (`name`), или
       node label (`label`).
   
-#### Пример 5.
+#### Пример 5
 
-Пример фрагмента конфигурационного файла с описанием `stage_1`, действия внутри которого имеют свои кастомизированные 
+Пример фрагмента конфигурационного файла с описанием `stage_1`, действия в котором имеют свои кастомизированные 
 сообщения:
 
 ```yaml
 stages:
-
   - name: stage_1
     actions:
       - before_message: Starting 'action_name_1'...
@@ -233,3 +232,86 @@ stages:
         fail_message: A custom message for 'action_name_2' that means it was failed.
         success_message: A custom message for 'action_name_2' that means it was complete without errors.
 ```
+
+#### Пример 6
+
+Пример фрагмента конфигурационного файла с описанием стадии `stage_name`, действия внутри которого запускаются в 
+параллель:
+
+```yaml
+  - name: stage_name
+    parallel: True
+    actions:
+      - action: action_name_1
+      - action: action_name_2
+      - action: action_name_3
+```
+
+#### Пример 7
+
+Пример фрагмента конфигурационного файла с описанием переменной `PIPELINE_ACTION` задающей единственное действие в
+`stage_name`: 
+
+```yaml
+parameters:
+  required:
+    - name: PIPELINE_ACTION
+      type: choice
+      description: Action to perform.
+      choices:
+        - action_one
+        - action_two
+stages:
+  - name: stage_name
+    actions:
+      - action: $PIPELINE_ACTION
+```
+
+#### Пример 8
+
+Пример фрагмента конфигурационного файла с описанием стадии `build_stage` с указанием условий выбора jenkins-node,
+которые выводятся сообщением перед запуском действия:
+
+```yaml
+stages:
+  - name: build_stage
+    actions:
+      - before_message: Starting build on 'build-x64-node-01.domain.com' jenkins node...
+        action: build_action
+        node: build-x64-node-01.domain.com
+      - before_message: Starting build on any jenkins node name starts with 'build-x64-node-'...
+        action: build_action
+        node:
+          name: build-x64-node-
+          pattern: True
+      - before_message: Starting build on any jenkins node with label 'build_nodes'...
+        action: build_action
+        node:
+          label: build_nodes
+      - before_message: Starting build on any jenkins node with label contains '_nodes'...
+        action: build_action
+        node:
+          label: _nodes
+```
+
+## Ключ actions
+
+Описание именованных действий, где каждый вложенный ключ является именем этого действия, а его значения - параметрами
+действия:
+```yaml
+actions:
+  action_name_1:
+    action_parameter_1: value_1
+    action_parameter_2: value_2
+```
+Тип действия определяется по заданным в нем параметрам-ключам. Поддерживаются действия следующих типов:
+
+- клонирование git исходников,
+- установка ansible-коллекции из Ansible Galaxy,
+- запуск ansible playbooks,
+- запуск скриптов,
+- сборка jenkins-артефактов,
+- сборка файлов с jenkins node (stash),
+- перенос файлов на jenkins node (unstash),
+- запуск другого jenkins pipeline,
+- отправка уведомлений (email, или mattermost).
