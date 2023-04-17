@@ -135,39 +135,43 @@ parameters:
 
 stages:
 
-  stage_1:
-    - name: Clone sources
-      action: git_clone_action_name
-      message: Clone sources to make an artifacts just for example
-    - name: Installing ansible galaxy collection
-      action: ansible_galaxy_install_action_name
-      message: Installing collection to run lxfs ansible role
-    - name: Run playbook or pipeline
-      action: $PIPELINE_ACTION
-    - name: Stash files
-      action: stash files action name
-    - name: Unstash files
-      action: unstash files action name
-      node:
-        label: ansible29
-    - name: Archive artifacts
-      action: action archive artifacts action name
+  - name: stage_1
+    actions:
+      - name: Clone sources
+        action: git_clone_action_name
+        message: Clone sources to make an artifacts just for example
+      - name: Installing ansible galaxy collection
+        action: ansible_galaxy_install_action_name
+        message: Installing collection to run lxfs ansible role
+      - name: Run playbook or pipeline
+        action: $PIPELINE_ACTION
+      - name: Stash files
+        action: stash files action name
+      - name: Unstash files
+        action: unstash files action name
+        node:
+          label: ansible29
+      - name: Archive artifacts
+        action: action archive artifacts action name
 
-  stage_2:
-    - name: Run custom part of pipeline
-      action: run custom code as a part of pipeline action name
-    - name: Run script
-      action: run bash script action name
-    - name: Email report
-      action: email report action name
-    - name: Mattermost report
-      action: mattermost report action name
-  parallel: True
+  - name: stage_2
+    parallel: True
+    actions:
+      - name: Run custom part of pipeline
+        action: run custom code as a part of pipeline action name
+      - name: Run script
+        action: run bash script action name
+      - name: Email report
+        action: email report action name
+      - name: Mattermost report
+        action: mattermost report action name
 
-  stage_3:
-    - name: Run final script
-      action: run bash final script action name
-      ignore_fail: True
+
+  - name: stage_3
+    actions:
+      - name: Run final script
+        action: run bash final script action name
+        ignore_fail: True
 
 
 actions:

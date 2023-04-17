@@ -39,8 +39,7 @@ final PipelineNameRegexReplace = ['^(admin|devops|qa)_'] as ArrayList
 # Основные ключи конфигурационных файлов
 
 - [**parameters**](#ключ-parameters) `[словарь]` *(обязательный, если pipeline параметризованный)* - параметры pipeline.
-- [**stages**](#ключ-stages) `[словарь]` *(обязательный)* - стадии pipeline, содержащие список действий, каждый из
-  которых ссылается на уникальное в рамках pipeline название действия (action name) из ключа [actions](#ключ-actioins).
+- [**stages**](#ключ-stages) `[список]` *(обязательный)* - список стадий pipeline.
 - [**actions**](#actions) `[словарь]` *(обязательный)* - описание действий, которые так же могут ссылаться на playbook
   и inventory из ключей [playbooks](#ключ-playbooks) и [inventories](#ключ-inventories), или на скрипт из ключа
 [scripts](#ключ-scripts).
