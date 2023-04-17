@@ -362,7 +362,7 @@ actions:
   git_clone_action_name:
     repo_url: 'ssh://git@gitlab.com:username/project-name.git
     repo_branch: develop
-    directory: subdirectory_in_workspace_for_repository
+    directory: subdirectory_name
     credentials: a123b01c-456d-7890-ef01-2a34567890b1
 ```
 
@@ -394,7 +394,7 @@ actions:
 
 ```yaml
 actions:
-  install lxc action name:
+  ping_action_name:
     playbook: ping_playbook_name
 
 playbooks:
@@ -407,9 +407,8 @@ playbooks:
 
 ### Action: запуск скриптов
 
-#### Запуск скрипта
-
-#### Запуск кода, как часть pipeline
+- **script** `[строка]` *(обязательный)* - имя скрипта для его запуска как отдельный скрипт ([Пример 12](#пример-12)),
+или запуска, как часть данного pipeline (см. ключ [scripts](#ключ-scripts)).
 
 ### Action: сборка файлов-артефактов
 
