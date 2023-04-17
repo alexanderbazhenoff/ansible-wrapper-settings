@@ -8,6 +8,9 @@ parameters:
     - name: IP_ADDRESSES
       type: string
       description: Space separated IP or DNS list of the host(s) to perform ROLE_ACTION and ROLE_SUBJECT.
+      regex_replace:
+        regex: ' '
+        to: \n
     - name: SSH_LOGIN
       type: string
       regex: ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$
@@ -24,7 +27,6 @@ parameters:
         assign: $SSH_PASSWORD
         fail: True
     - name: ROLE_ACTION
-      action: True
       type: choice
       choices:
         - install
