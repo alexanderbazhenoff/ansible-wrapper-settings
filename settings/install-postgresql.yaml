@@ -371,8 +371,7 @@ parameters:
 stages:
   - name: run postgresql role
     actions:
-      - name: run postgresql role
-        action: $ROLE_ACTION
+      - action: $ROLE_ACTION
 
 
 actions:
