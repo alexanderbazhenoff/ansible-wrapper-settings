@@ -410,15 +410,20 @@ playbooks:
 - **script** `[строка]` *(обязательный)* - имя скрипта для его запуска как отдельный скрипт ([Пример 12](#пример-12)),
 или запуска, как часть данного pipeline (см. ключ [scripts](#ключ-scripts)).
 
+#### Пример 12
+
+Пример фрагмента конфигурационного файла с описанием действия запуска и непосредственно сам `bash_script_name`:
+
 ```yaml
 actions:
   run_script_action_name:
     script: bash_script_name
 
 scripts:
-  script: |
-    #!/usr/bin/env bash
-    printf "This is a %s script.\n" "$(cut -d'/' -f4 <<<"$SHELL")"
+  bash_script_name:
+    script: |
+      #!/usr/bin/env bash
+      printf "This is a %s script.\n" "$(cut -d'/' -f4 <<<"$SHELL")"
 ```
 
 ### Action: сборка файлов-артефактов
