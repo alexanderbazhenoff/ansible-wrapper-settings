@@ -395,8 +395,7 @@ actions:
 
 
 playbooks:
-  - name: install_uninstall_configure
-    playbook: |
+  install_uninstall_configure: |
       - hosts: all
         become: True
         become_method: sudo
@@ -438,8 +437,7 @@ playbooks:
               postgresql_additional_packages:
                 - "{{ '$POSTGRESQL_ADDITIONAL_PACKAGES'.split(' ') | list }}"
 
-  - name: db_instance_management
-    playbook: |
+  db_instance_management: |
       - hosts: all
         become: True
         become_method: sudo

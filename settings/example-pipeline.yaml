@@ -260,37 +260,35 @@ scripts:
 
 
 playbooks:
-  - name: ping_playbook_name
-    playbook: |
-      - hosts: all
-        become: True
-        become_method: sudo
-        gather_facts: True
+  ping_playbook_name: |
+    - hosts: all
+      become: True
+      become_method: sudo
+      gather_facts: True
 
-        tasks:
+      tasks:
 
-          - name: "Ping host(s)"
-            ansible.builtin.ping:
-            when: $PERFORM_PING
+        - name: "Ping host(s)"
+          ansible.builtin.ping:
+          when: $PERFORM_PING
 
-  - name: run_role_playbook_name
-    playbook: |
-      - hosts: all
-        become: True
-        become_method: sudo
-        gather_facts: True
+  run_role_playbook_name: |
+    - hosts: all
+      become: True
+      become_method: sudo
+      gather_facts: True
 
-        tasks:
+      tasks:
 
-          - name: "Ping host(s)"
-            ansible.builtin.ping:
-            when: $PERFORM_PING
+        - name: "Ping host(s)"
+          ansible.builtin.ping:
+          when: $PERFORM_PING
 
-          - name: "Install lxc(fs)"
-            ansible.builtin.include_role:
-              name: alexanderbazhenoff.linux.lxcfs
-            vars:
-              lxc_technology: {{ $LXCFS | ternary ('lxcfs', 'lxc') }}
+        - name: "Install lxc(fs)"
+          ansible.builtin.include_role:
+            name: alexanderbazhenoff.linux.lxcfs
+          vars:
+            lxc_technology: {{ $LXCFS | ternary ('lxcfs', 'lxc') }}
 
 
 inventories:
