@@ -169,6 +169,7 @@ stages:
       action: run bash final script action name
       ignore_fail: True
 
+
 actions:
 
   git_clone_action_name:
@@ -245,6 +246,7 @@ actions:
 
 
 scripts:
+
   script_name_1:
     pipeline: |
       // some groovy code here
@@ -262,6 +264,7 @@ scripts:
 
 
 playbooks:
+
   ping_playbook_name: |
     - hosts: all
       become: True
@@ -294,6 +297,7 @@ playbooks:
 
 
 inventories:
+
   default: |
     [all]
     $IP_ADDRESSES
