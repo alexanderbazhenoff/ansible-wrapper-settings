@@ -141,6 +141,8 @@ stages:
         action: git_clone_action_name
       - action: ansible_galaxy_install_action_name
         after_message: Installing collection to run lxfs ansible role done.
+        fail_message: Executing ansible playbook failed.
+        success_message: Executing ansible playbook finished.
       - action: $PIPELINE_ACTION
       - action: stash files action name
       - action: unstash files action name
@@ -159,6 +161,7 @@ stages:
 
   - name: stage_3
     actions:
+      - before_message: Running final action...
       - action: run bash final script action name
         ignore_fail: True
 
