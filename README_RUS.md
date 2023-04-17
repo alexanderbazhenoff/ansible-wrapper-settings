@@ -410,6 +410,17 @@ playbooks:
 - **script** `[строка]` *(обязательный)* - имя скрипта для его запуска как отдельный скрипт ([Пример 12](#пример-12)),
 или запуска, как часть данного pipeline (см. ключ [scripts](#ключ-scripts)).
 
+```yaml
+actions:
+  run_script_action_name:
+    script: bash_script_name
+
+scripts:
+  script: |
+    #!/usr/bin/env bash
+    printf "This is a %s script.\n" "$(cut -d'/' -f4 <<<"$SHELL")"
+```
+
 ### Action: сборка файлов-артефактов
 
 ### Action: сборка файлов с node (stash)

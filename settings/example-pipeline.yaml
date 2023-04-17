@@ -248,13 +248,13 @@ scripts:
       // some groovy code here
       println String.format('EMAIL executing %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
   script_name_2:
-    script:
+    script: |
       #!/usr/bin/env bash
-      println "Here is some output of LXCFS environment variable, which also a pipeline parameter: %s\n" "$LXCFS"
-      println "while the whole environment variables looks like: %s\n" "$(env)"
+      printf "Here is some output of LXCFS environment variable, which also a pipeline parameter: %s\n" "$LXCFS"
+      printf "while the whole environment variables looks like: %s\n" "$(env)"
 
   script_name_3:
-    script:
+    script: |
       #!/usr/bin/env bash
       echo "All done."
 
