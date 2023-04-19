@@ -452,7 +452,7 @@ actions:
 
 ### Action: сборка файлов с node (stash)
 
-- **name** - имя набора файлов для сборки файлов с node (например,
+- **name** `[строка]` *(обязательный)* - имя набора файлов для сборки файлов с node (например,
 [stash в Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build)).
 Фактически служит идентификатором набора файлов.
 - **includes** `[строка]` *(необязательный)* - маска пути и имен (или список их список через запятую) для сборки файлов 
@@ -465,9 +465,15 @@ actions:
 в `artifacts` и `excludes`. По умолчанию False, то есть отсутствие файлов, удовлетворяющих условиям `includes`,
 `excludes` и `default_excludes` вызовет ошибку.
 
-#### Пример 14
-
 ### Action: перенос файлов на node (unstash)
+
+- **name** - имя набора файлов для сборки файлов с node (например,
+[stash в Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build)).
+Фактически служит идентификатором набора файлов.
+- **directory** - путь в который будет произведено копирование именованого набора файлов (заданного в `name`) (см.
+[Пример 14](#пример-14)).
+
+#### Пример 14
 
 ```yaml
 # Фрагмент конфигурационного файла с описанием стадий и действия сборки файлов с node: из папки logs в workspace
