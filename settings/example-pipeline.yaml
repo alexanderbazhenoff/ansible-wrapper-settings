@@ -235,7 +235,7 @@ actions:
     url: https://mattermost.com/hooks/<token>
     text: |
       Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME. 
-      Please ignore this automatic email report.
+      Please ignore this automatic report.
 
   run bash final script action name:
     script: script_name_3
@@ -244,9 +244,13 @@ actions:
 scripts:
 
   script_name_1:
-    pipeline: |
-      // some groovy code here
+    pipeline: True
+    jenkins: |
+      // some groovy code here to print 'PIPELINE_ACTION' and 'EMAIL' pipeline parameters:
       println String.format('EMAIL executing %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
+    teamcity: |
+      // some kotlin code here to print 'PIPELINE_ACTION' and 'EMAIL' pipeline parameters:
+      print (String.format("My name is %s", env.PIPELINE_ACTION, env.EMAIL))
   script_name_2:
     script: |
       #!/usr/bin/env bash

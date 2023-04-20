@@ -549,7 +549,7 @@ pipeline, или job. По сути, для Jenkins - это 'Wait for completio
 ```yaml
 ---
 
-# Фрагмент конфигурационного файла c описанием единственного параметра pipeline `UPSTREAM_PARAMETER`, стадии
+# Фрагмент конфигурационного файла с описанием единственного параметра pipeline `UPSTREAM_PARAMETER`, стадии
 # `run_downstream_pipeline_stage` и действия с запуском нижестоящего pipeline `downstream_pipeline_name`, в который
 # передается значение вышестоящего параметра `UPSTREAM_PARAMETER`. Если выполнение нижестоящего pipeline 
 # `downstream_pipeline_name` завершится неудачно, или в при его выполнении папка logs окажется пустой, то это не
@@ -583,7 +583,93 @@ actions:
 ### Action: отправка уведомлений
 
 - **report** `[строка]` *(обязательный)* - способ отправки уведомлений. В настоящий момент поддерживается отправка:
-    - на электронную почту (см. [Пример 16](#пример-16)),
-    - в mattermost (см. [Пример 17](#пример-17)).
+    - [**на электронную почту**](#отправка-уведомлений-на-электронную-почту) (см. [Пример 16](#пример-16)) - значение
+      `emial`,
+    - [**в mattermost**](#отправка-уведомлений-в-mattermost) (см. [Пример 17](#пример-17)) - значение `mattermost`.
 
 Параметры других ключей зависят от способа отправки уведомлений.
+
+#### Отправка уведомлений на электронную почту
+
+Для отправки уведомлений на электронную почту в Jenkins потребуется
+[Email Extension](https://plugins.jenkins.io/email-ext/). Требования к значениям в ключах здесь так же зависит от
+настроек сервера email (например, ключ `reply_to`), через который осуществляется отправка.
+
+- **to** `[строка]` *(обязательный)* - адреса получателя(-ей).
+- **reply_to** `[строка]` *(обязательный)* - адрес электронной почты для ответа на данное уведомление.
+- **subject** `[строка]` *(необязательный)* - тема письма.
+- **body** `[строка]` *(необязательный)* - текст письма.
+
+```yaml
+---
+
+# Фрагмент конфигурационного файла с описанием единственного параметра pipeline `EMAIL`, где указывается список
+# получателей через пробел (будет замене на ', '), единственной стаии и действия отправки уведомления не email. Текст
+# письма содержит встроенные в Jenkins переменные: `env.JOB_NAME` (имя текущего pipeline), `env.BUILD_URL` (ссылка на
+# текущий build), а так же ключ встроенной в universal wrapper pipeline переменной `UNIVERSAL_PIPELINE_WRAPPER` (см.
+# встроенный в pipeline переменные) и параметр пайплайна `EMAIL`. Если требуется осуществить подстановку переменных
+# не только для Jenkins, то параметры pipeline и встроенные переменные требуется извлекать из ключей переменной
+# `UNIVERSAL_PIPELINE_WRAPPER`: вместо `env.JOB_NAME` следует указывать `UNIVERSAL_PIPELINE_WRAPPER.JOB_NAME`,
+# вместо `env.EMAIL` - `UNIVERSAL_PIPELINE_WRAPPER.EMAIL`. Данная возможность реализована для универсальности
+# конфигурационных файлов и возможности использования в других инструментах помимо Jenkins.
+
+parameters:
+  required:
+    - name: EMAIL
+      type: string
+      description: Space separated email recipients list.
+      regex_replace:
+        regex: ' '
+        to: ', '
+      
+stages:
+  - name: email_report_stage_name
+    actions:
+        action: email_report_action_name
+
+actions:
+  email_report_action_name:
+    report: email
+    to: ${env.EMAIL}
+    reply_to: ${env.EMAIL}
+    subject: Test email report
+    body: |
+      Hi,
+      
+      I've just run a test for universal jenkins wrapper pipeline for '${env.JOB_NAME}' pipeline, finished with
+      '${currentBuild.result}' state. As you see sending report to ${env.EMAIL} done.
+      
+      Overall report is:
+      ${UNIVERSAL_PIPELINE_WRAPPER.multilineReport}
+      
+      Check pipeline console for details: ${env.BUILD_URL}/console
+      This report was generated automatically, please do not reply.
+      
+      Sincerely,
+      Your Jenkins.
+```
+
+#### Отправка уведомлений в mattermost
+
+- **url** - ссылка на hooks в mattermost, содержащая ключ канала. Например: `https://mattermost.com/hooks/<token>` (см.
+[Пример 17](#пример-17)).
+- **text** - текст уведомления.
+
+#### Пример 17
+
+```yaml
+# Фрагмент конфигурационного файла с описанием действия отправки уведомления в mattermost. URL и токен указаны для
+# примера.
+
+actions:
+  mattermost_report_action_name:
+    report: mattermost
+    url: https://mattermost.com/hooks/31895e09lg2m0g44dk4qeb847s
+    text: |
+      Hi, I've just run a test for universal jenkins wrapper pipeline: ${env.JOB_NAME}.
+      Overall report is:
+      ```
+      ${UNIVERSAL_PIPELINE_WRAPPER.multilineReport}
+      ```
+      Please ignore this automatic report.
+```
