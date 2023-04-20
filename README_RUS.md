@@ -440,7 +440,7 @@ scripts:
 
 ```yaml
 # Фрагмент конфигурационного файла с описанием действия сборки логов регрессионных, unit-тестов и общих результатов без
-# логов unit-тестов в json-формате. Разрешается отсутствие файлов, подсчет контрольной суммы отключен.
+# log'ов unit-тестов в json-формате. Разрешается отсутствие файлов, подсчет контрольной суммы отключен.
 
 actions:
   archive_artifacts_action_name:
@@ -546,4 +546,44 @@ pipeline, или job. По сути, для Jenkins - это 'Wait for completio
 
 #### Пример 15
 
+```yaml
+---
+
+# Фрагмент конфигурационного файла c описанием единственного параметра pipeline `UPSTREAM_PARAMETER`, стадии
+# `run_downstream_pipeline_stage` и действия с запуском нижестоящего pipeline `downstream_pipeline_name`, в который
+# передается значение вышестоящего параметра `UPSTREAM_PARAMETER`. Если выполнение нижестоящего pipeline 
+# `downstream_pipeline_name` завершится неудачно, или в при его выполнении папка logs окажется пустой, то это не
+# повлечет ошибок при выполнении описанного в данном фрагменте pipeline'а.
+
+parameters:
+  required:
+    - name: UPSTREAM_PARAMETER
+      type: string
+      
+stages:
+  - name: run_downstream_pipeline_stage
+    actions:
+        action: run_jenkins_pipeline_action_name
+
+actions:
+  run_jenkins_pipeline_action_name:
+    pipeline: downstream_pipeline_name
+    parameters:
+      - name: UPSTREAM_PARAMETER
+        type: string
+        value: ${env.UPSTREAM_PARAMETER}
+    propagate: False
+    copy_artifacts:
+      filter: logs/*
+      fingerprint: True
+      target_directory: logs
+      optional: True
+```
+
 ### Action: отправка уведомлений
+
+- **report** `[строка]` *(обязательный)* - способ отправки уведомлений. В настоящий момент поддерживается отправка:
+    - на электронную почту (см. [Пример 16](#пример-16)),
+    - в mattermost (см. [Пример 17](#пример-17)).
+
+Параметры других ключей зависят от способа отправки уведомлений.

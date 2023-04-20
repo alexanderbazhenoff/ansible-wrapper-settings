@@ -192,7 +192,6 @@ actions:
         type: string
         value: $EMAIL
     propagate: False
-    wait: False
     copy_artifacts:
       filter: test_file.txt
       fingerprint: True
