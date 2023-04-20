@@ -247,10 +247,10 @@ scripts:
     pipeline: True
     jenkins: |
       // some groovy code here to print 'PIPELINE_ACTION' and 'EMAIL' pipeline parameters:
-      println String.format('EMAIL executing %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
+      println String.format('EMAIL provided for %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
     teamcity: |
       // some kotlin code here to print 'PIPELINE_ACTION' and 'EMAIL' pipeline parameters:
-      print (String.format("My name is %s", env.PIPELINE_ACTION, env.EMAIL))
+      print (String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
   script_name_2:
     script: |
       #!/usr/bin/env bash
@@ -267,13 +267,10 @@ playbooks:
 
   ping_playbook_name: |
     - hosts: all
-      become: True
-      become_method: sudo
-      gather_facts: True
 
       tasks:
 
-        - name: "Ping host(s)"
+        - name: "Perform ansible ping on the host(s)"
           ansible.builtin.ping:
           when: $PERFORM_PING
 
