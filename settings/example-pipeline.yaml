@@ -176,7 +176,7 @@ actions:
   ansible_galaxy_install_action_name:
     collection: alexanderbazhenoff.linux
 
-  install lxc action name:
+  install_lxc_action_name:
     playbook: ping_playbook_name
 
   show ansible hostname action name:
