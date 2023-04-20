@@ -330,7 +330,7 @@ actions:
 - [**сборка файлов-артефактов**](#action-сборка-файлов-артефактов),
 - [**сборка файлов с jenkins node (stash)**](#action-сборка-файлов-с-node-stash),
 - [**перенос файлов на jenkins node (unstash)**](#action-перенос-файлов-на-node-unstash),
-- [**запуск другого downstream pipeline**](#action-запуск-другого-downstream-pipeline),
+- [**запуск другого downstream pipeline**](#action-запуск-нижележащего-pipeline),
 - [**отправка уведомлений**](#action-отправка-уведомлений) (email, или mattermost).
 
 Если какое-либо из перечисленных в ключе `actions` конфигурационного файла действий не указано ни в одной из стадий
@@ -470,7 +470,7 @@ actions:
 - **name** - имя набора файлов для сборки файлов с node (например,
 [stash в Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build)).
 Фактически служит идентификатором набора файлов.
-- **directory** - путь в который будет произведено копирование именованого набора файлов (заданного в `name`) (см.
+- **directory** - путь в который будет произведено копирование именованного набора файлов (заданного в `name`) (см.
 [Пример 14](#пример-14)).
 
 #### Пример 14
@@ -499,7 +499,7 @@ actions:
     directory: my_folder
 ```
 
-### Action: запуск другого downstream pipeline
+### Action: запуск нижележащего pipeline
 
 - **pipeline** `[строка]` *(обязательный)* - имя нижестоящего pipeline, или job.
 - **parameters** `[список]`- *(необязательный)* - список параметров, если нижестоящий pipeline/job параметризован, где
@@ -540,9 +540,10 @@ pipeline, или job. По сути, для Jenkins - это 'Wait for completio
   
     Следует обратить внимание, что 
     [universal wrapper pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) копирует
-    файлы-артефактов из pipeline (или jobs) вызываемым им. Выборка "по последнему удачному", "по последнему 
-    завешенному" и/или по имени pipeline/job отсутствует.
+    файлы-артефактов из pipeline'ы (или jobs) вызываемыми им. Выборка "по последнему удачному", "по последнему 
+    завешенному" и/или по имени pipeline/job отсутствует. Если ожидание завершения нижестоящего pipeline (или job)
+    отключено (см. ключ [`wait`](#action-запуск-нижележащего-pipeline))
 
-#### Пример 15.
+#### Пример 15
 
 ### Action: отправка уведомлений
