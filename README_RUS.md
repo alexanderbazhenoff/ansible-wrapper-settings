@@ -705,6 +705,6 @@ actions:
 
 ## Ключ playbooks
 
-## Ключ scripts
+## Ключ inventories
 
 # Встроенные в pipeline переменные
