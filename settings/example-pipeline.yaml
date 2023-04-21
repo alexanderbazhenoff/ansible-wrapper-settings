@@ -1,16 +1,24 @@
 ---
 
-# Example settings for 'universal wrapper pipeline'.
+# Example settings for 'universal wrapper pipeline' with maximum number of possible features and parameters.
+
+# Please also read the detailed settings format documentation.
+# English: https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/blob/main/README.md
+# Russian: https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/blob/main/README_RUS.md
+
 
 parameters:
-
+  # Required parameters dictionary inside, but empty `EMAIL` parameter will not fail the whole pipeline. Also, the empty
+  # `SSH_SUDO_PASSWORD` will be assigned from `SSH_PASSWORD` parameter.
   required:
+    # Host list in `IP_ADDRESSES` will be split by newline instead of spaces (see `regex_replace`).
     - name: IP_ADDRESSES
       type: string
       description: Space separated IP or DNS list of the host(s) to perform PIPELINE_ACTION and ROLE_SUBJECT.
       regex_replace:
         regex: ' '
         to: \n
+    # `SSH_LOGIN` value will be checked on regex match.
     - name: SSH_LOGIN
       type: string
       regex: ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$
@@ -18,6 +26,7 @@ parameters:
     - name: SSH_PASSWORD
       type: password
       description: SSH password for install/uninstall components and copy configs (The same for all hosts).
+    # Do not fail pipeline and print warning, just assign sudo password from non-sudo password when it's empty.
     - name: SSH_SUDO_PASSWORD
       type: password
       description: |
@@ -25,19 +34,13 @@ parameters:
         If this parameter is empy SSH_PASSWORD will be used.
       on_empty:
         assign: $SSH_PASSWORD
-        fail: True
+        fail: False
     - name: PIPELINE_ACTION
       type: choice
       choices:
         - install lxc action name
         - show ansible hostname action name
         - run jenkins downstream job action name
-
-  optional:
-    - name: PERFORM_PING
-      type: boolean
-      default: False
-      description: Perform ping
     - name: EMAIL
       type: string
       default: my-email@domain.net
@@ -127,6 +130,12 @@ parameters:
         - '|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*\>(?:('
         - '?:\r\n)?[ \t])*))*)?;\s*)'
       description: Email to send report.
+
+  optional:
+    - name: PERFORM_PING
+      type: boolean
+      default: False
+      description: Perform ping
     - name: LXCFS
       type: boolean
       default: False
