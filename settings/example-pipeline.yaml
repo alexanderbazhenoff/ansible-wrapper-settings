@@ -59,7 +59,8 @@ parameters:
         - show ansible hostname action name
         - run downstream job action name
     # Just warn and not do not fail the whole pipeline when `EMAIL` value is empty. Regular expression defined as a
-    # list, which will be merged into a huge string.
+    # list, which will be merged into a huge string. You can also split parameters blocks using several `<br>` at the
+    # end of description value.
     - name: EMAIL
       type: string
       default: my-email@domain.net
@@ -148,7 +149,7 @@ parameters:
         - '.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z'
         - '|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*\>(?:('
         - '?:\r\n)?[ \t])*))*)?;\s*)'
-      description: Email to send report.
+      description: Email to send report.<br><br><br><br>
 
   optional:
     # Obviously, if boolean parameters are already injected to pipeline it will always be defined. So you don't need to

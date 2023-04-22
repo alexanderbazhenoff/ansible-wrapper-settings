@@ -382,7 +382,7 @@ parameters:
         <b>ca_cert</b> (default: ''): Specifies the name of a file containing SSL certificate authority (CA)
         certificate(s).
         <b>trust_input</b> (default: True): It makes sense only when SQL injections through the options are
-        possible.<br>
+        possible.<br><br><br><br>
 
 
 stages:
