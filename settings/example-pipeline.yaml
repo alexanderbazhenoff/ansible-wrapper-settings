@@ -7,6 +7,22 @@
 # Russian: https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/blob/main/README_RUS.md
 
 
+# Copyright (c) 2023 Alexander Bazhenov.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
 parameters:
   # Required parameters dictionary inside, but empty `EMAIL` parameter will not fail the whole pipeline. Also, the empty
   # `SSH_SUDO_PASSWORD` will be assigned from `SSH_PASSWORD` parameter.
@@ -26,7 +42,7 @@ parameters:
     - name: SSH_PASSWORD
       type: password
       description: SSH password for install/uninstall components and copy configs (The same for all hosts).
-    # Do not fail pipeline and print warning, just assign sudo password from non-sudo password when it's empty.
+    # When `SSH_SUDO_PASSWORD` is empty not fail pipeline and print warning, just assign value from `SSH_LOGIN`.
     - name: SSH_SUDO_PASSWORD
       type: password
       description: |
@@ -35,12 +51,15 @@ parameters:
       on_empty:
         assign: $SSH_PASSWORD
         fail: False
+    # Define action by choices of `PIPELINE_ACTION`. Using spaces in action and stage names are allowed.
     - name: PIPELINE_ACTION
       type: choice
       choices:
         - install lxc action name
         - show ansible hostname action name
-        - run jenkins downstream job action name
+        - run downstream job action name
+    # Just warn and not do not fail the whole pipeline when `EMAIL` value is empty.
+    # Regular expression defined as a list, which will be merged into a huge string.
     - name: EMAIL
       type: string
       default: my-email@domain.net
@@ -132,10 +151,13 @@ parameters:
       description: Email to send report.
 
   optional:
+    # Obviously, if boolean parameters are already injected to pipeline it will always be defined.
+    # So you don't need to set them as 'required'. These parameters are also less significant.
+    # So it's ok to add them after 'required' parameters, which are always injected first on pipeline parameters update.
     - name: PERFORM_PING
       type: boolean
       default: False
-      description: Perform ping
+      description: Perform ansible ping.
     - name: LXCFS
       type: boolean
       default: False
@@ -143,23 +165,31 @@ parameters:
 
 
 stages:
-
   - name: stage_1
+  # Spaces in stage and action names are also allowed.
     actions:
+      # Clone sources, install ansible galaxy collection, action defined in `PIPELINE_ACTION` variable, stash files,
+      # unstash on node with label `ansible29` then finally archive artifacts on the same node. Actions are sequential.
       - before_message: Clone sources to make an artifacts just for example
         action: git_clone_action_name
+      # Take a look at before, after, fail and success messages.
       - action: ansible_galaxy_install_action_name
         after_message: Installing collection to run lxfs ansible role done.
         fail_message: Executing ansible playbook failed.
         success_message: Executing ansible playbook finished.
       - action: $PIPELINE_ACTION
       - action: stash files action name
+      # When you change the node from pipeline start node, you should set node for every action. Otherwise, the
+      # execution returns to the start node.
       - action: unstash files action name
         node:
           label: ansible29
       - action: action archive artifacts action name
+        node:
+          label: ansible29
 
   - name: stage_2
+    # Actions in this (scripts and reports) stage will start in parallel.
     parallel: True
     actions:
       - action: run custom code as a part of pipeline action name
@@ -170,36 +200,46 @@ stages:
 
   - name: stage_3
     actions:
-      - before_message: Running final action...
-      - action: run bash final script action name
+      # All errors in this action will be ignored.
+      - before_message: Running final action with exit code 1...
+        action: run bash final script action name
         ignore_fail: True
 
 
+# All possible kinds of actions set here.
 actions:
-
+  # Clone sources to `subdirectory_in_workspace_for_repository` then switch to the `main` branch.
   git_clone_action_name:
     repo_url: https://github.com/alexanderbazhenoff/ansible-collection-linux.git
     repo_branch: main
     directory: subdirectory_in_workspace_for_repository
 
+  # Install an ansible collection from Ansible Galaxy.
   ansible_galaxy_install_action_name:
     collection: alexanderbazhenoff.linux
 
+  # Actions that run ansible playbooks.
   install_lxc_action_name:
     playbook: ping_playbook_name
 
   show ansible hostname action name:
     playbook: run_role_playbook_name
 
-  run jenkins downstream job action name:
-    pipeline: name_of_jenkins_pipeline
+  # Run downstream `name_of_pipeline` and pass `DOWNSTREAM_JOB_PARAMETER_1` with `PERFORM_PING` upstream pipeline
+  # parameter value and `EMAIL` with `EMAIL` value. Do not propagate errors of a downstream pipeline, but wait for the
+  # completion. Finally, copy `test_file.txt` from `downstream_job_artifacts_folder_name` folder in workspace of
+  # `name_of_pipeline` as artifacts, but ignore when this file is absent. No fingerprints.
+  run downstream job action name:
+    pipeline: name_of_pipeline
     parameters:
+      # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter. Otherwise, pass as a
+      # `$BAR` or `${BAR}`.
       - name: DOWNSTREAM_JOB_PARAMETER_1
         type: boolean
         value: $PERFORM_PING
-      - name: DOWNSTREAM_PARAMETER3
+      - name: EMAIL
         type: string
-        value: $EMAIL
+        value: ${EMAIL}
     propagate: False
     copy_artifacts:
       filter: test_file.txt
@@ -207,51 +247,76 @@ actions:
       target_directory: downstream_job_artifacts_folder_name
       optional: True
 
+  # Stash any file in any sub-directory of `subdirectory_in_workspace_for_repository` folder in workspace with
+  # `stash_name` naming.
   stash files action name:
     stash: stash_name
     includes: subdirectory_in_workspace_for_repository/**/*
 
+  # Unstash files and folders with stash name `stash_name`.
   unstash files action name:
     unstash: stash_name
 
+  # Archive as pipeline artifact any file from cloned from a git ansible collection, including unexisting file
+  # `test_file.txt`, but except markdown files inside the roles. Do not fail the whole pipeline execution on unexisting
+  # `test_file.txt` file.
   action archive artifacts action name:
     artifacts: subdirectory_in_workspace_for_repository/**/roles/*, test_file.txt
-    excludes: subdirectory_in_workspace_for_repository/**/roles/.*
+    excludes: subdirectory_in_workspace_for_repository/**/roles/*.md
     allow_empty: True
 
+  # Actions to run scripts.
   run custom code as a part of pipeline action name:
     script: script_name_1
 
   run bash script action name:
     script: script_name_2
 
+  # Action that sends email report with a name of the pipeline, overall pipeline status, URL to console and
+  # stages and actions report table.
   email report action name:
     report: email
-    to: $EMAIL
-    reply_to: $EMAIL
+    to: ${env.EMAIL}
+    reply_to: ${env.EMAIL}
     subject: Test email report
     body: |
       Hi,
-
-      I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME
-      So I don't want to bother you, please ignore this automatic email report.
-
+      
+      I've just run a test for universal jenkins wrapper pipeline for '${env.JOB_NAME}' pipeline, finished with
+      '${currentBuild.result}' state. As you see sending report to ${env.EMAIL} done.
+      
+      Overall report is:
+      ${universalPipelineWrapperBuiltIns.multilineReport}
+      
+      Check pipeline console for details: ${env.BUILD_URL}/console
+      This report was generated automatically, please do not reply.
+      
       Sincerely,
       Your Jenkins.
 
+  # Action that sends mattermost report to mattermost.com using token with pipeline name and stages and actions report
+  # table.
   mattermost report action name:
     report: mattermost
-    url: https://mattermost.com/hooks/<token>
+    url: https://mattermost.com/hooks/31895e09lg2m0g44dk4qeb847s
     text: |
-      Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME. 
+      Hi, I've just run a test for universal jenkins wrapper pipeline: ${env.JOB_NAME}.
+      Overall report is:
+      ```
+      ${universalPipelineWrapperBuiltIns.multilineReport}
+      ```
       Please ignore this automatic report.
 
+  # Run a final script that exits with error (but this will be ignored by setting up the key `ignore_fail` in `stages`.
   run bash final script action name:
     script: script_name_3
 
 
+# All possible kinds of script running here.
 scripts:
 
+  # Run a code as a part of pipeline including code for Jenkins and Teamcity that will be selected in the appropriate
+  # environment.
   script_name_1:
     pipeline: True
     jenkins: |
@@ -261,6 +326,7 @@ scripts:
       // some kotlin code here to print 'PIPELINE_ACTION' and 'EMAIL' pipeline parameters:
       print (String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
   script_name_2:
+    # You can also set `#!/usr/bin/env python` hashbang.
     script: |
       #!/usr/bin/env bash
       printf "Here is some output of LXCFS environment variable, which also a pipeline parameter: %s\n" "$LXCFS"
@@ -269,9 +335,11 @@ scripts:
   script_name_3:
     script: |
       #!/usr/bin/env bash
-      echo "All done."
+      echo "All done, but exit 1."
+      exit 1
 
 
+# Playbooks are here, where ansible ping will be skipped when `PERFORM_PING` pipeline parameter wasn't set.
 playbooks:
 
   ping_playbook_name: |
@@ -301,7 +369,7 @@ playbooks:
           vars:
             lxc_technology: {{ $LXCFS | ternary ('lxcfs', 'lxc') }}
 
-
+# The only inventory for both playbooks is here.
 inventories:
 
   default: |
