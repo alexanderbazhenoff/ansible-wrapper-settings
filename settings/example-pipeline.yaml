@@ -58,8 +58,8 @@ parameters:
         - install lxc action name
         - show ansible hostname action name
         - run downstream job action name
-    # Just warn and not do not fail the whole pipeline when `EMAIL` value is empty.
-    # Regular expression defined as a list, which will be merged into a huge string.
+    # Just warn and not do not fail the whole pipeline when `EMAIL` value is empty. Regular expression defined as a
+    # list, which will be merged into a huge string.
     - name: EMAIL
       type: string
       default: my-email@domain.net
@@ -151,9 +151,9 @@ parameters:
       description: Email to send report.
 
   optional:
-    # Obviously, if boolean parameters are already injected to pipeline it will always be defined.
-    # So you don't need to set them as 'required'. These parameters are also less significant.
-    # So it's ok to add them after 'required' parameters, which are always injected first on pipeline parameters update.
+    # Obviously, if boolean parameters are already injected to pipeline it will always be defined. So you don't need to
+    # set them as 'required'. These parameters are also less significant. So it's ok to add them after 'required'
+    # parameters, which are always injected first on pipeline parameters update.
     - name: PERFORM_PING
       type: boolean
       default: False
@@ -232,8 +232,8 @@ actions:
   run downstream job action name:
     pipeline: name_of_pipeline
     parameters:
-      # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter. Otherwise, pass as a
-      # `$BAR` or `${BAR}`.
+      # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter. Otherwise, pass as a `$BAR`
+      # or `${BAR}`.
       - name: DOWNSTREAM_JOB_PARAMETER_1
         type: boolean
         value: $PERFORM_PING
@@ -298,6 +298,8 @@ actions:
   # table.
   mattermost report action name:
     report: mattermost
+    # So paste your mattermost URL and working token like this, or set as global variable inside the libraries
+    # (then set something like `${GlobalVariable}`).
     url: https://mattermost.com/hooks/31895e09lg2m0g44dk4qeb847s
     text: |
       Hi, I've just run a test for universal jenkins wrapper pipeline: ${env.JOB_NAME}.
