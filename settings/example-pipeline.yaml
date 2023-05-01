@@ -166,6 +166,7 @@ parameters:
     # Unused pipeline parameter with no type is just to show pipeline parameters injection is possible without
     # specifying a parameter type.
     - name: UNUSED_PARAMETER
+      default: true
 
 
 stages:
