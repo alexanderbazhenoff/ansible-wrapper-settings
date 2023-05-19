@@ -386,12 +386,24 @@ parameters:
 
 
 stages:
+  - name: clone and install required ansible collection
+    actions:
+      - action: clone_git_repository
+        build_name: ${ROLE_ACTION}-${ROLE_SUBJECT}--#${BUILD_NUMBER}
+      - action: install_ansible_collection
   - name: run postgresql role
     actions:
       - action: $ROLE_ACTION
+        success_only: True
 
 
 actions:
+  clone_git_repository:
+    repo_url: https://github.com/alexanderbazhenoff/ansible-collection-linux.git
+    repo_branch: main
+    directory: subdirectory_in_workspace_for_repository
+  install_ansible_collection:
+    script: install_collection_script
   install:
     playbook: install_uninstall_configure
   uninstall:
@@ -413,6 +425,13 @@ actions:
   restore:
     playbook: db_instance_management
 
+
+scripts:
+  install_collection_script: |
+    #!/usr/bin/env bash
+    cd ansible-collection-linux || exit 1
+    ansible-galaxy collection build
+    ansible-galaxy collection install $(ls -1 | grep ".tar.gz")
 
 playbooks:
   install_uninstall_configure: |

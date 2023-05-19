@@ -171,8 +171,12 @@ stages:
     actions:
       # Clone sources, install ansible galaxy collection, action defined in `PIPELINE_ACTION` variable, stash files,
       # unstash on node with label `ansible29` then finally archive artifacts on the same node. Actions are sequential.
+      # Pipeline build name will be formed from action, email and current build number. This action sources will be
+      # cloned to `sources` subdirectory.
       - before_message: Clone sources to make an artifacts just for example
         action: git_clone_action_name
+        build_name: ${PIPELINE_ACTION}-${EMAIL}--#${BUILD_NUMBER}
+        dir: sources
       # Take a look at before, after, fail and success messages.
       - action: ansible_galaxy_install_action_name
         after_message: Installing collection to run lxfs ansible role done.
@@ -201,10 +205,25 @@ stages:
 
   - name: stage_3
     actions:
-      # All errors in this action will be ignored.
-      - before_message: Running final action with exit code 1...
+      # All errors in the first action will be ignored. Take a look at conditions and messages in other actions.
+      - before_message: Running action with exit code 1...
         action: run bash final script action name
         ignore_fail: True
+      - before_message: |
+          This action will never run because requires at least one action with fail, but all completed with SUCCESS.
+        action: run bash final script action name
+        fail_only: True
+      - before_message: This action will run only when all actions completed with SUCCESS...
+        action: run bash final script action name
+        success_only: True
+      - before_message: |
+          This action will never run because requires all actions completed with SUCCESS, but previous was failed.
+        action: run bash final script action name
+        success_only: True
+      - before_message: This action will run only when at least one action completed with FAILURE...
+        action: run bash final script action name
+        fail_only: True
+        stop_on_fail: True
 
 
 # All possible kinds of actions set here.
