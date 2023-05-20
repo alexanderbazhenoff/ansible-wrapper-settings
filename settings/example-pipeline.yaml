@@ -234,9 +234,11 @@ actions:
     repo_branch: main
     directory: subdirectory_in_workspace_for_repository
 
-  # Install an ansible collection from Ansible Galaxy.
+  # Install an ansible collections from Ansible Galaxy.
   ansible_galaxy_install_action_name:
-    collection: alexanderbazhenoff.linux
+    collections:
+      - community.postgresql
+      - alexanderbazhenoff.linux
 
   # Actions that run ansible playbooks.
   install_lxc_action_name:
@@ -301,16 +303,16 @@ actions:
     subject: Test email report
     body: |
       Hi,
-      
+
       I've just run a test for universal jenkins wrapper pipeline for '${env.JOB_NAME}' pipeline, finished with
       '${currentBuild.result}' state. As you see sending report to ${env.EMAIL} done.
-      
+
       Overall report is:
       ${universalPipelineWrapperBuiltIns.multilineReport}
-      
+
       Check pipeline console for details: ${env.BUILD_URL}/console
       This report was generated automatically, please do not reply.
-      
+
       Sincerely,
       Your Jenkins.
 

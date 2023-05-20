@@ -411,19 +411,24 @@ actions:
 
 ### Action: установка ansible-коллекции из Ansible Galaxy
 
-- **collection** `[строка]` *(обязательный)* - namespace и имя коллекции из 
-[Ansible Galaxy](https://galaxy.ansible.com/) для установки (см. [Пример 10](#пример-10)).
+- **collection** `[строка, или список]` *(обязательный)* - namespace и имя коллекции из 
+[Ansible Galaxy](https://galaxy.ansible.com/) для установки (см. [Пример 10](#пример-10)), или их список.
 
 Коллекция всегда устанавливается принудительно (ключ `force`), что обеспечивает постоянное их обновление.
 
 #### Пример 10
 
 ```yaml
-# Пример фрагмента конфигурационного файла с действием: установкой ansible-коллекции `namespace.collection_name`.
+# Пример фрагмента конфигурационного файла с действием: установкой одной ansible-коллекции `namespace.collection_name`
+# и целого списка коллекций.
 
 actions:
   ansible_galaxy_install_action_name:
-    collection: namespace.collection_name
+    collections: namespace.collection_name
+  ansible_galaxy_install_list_action_name:
+    collections:
+      - namespace_1.collection_name_1
+      - namespace_2.collection_name_2
 ```
 
 ### Action: запуск ansible playbooks

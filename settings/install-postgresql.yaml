@@ -388,9 +388,11 @@ parameters:
 stages:
   - name: clone and install required ansible collection
     actions:
+      - action: install_community_postgresql_collection
       - action: clone_git_repository
         build_name: ${ROLE_ACTION}-${ROLE_SUBJECT}--#${BUILD_NUMBER}
       - action: install_ansible_collection
+        success_only: True
   - name: run postgresql role
     actions:
       - action: $ROLE_ACTION
@@ -398,6 +400,9 @@ stages:
 
 
 actions:
+  install_community_postgresql_collection:
+    collections:
+      - community.postgresql
   clone_git_repository:
     repo_url: https://github.com/alexanderbazhenoff/ansible-collection-linux.git
     repo_branch: main
