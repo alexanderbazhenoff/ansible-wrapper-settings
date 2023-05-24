@@ -206,24 +206,29 @@ stages:
   - name: stage_3
     actions:
       # All errors in the first action will be ignored. Take a look at conditions and messages in other actions.
-      - before_message: Running action with exit code 1...
+      - before_message: Running action with exit code 1 on any node...
         action: run bash final script action name
         ignore_fail: True
+        node:
       - before_message: |
           This action will never run because requires at least one action with fail, but all completed with SUCCESS.
         action: run bash final script action name
         fail_only: True
-      - before_message: This action will run only when all actions completed with SUCCESS...
+      # Take a look at 'node' key: you can specifu them by 'node' sub-key or just as string value of node key.
+      - before_message: This action will run on master node only when all actions completed with SUCCESS...
         action: run bash final script action name
         success_only: True
+        node: master
       - before_message: |
           This action will never run because requires all actions completed with SUCCESS, but previous was failed.
         action: run bash final script action name
         success_only: True
-      - before_message: This action will run only when at least one action completed with FAILURE...
+      - before_message: This action will run on master node only when at least one action completed with FAILURE...
         action: run bash final script action name
         fail_only: True
         stop_on_fail: True
+        node:
+          name: master
 
 
 # All possible kinds of actions set here.
