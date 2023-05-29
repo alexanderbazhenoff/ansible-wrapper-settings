@@ -195,7 +195,7 @@ stages:
 
   - name: stage_2
     # Actions in this (scripts and reports) stage will start in parallel.
-    #parallel: True
+    parallel: True
     actions:
       - action: run custom code as a part of pipeline action name
       - action: run bash script action name
@@ -245,10 +245,10 @@ actions:
       - alexanderbazhenoff.linux
 
   # Actions that run ansible playbooks.
-  install_lxc_action_name:
+  show ansible hostname action name:
     playbook: ping_playbook_name
 
-  show ansible hostname action name:
+  install lxc action name:
     playbook: run_role_playbook_name
 
   # Run downstream `name_of_pipeline` and pass `DOWNSTREAM_JOB_PARAMETER_1` with `PERFORM_PING` upstream pipeline
@@ -375,7 +375,7 @@ playbooks:
 
       tasks:
 
-        - name: "Perform ansible ping on the host(s)"
+        - name: "Perform ansible ping on the host(s) to show hosts"
           ansible.builtin.ping:
           when: $PERFORM_PING
 
@@ -387,11 +387,11 @@ playbooks:
 
       tasks:
 
-        - name: "Ping host(s)"
+        - name: "Perform ansible ping on the host(s) to show hosts"
           ansible.builtin.ping:
           when: $PERFORM_PING
 
-        - name: "Install lxc(fs)"
+        - name: "Install {{ $LXCFS | ternary ('lxcfs', 'lxc') }}"
           ansible.builtin.include_role:
             name: alexanderbazhenoff.linux.lxcfs
           vars:
