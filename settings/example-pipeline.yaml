@@ -202,7 +202,6 @@ stages:
       - action: email report action name
       - action: mattermost report action name
 
-
   - name: stage_3
     actions:
       # All errors in the first action will be ignored. Take a look at conditions and messages in other actions.
