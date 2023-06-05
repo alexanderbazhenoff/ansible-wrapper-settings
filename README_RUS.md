@@ -952,13 +952,13 @@ universalPipelineWrapperBuiltIns.multilineStagesReportMap = [
 В отличие от вывода такой же таблицы в console Jenkins, или Teamcity (при завершении работы pipeline) этот ключ не
 содержит цветовых кодов (ASCII colours) и, таким образом, удобен для вставки при формировании текста различных 
 [уведомлений](#action-отправка-уведомлений).
-- `universalPipelineWrapperBuiltIns.multilineStagesReport` *[строка]* - содержит только текстовую таблицу статусов 
+- `universalPipelineWrapperBuiltIns.multilineReportStages` *[строка]* - содержит только текстовую таблицу статусов 
 стадий. Не содержит цветовых кодов, предназначен для формирования текста различных
 [уведомлений](#action-отправка-уведомлений).
-- `universalPipelineWrapperBuiltIns.multilineFailedReport` *[строка]* - содержит текстовую таблицу только неудачно
+- `universalPipelineWrapperBuiltIns.multilineReportFailed` *[строка]* - содержит текстовую таблицу только неудачно
 завершенных стадий и действий. Не содержит цветовых кодов, предназначен для формирования текста различных
 [уведомлений](#action-отправка-уведомлений).
-- `universalPipelineWrapperBuiltIns.multilineFailedStagesReport` *[строка]* - содержит текстовую таблицу только неудачно
+- `universalPipelineWrapperBuiltIns.multilineReportStagesFailed` *[строка]* - содержит текстовую таблицу только неудачно
 завершенных стадий и действий. Не содержит цветовых кодов, предназначен для формирования текста различных
 [уведомлений](#action-отправка-уведомлений).
 
