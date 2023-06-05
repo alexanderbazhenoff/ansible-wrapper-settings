@@ -907,46 +907,60 @@ inventory и скриптах через переменные окружения
 ключи, которые можно использовать в конфигурационном файле (например, при формировании отчетов):
 
 - `universalPipelineWrapperBuiltIns.multilineReportMap` *[словарь, или Map]* - содержит словарь статусов и информацию о
-каждом действии и стадии pipeline. Удобно использовать исключительно в кодовых вставках "запуск кода как часть 
-pipeline". Структура Map'а идентична с той, что описана в 
-[jenkins-shared-library](https://github.com/alexanderbazhenoff/jenkins-shared-library) в функции
-`addPipelineStepsAndUrls()` и выглядит примерно следующим образом:
+каждом действии в стадиях pipeline. Ключ предназначен для использования в кодовых вставках "запуск кода как часть 
+pipeline". Структура Map'а идентична описанию функции `addPipelineStepsAndUrls()` в 
+[jenkins-shared-library](https://github.com/alexanderbazhenoff/jenkins-shared-library) в функции и выглядит:
 
 ```groovy
 universalPipelineWrapperBuiltIns.multilineReport = [
-        stage_1_name: [
-            name  : 'stage_1_name',
+        'stage_1[0]': [
+            name  : 'stage_1 [0]',
             state : true|false
-            jobUrl: 'Information about stage_1_name.'
+            url: 'Information about 1st action in stage_1.'
         ],
-        action_1_name: [
-            name  : 'action_2_name',
+        'stage_1[1]': [
+            name  : 'stage_1 [1]',
             state : true|false
-            jobUrl: 'Information about action_2_name.'
+            url: 'Information about 2nd action in stage_1.'
         ],
-        stage_2_name: [
-            name  : 'stage_2_name',
+        'stage_2[0]': [
+            name  : 'stage_2 [0]',
             state : true|false
-            jobUrl: 'Information about stage_2_name.'
+            url: 'Information about 1st action in stage_2.'
         ]
 ]
 ```
 
 - `universalPipelineWrapperBuiltIns.multilineStagesReportMap` *[словарь, или Map]* - содержит только словарь статусов 
-стадий. Структура аналогична *multilineReportMap*.
-- `universalPipelineWrapperBuiltIns.multilineActionsReportMap` *[словарь, или Map]* - содержит только словарь статусов 
-действий. Структура аналогична *multilineReportMap*.
-
+стадий. Структура аналогична *multilineReportMap*:
+```groovy
+universalPipelineWrapperBuiltIns.multilineStagesReportMap = [
+        'stage_1': [
+            name  : 'stage_1',
+            state : true|false
+            url: '6 actions.'
+        ],
+        'stage_2': [
+            name  : 'stage_2',
+            state : true|false
+            url: '4 actions in parallel.'
+        ]
+]
+```
 - `universalPipelineWrapperBuiltIns.multilineReport` *[строка]* - содержит текстовую таблицу статусов и информацию о 
-каждом действии и стадии pipeline. Содержимое идентично *multilineReport*, только имеет удобный для чтения формат.
-В отличие от вывода такой же таблицы в console Jenkins, или Teamcity эта переменная не содержит цветовых кодов (ASCII
-colours) и, таким образом, удобна для отправки различных уведомлений.
+каждом действии и стадии pipeline. Содержимое идентично *multilineReportMap*, только имеет удобный для чтения формат.
+В отличие от вывода такой же таблицы в console Jenkins, или Teamcity (при завершении работы pipeline) этот ключ не
+содержит цветовых кодов (ASCII colours) и, таким образом, удобен для вставки при формировании текста различных 
+[уведомлений](#action-отправка-уведомлений).
 - `universalPipelineWrapperBuiltIns.multilineStagesReport` *[строка]* - содержит только текстовую таблицу статусов 
-стадий.
-- `universalPipelineWrapperBuiltIns.multilineActionsReport` *[строка]* - содержит только текстовую таблицу статусов 
-действий.
+стадий. Не содержит цветовых кодов, предназначен для формирования текста различных
+[уведомлений](#action-отправка-уведомлений).
 - `universalPipelineWrapperBuiltIns.multilineFailedReport` *[строка]* - содержит текстовую таблицу только неудачно
-завершенных стадий и действий.
+завершенных стадий и действий. Не содержит цветовых кодов, предназначен для формирования текста различных
+[уведомлений](#action-отправка-уведомлений).
+- `universalPipelineWrapperBuiltIns.multilineFailedStagesReport` *[строка]* - содержит текстовую таблицу только неудачно
+завершенных стадий и действий. Не содержит цветовых кодов, предназначен для формирования текста различных
+[уведомлений](#action-отправка-уведомлений).
 
 # Подстановка переменных
 
