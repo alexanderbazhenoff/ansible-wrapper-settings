@@ -914,19 +914,19 @@ pipeline". Структура Map'а идентична описанию фун�
 ```groovy
 universalPipelineWrapperBuiltIns.multilineReport = [
         'stage_1[0]': [
-            name  : 'stage_1 [0]',
-            state : true|false
-            url: 'Information about 1st action in stage_1.'
+            name : 'stage_1 [0]',
+            state: true|false,
+            url  : 'Information about 1st action in stage_1.'
         ],
         'stage_1[1]': [
-            name  : 'stage_1 [1]',
-            state : true|false
-            url: 'Information about 2nd action in stage_1.'
+            name : 'stage_1 [1]',
+            state: true|false,
+            url  : 'Information about 2nd action in stage_1.'
         ],
         'stage_2[0]': [
-            name  : 'stage_2 [0]',
-            state : true|false
-            url: 'Information about 1st action in stage_2.'
+            name : 'stage_2 [0]',
+            state: true|false,
+            url  : 'Information about 1st action in stage_2.'
         ]
 ]
 ```
@@ -936,14 +936,14 @@ universalPipelineWrapperBuiltIns.multilineReport = [
 ```groovy
 universalPipelineWrapperBuiltIns.multilineStagesReportMap = [
         'stage_1': [
-            name  : 'stage_1',
-            state : true|false
-            url: '6 actions.'
+            name : 'stage_1',
+            state: true|false,
+            url  : '6 actions.'
         ],
         'stage_2': [
-            name  : 'stage_2',
-            state : true|false
-            url: '4 actions in parallel.'
+            name : 'stage_2',
+            state: true|false,
+            url  : '4 actions in parallel.'
         ]
 ]
 ```
