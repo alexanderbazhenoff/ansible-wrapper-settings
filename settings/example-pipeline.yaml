@@ -175,7 +175,7 @@ stages:
       # cloned to `sources` subdirectory.
       - before_message: Clone sources to make an artifacts just for example
         action: git_clone_action_name
-        build_name: ${PIPELINE_ACTION}-${EMAIL}--#${BUILD_NUMBER}
+        build_name: $PIPELINE_ACTION-$EMAIL--#$BUILD_NUMBER
         dir: sources
       # Take a look at before, after, fail and success messages.
       - action: ansible_galaxy_install_action_name
@@ -273,7 +273,7 @@ actions:
       target_directory: downstream_job_artifacts_folder_name
       optional: True
 
-  # Stash any file in any sub-directory of `subdirectory_in_workspace_for_repository` folder in workspace with
+  # Stash any file in any subdirectory of `subdirectory_in_workspace_for_repository` folder in workspace with
   # `stash_name` naming.
   stash files action name:
     stash: stash_name
