@@ -966,26 +966,37 @@ universalPipelineWrapperBuiltIns.multilineReportMapStages = [
 
 # Подстановка переменных
 
-В качестве значений ключа может быть указано значение любого параметра pipeline, или переменной окружения. Если в ключе
-['assign'](#required) параметра pipeline (см. [Пример 2](#пример-2)), или ключе ['action'](#ключ-stages) внутри списка
-`actions` (см. [Пример 7](#пример-7)) перед запуском стадий pipeline требуется проверить наличие переменной, или 
-параметра pipeline, то переменную `VAR_NAME` в качестве значения ключа следует указывать как `$VAR_NAME`. Если указанная
-переменная не задана (параметр pipeline отсутствует), или же имя переменной не соответствует стандартам POSIX, то
-текущий запуск pipeline будет завершен ошибкой с указанием о том, что не удается присвоить значение`VAR_NAME`. В
-качестве значений других ключей, или же в случае, если проверка не требуется, следует указывать: `"${VAR_NAME}"` (см.
-[Пример 21](#пример-21)).
+В качестве значений ключа может быть указано значение любого параметра pipeline, или переменной окружения. Допускается
+использование нескольких переменных комбинированных с обычными текстовыми строками (см. [Пример 21](#пример-21)).
 
 #### Пример 21
+```yaml
+---
+
+parameters:
+  required:
+    - name: FOO
+      type: string
+    - name: BAR
+      type: string
+    - name: BAZ
+      type: string
+
+stages:
+  - name: own stage
+    actions:
+      - before_message: Ready to perform action combined from FOO='$FOO', BAR='$BAR' and BAZ='$BAZ' values.
+        action: $FOO$BAR$BAZ
+
+```
+
+#### Пример 22
 
 ```yaml
 ---
 
 # Пример конфигурационного файла для запуска ansible playbook, или pipeline (параметр `ACTION`), имя которых задается
 # переменной `ACTION_SUBJECT`. Имя пользователя `USERNAME` так же передается в playbook, или pipeline.
-# Обратите внимание, что задание параметра pipeline, или переменной как `$VAR_NAME` и проверка будет произведена только
-# в parameters и actions. В остальных ключах можно так же указывать `$VAR_NAME`, но проверка на несуществующую 
-# переменную и соответствие имен стандартам POSIX осуществляться не будет. Однако ниже для наглядности и удобства чтения
-# в таких случаях указывается как: `${ACTION}`, `${USERNAME}` и т.д.
 
 parameters:
   required:
@@ -1009,19 +1020,19 @@ parameters:
 stages:
   - name: own stage
     actions:
-      - before_message: Ready to ${ACTION} under ${USERNAME}
+      - before_message: Ready to $ACTION under $USERNAME
         # Будет произведена проверка, возможна ли подстановка параметра pipeline `ACTION`.
         action: $ACTION
 
 actions:
   run playbook:
-    playbook: ${ACTION_SUBJECT}
+    playbook: $ACTION_SUBJECT
   run pipeline:
-    pipeline: ${ACTION_SUBJECT}
+    pipeline: $ACTION_SUBJECT
     parameters:
       - name: USERNAME
         type: string
-        value: ${USERNAME}
+        value: $USERNAME
         
 playbooks:
   subject_name: |
