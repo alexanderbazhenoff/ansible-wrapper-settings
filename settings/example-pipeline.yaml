@@ -258,14 +258,13 @@ actions:
   run downstream job action name:
     pipeline: name_of_pipeline
     parameters:
-      # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter. Otherwise, pass as a `$BAR`
-      # or `${BAR}`.
+      # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter.
       - name: DOWNSTREAM_JOB_PARAMETER_1
         type: boolean
         value: $PERFORM_PING
       - name: EMAIL
         type: string
-        value: ${EMAIL}
+        value: $EMAIL
     propagate: False
     copy_artifacts:
       filter: test_file.txt
@@ -302,19 +301,19 @@ actions:
   # stages and actions report table.
   email report action name:
     report: email
-    to: ${env.EMAIL}
-    reply_to: ${env.EMAIL}
+    to: $EMAIL
+    reply_to: $EMAIL
     subject: Test email report
     body: |
       Hi,
 
-      I've just run a test for universal jenkins wrapper pipeline for '${env.JOB_NAME}' pipeline, finished with
-      '${currentBuild.result}' state. As you see sending report to ${env.EMAIL} done.
+      I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME' pipeline, finished with
+      '$currentBuild_result' state. As you see sending report to $EMAIL done.
 
       Overall report is:
-      ${universalPipelineWrapperBuiltIns.multilineReport}
+      $multilineReport
 
-      Check pipeline console for details: ${env.BUILD_URL}/console
+      Check pipeline console for details: $BUILD_URL/console
       This report was generated automatically, please do not reply.
 
       Sincerely,
@@ -325,13 +324,13 @@ actions:
   mattermost report action name:
     report: mattermost
     # So paste your mattermost URL and working token like this, or set as global variable inside the libraries
-    # (then set something like `${GlobalVariable}`).
+    # (then set something like `$GlobalVariable`).
     url: https://mattermost.com/hooks/31895e09lg2m0g44dk4qeb847s
     text: |
-      Hi, I've just run a test for universal jenkins wrapper pipeline: ${env.JOB_NAME}.
+      Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME.
       Overall report is:
       ```
-      ${universalPipelineWrapperBuiltIns.multilineReport}
+      $multilineReport
       ```
       Please ignore this automatic report.
 

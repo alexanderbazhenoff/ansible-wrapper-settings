@@ -390,7 +390,7 @@ stages:
     actions:
       - action: install_community_postgresql_collection
       - action: clone_git_repository
-        build_name: ${ROLE_ACTION}-${ROLE_SUBJECT}--#${BUILD_NUMBER}
+        build_name: $ROLE_ACTION-$ROLE_SUBJECT--#$BUILD_NUMBER
       - action: install_ansible_collection
         success_only: True
   - name: run postgresql role

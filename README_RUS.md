@@ -957,21 +957,31 @@ universalPipelineWrapperBuiltIns.multilineReportMapStages = [
 [уведомлений](#action-отправка-уведомлений). Общий статус выполнения стадии будет обновлен только после выполнения всех
 действий в стадии.
 - `universalPipelineWrapperBuiltIns.multilineReportFailed` *[строка]* - содержит текстовую таблицу только неудачно
-завершенных действий в стадиях. Если все действия заверешны удачно, то содержит пустую строку. Не содержит цветовых
+завершенных действий в стадиях. Если все действия завершились удачно, то содержит пустую строку. Не содержит цветовых
 кодов, предназначен для формирования текста различных [уведомлений](#action-отправка-уведомлений).
 - `universalPipelineWrapperBuiltIns.multilineReportStagesFailed` *[строка]* - содержит текстовую таблицу только неудачно
 завершенных стадий. Если все стадии завершены удачно, то содержит пустую строку. Не содержит цветовых кодов, 
 предназначен для формирования текста различных [уведомлений](#action-отправка-уведомлений). Общий статус выполнения 
 стадии будет обновлен только после выполнения всех действий в стадии.
+- `currentBuild_result` *[строка]* - содержит общий статус выполнения текущего запуска pipeline: `SUCCESS`, или
+`FAILED` (например, для Jenkins ее содержимое идентично `currentBuild.result`).
 
 # Подстановка переменных
 
-В качестве значений ключа может быть указано значение любого параметра pipeline, или переменной окружения. Допускается
-использование нескольких переменных комбинированных с обычными текстовыми строками (см. [Пример 21](#пример-21)).
+В конфигурационном файле в качестве значений в некоторых ключах может быть указано значение любого параметра pipeline, 
+или переменной окружения (если подстановка возможна, то это указано в описании ключа конфигурационного файла выше).
+Допускается использование нескольких переменных, комбинированных с обычными текстовыми строками(см.
+[Пример 21](#пример-21)). В [описании действий](#ключ-actions) в конфигурационном файле так же допускается подстановка
+[встроенных в pipeline переменных](#встроенные-в-pipeline-переменные) (см. [Пример 22](#пример-22)), для которых не
+требуется полное указание имени переменной (например: `universalPipelineWrapperBuiltIns.multilineReport`, как если бы
+эта переменная использовалась внутри скрипта, исполняемого "как часть pipeline'а" (см. [Пример 18](#пример-18))), а
+нужно всего лишь указать ключ этой переменной (например, `$multilineReport`). 
 
 #### Пример 21
 ```yaml
 ---
+# Фрагмент конфигурационного файла, в котором в `before_message` и `action` производится подстановка параметров
+# pipeline.
 
 parameters:
   required:
@@ -987,7 +997,6 @@ stages:
     actions:
       - before_message: Ready to perform action combined from FOO='$FOO', BAR='$BAR' and BAZ='$BAZ' values.
         action: $FOO$BAR$BAZ
-
 ```
 
 #### Пример 22
@@ -1023,6 +1032,7 @@ stages:
       - before_message: Ready to $ACTION under $USERNAME
         # Будет произведена проверка, возможна ли подстановка параметра pipeline `ACTION`.
         action: $ACTION
+      - action: email report
 
 actions:
   run playbook:
@@ -1033,6 +1043,29 @@ actions:
       - name: USERNAME
         type: string
         value: $USERNAME
+  email report:
+    report: email
+    to: $EMAIL
+    reply_to: $EMAIL
+    subject: Test email report
+    # В сообщение будет произведена, как подстановка переменных окружения (`JOB_NAME`, `EMAIL` и `BUILD_URL`), так и
+    # встроенных в pipeline переменных (`currentBuild_result` и `multilineReport`). Обратите внимание, что для
+    # встроенных переменных в качестве значений ключа `body` указывать полное имя `universalPipelineWrapperBuiltIns` не
+    # нужно.
+    body: |
+      Hi,
+
+      I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME' pipeline, finished with
+      '$currentBuild_result' state. As you see sending report to $EMAIL done.
+
+      Overall report is:
+      $multilineReport
+
+      Check pipeline console for details: $BUILD_URL/console
+      This report was generated automatically, please do not reply.
+
+      Sincerely,
+      Your CI.
         
 playbooks:
   subject_name: |
