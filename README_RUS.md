@@ -773,7 +773,6 @@ actions:
 переменная `universalPipelineWrapperBuiltIns` сохраняются и передаются между [действиями](#ключ-actions) и
 [стадиями](#ключ-stages). 
 
-
 #### Пример 18
 
 ```yaml
