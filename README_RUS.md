@@ -414,7 +414,7 @@ actions:
 
 actions:
   git_clone_action_name:
-    repo_url: 'ssh://git@gitlab.com:username/project-name.git
+    repo_url: ssh://git@gitlab.com:username/project-name.git
     repo_branch: develop
     directory: subdirectory_name
     credentials: a123b01c-456d-7890-ef01-2a34567890b1
