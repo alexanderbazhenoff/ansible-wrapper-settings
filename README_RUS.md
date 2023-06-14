@@ -333,7 +333,7 @@ stages:
   - name: stage_name
     actions:
       - action: $PIPELINE_ACTION
-        build_name: ${PIPELINE_ACTION}
+        build_name: $PIPELINE_ACTION
 ```
 
 #### Пример 8
