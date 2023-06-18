@@ -179,9 +179,9 @@ stages:
         dir: sources
       # Take a look at before, after, fail and success messages.
       - action: ansible_galaxy_install_action_name
-        after_message: Installing collection to run lxfs ansible role done.
-        fail_message: Executing ansible playbook failed.
-        success_message: Executing ansible playbook finished.
+        after_message: Installing collections to run lxfs ansible role done.
+        fail_message: Installing ansible collections failed.
+        success_message: Installing ansible collections finished.
         stop_on_fail: True
       - before message: |
           Install comminity.docker collection just fo example of sing collection install, because it's not required.
@@ -246,7 +246,7 @@ actions:
     collections:
       - community.postgresql
       - alexanderbazhenoff.linux
-      -
+
   # Install a single ansible collection from Ansible Galaxy. This collection installation is just an example of how to
   # set a single collection value in string format, because it's not required for the whole pipeline tun.
   ansible_galaxy_install_action_name_2:
