@@ -182,6 +182,9 @@ stages:
         after_message: Installing collection to run lxfs ansible role done.
         fail_message: Executing ansible playbook failed.
         success_message: Executing ansible playbook finished.
+      - before message: |
+          Install comminity.docker collection just fo example of sing collection install, because it's not required.
+        action: ansible_galaxy_install_action_name_2
       - action: $PIPELINE_ACTION
       - action: stash files action name
       # When you change the node from pipeline start node, you should set node for every action. Otherwise, the
@@ -243,6 +246,11 @@ actions:
     collections:
       - community.postgresql
       - alexanderbazhenoff.linux
+      -
+  # Install a single ansible collection from Ansible Galaxy. This collection installation is just an example of how to
+  # set a single collection value in string format, because it's not required for the whole pipeline tun.
+  ansible_galaxy_install_action_name_2:
+    collections: community.docker
 
   # Actions that run ansible playbooks.
   show ansible hostname action name:
