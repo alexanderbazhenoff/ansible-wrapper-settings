@@ -246,7 +246,7 @@ actions:
     collections:
       - community.postgresql
       - alexanderbazhenoff.linux
-
+      -
   # Install a single ansible collection from Ansible Galaxy. This collection installation is just an example of how to
   # set a single collection value in string format, because it's not required for the whole pipeline tun.
   ansible_galaxy_install_action_name_2:
