@@ -182,9 +182,11 @@ stages:
         after_message: Installing collection to run lxfs ansible role done.
         fail_message: Executing ansible playbook failed.
         success_message: Executing ansible playbook finished.
+        stop_on_fail: True
       - before message: |
           Install comminity.docker collection just fo example of sing collection install, because it's not required.
         action: ansible_galaxy_install_action_name_2
+        stop_on_fail: True
       - action: $PIPELINE_ACTION
       - action: stash files action name
       # When you change the node from pipeline start node, you should set node for every action. Otherwise, the
@@ -216,7 +218,7 @@ stages:
           This action will never run because requires at least one action with fail, but all completed with SUCCESS.
         action: run bash final script action name
         fail_only: True
-      # Take a look at 'node' key: you can specify them by 'node' sub-key or just as string value of node key.
+      # Take a look at 'node' key: you can specify them by 'node' sub-key or just as string value of a node key.
       - before_message: This action will run on master node only when all actions completed with SUCCESS...
         action: run bash final script action name
         success_only: True
@@ -228,7 +230,6 @@ stages:
       - before_message: This action will run on master node only when at least one action completed with FAILURE...
         action: run bash final script action name
         fail_only: True
-        stop_on_fail: True
         node:
           name: master
 

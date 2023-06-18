@@ -947,7 +947,7 @@ universalPipelineWrapperBuiltIns.multilineReport = [
 ]
 ```
 
-- `universalPipelineWrapperBuiltIns.multilineReportStagesMap` *[словарь, или Map]* - содержит только словарь статусов 
+- `universalPipelineWrapperBuiltIns.multilineReportMapStages` *[словарь, или Map]* - содержит только словарь статусов 
 стадий. Структура аналогична *multilineReportMap*:
 ```groovy
 universalPipelineWrapperBuiltIns.multilineReportMapStages = [
