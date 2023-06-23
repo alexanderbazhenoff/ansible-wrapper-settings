@@ -402,7 +402,7 @@ playbooks:
           ansible.builtin.include_role:
             name: alexanderbazhenoff.linux.lxcfs
           vars:
-            lxc_technology: {{ $LXCFS | ternary ('lxcfs', 'lxc') }}
+            lxc_technology: "{{ $LXCFS | ternary ('lxcfs', 'lxc') }}"
 
 # The only inventory for both playbooks is here.
 inventories:

@@ -995,8 +995,13 @@ universalPipelineWrapperBuiltIns.multilineReportMapStages = [
 завершенных стадий. Если все стадии завершены удачно, то содержит пустую строку. Не содержит цветовых кодов, 
 предназначен для формирования текста различных [уведомлений](#action-отправка-уведомлений). Общий статус выполнения 
 стадии будет обновлен только после выполнения всех действий в стадии.
-- `currentBuild_result` *[строка]* - содержит общий статус выполнения текущего запуска pipeline: `SUCCESS`, или
-`FAILED` (например, для Jenkins ее содержимое идентично `currentBuild.result`).
+- `universalPipelineWrapperBuiltIns.currentBuild_result` *[строка]* - содержит общий статус выполнения текущего
+запуска pipeline: `SUCCESS`, или `FAILED` (например, для Jenkins ее содержимое идентично `currentBuild.result`).
+- `universalPipelineWrapperBuiltIns.ansibleCurrentInstallationName` *[строка]* содержит имя ansible установки, 
+[заданное в jenkins Global Configuration Tool](https://issues.jenkins.io/browse/JENKINS-67209). Менять её значение в
+действиях pipeline'а допускается, но не рекомендуется: для задания имени пользуйтесь константой pipeline 
+`AnsibleInstallationName`, или `OrgAlxGlobals.GitCredentialsID` в
+[jenkins shared library](https://github.com/alexanderbazhenoff/jenkins-shared-library). 
 
 Для внутренних нужд путем [запуска скриптов "как часть pipeline'а"](#ключ-scripts) допускается так же создание своих
 ключей для переменной `universalPipelineWrapperBuiltIns`. Например:
