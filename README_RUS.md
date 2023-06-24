@@ -791,12 +791,12 @@ actions:
     script: script_name
 
 scripts:
-  pipeline: True
   script_name:
-    jenkins: |
-      println String.format('EMAIL provided for %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
-    teamcity: |
-      println(String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
+      pipeline: True
+      jenkins: |
+        println String.format('EMAIL provided for %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
+      teamcity: |
+        println(String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
 ```
 
 ## Ключ playbooks
@@ -1003,11 +1003,22 @@ universalPipelineWrapperBuiltIns.multilineReportMapStages = [
 `AnsibleInstallationName`, или `OrgAlxGlobals.GitCredentialsID` в
 [jenkins shared library](https://github.com/alexanderbazhenoff/jenkins-shared-library). 
 
-Для внутренних нужд путем [запуска скриптов "как часть pipeline'а"](#ключ-scripts) допускается так же создание своих
-ключей для переменной `universalPipelineWrapperBuiltIns`. Например:
+Для внутренних нужд при [запуске скриптов "как часть pipeline'а"](#ключ-scripts) допускается так же 
+[создание своих ключей](#использование-переменных-в-скриптах-и-playbookах) для переменной
+`universalPipelineWrapperBuiltIns`. Например:
 
 ```groovy
 universalPipelineWrapperBuiltIns.myCustomReport = 'Some text of my custom report'
+```
+
+По завершении выполнения скрипта эти ключи будут обновлены для всего pipeline. Встроенные в pipeline ключи переменной
+при [запуске скриптов "как часть pipeline'а"](#ключ-scripts) недоступны, но они будут доступны в одноименной переменной
+окружения (см. [Использование переменных в скриптах и playbook'ах](#использование-переменных-в-скриптах-и-playbookах) и
+[Пример 23](#пример-23)):
+
+```groovy
+// Значение universalPipelineWrapperBuiltIns.multilineReport можно вывести как:
+println env.multilineReport
 ```
 
 # Подстановка переменных
@@ -1132,6 +1143,65 @@ inventories:
     ansible_ssh_pass=my_password
     ansible_become_pass=my_password
 ```
+
+# Использование переменных в скриптах и playbook'ах
+
+Все переменные окружения доступны во время выполнения скриптов (как при их 
+[запуске "как часть pipeline'а"](#ключ-scripts), так и отдельно). Переменные окружения едины для всех запусков и всего
+pipeline, поэтому следует уделить внимание их обновлению при параллельном запуске действий. Ключи 
+[встроенной в pipeline переменной](#встроенные-в-pipeline-переменные) `universalPipelineWrapperBuiltIns` доступны так же
+в переменных окружения, но сама переменная не передается при запуске скрипта. И лишь по завершению действия скрипта
+выполненного "как часть pipeline'а" созданные внутри ключи добавятся в переменную `universalPipelineWrapperBuiltIns`
+(см. [Пример 23](#пример-23)).
+
+# Пример 23
+
+```yaml
+# Фрагмент конфигурационного файла с описаниями действий и скриптами:
+# - bash скрипт для задания переменной окружения и ее отображения;
+# - отображение этой переменной окружения и создание ключа `myKey` для переменной `universalPipelineWrapperBuiltIns` в 
+#   запуске скрипта "как часть pipeline" для Jenkins;
+# - скрипт для вывода значения этого ключа как переменной окружения запускаемый "как часть pipeline";
+# - bash скрипт для вывода значения этого ключа.
+
+actions:
+  setup_env_variable:
+    script: script_1
+  show_variable_and_setup_keys:
+    script: script_2
+  show_updated_key_as_env_variable_in_groovy:
+    script: script_3
+  show_updated_key_as_env_variable_in_bash:
+    script: script_4
+
+scripts:
+  script_1:
+    script: |
+      #!/usr/bin/env bash
+      MY_ENV_VARIABLE='my env variable text'
+      printf "MY_ENV_VARIABLE was defined. Now it's '%s'.\n" "$MY_ENV_VARIABLE"
+  script_2:
+    pipeline: True
+    # Обратите внимание, что объявление переменной universalPipelineWrapperBuiltIns внутри скрипта так же как и return
+    # для ее возврата указывать не требуется. Любой тип ключа по завершении скрипта "как часть pipeline" будет
+    # преобразован в строковое значение одноименной переменной окружения.
+    jenkins: |
+      println String.format('Print my MY_ENV_VARIABLE env variable: %s', env.MY_ENV_VARIABLE)
+      universalPipelineWrapperBuiltIns.myKey = 'my key text'
+      println String.format('Print myKey: %s', universalPipelineWrapperBuiltIns.myKey)
+  script_3:
+    pipeline: True
+    jenkins: |
+      println String.format('Now myKey is available in groovy code as environment variable only: %s', env.myKey)
+  script_4:
+    script: |
+      #!/usr/bin/env bash
+      printf "Print myKey in bash: '%s'.\n" "$myKey"
+```
+
+При создании ключей переменной `universalPipelineWrapperBuiltIns`, так же как и при именовании переменных внутри bash,
+или shell скриптов, учитывайте уже существующие ключи встроенной переменной, параметры pipeline и уже существующие
+переменные окружения. Для быстрой справки можно использовать shell команду `env`, или `println env` для groovy.
 
 # Примеры использования
 
