@@ -26,7 +26,7 @@
 
 # Parameters are just to test pass from `example-pipeline` upstream pipeline.
 parameters:
-  required:
+  optional:
     - name: DOWNSTREAM_JOB_PARAMETER_1
       type: boolean
       description: Parameter just to check PERFORM_PING parameter pass.
