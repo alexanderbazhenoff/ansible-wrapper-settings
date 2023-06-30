@@ -259,12 +259,12 @@ actions:
   install lxc action name:
     playbook: run_role_playbook_name
 
-  # Run downstream `name_of_pipeline` and pass `DOWNSTREAM_JOB_PARAMETER_1` with `PERFORM_PING` upstream pipeline
-  # parameter value and `EMAIL` with `EMAIL` value. Do not propagate errors of a downstream pipeline, but wait for the
-  # completion. Finally, copy `test_file.txt` from `downstream_job_artifacts_folder_name` folder in workspace of
-  # `name_of_pipeline` as artifacts, but ignore when this file is absent. No fingerprints.
+  # Run `downstream-example-pipeline` and pass `DOWNSTREAM_JOB_PARAMETER_1` with `PERFORM_PING` upstream pipeline
+  # parameter value and `EMAIL` with `$EMAIL` value. Do not propagate errors of a downstream pipeline, but wait for the
+  # completion. Finally, copy `test_file.txt` to `downstream_job_artifacts_folder_name` folder in workspace of
+  # `downstream-example-pipeline` as artifacts, but ignore when this file is absent. Fingerprints are also enabled.
   run downstream job action name:
-    pipeline: name_of_pipeline
+    pipeline: downstream-example-pipeline
     parameters:
       # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter.
       - name: DOWNSTREAM_JOB_PARAMETER_1
@@ -361,7 +361,7 @@ scripts:
       // some kotlin code here to print 'PIPELINE_ACTION' and 'EMAIL' pipeline parameters:
       print (String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
   script_name_2:
-    # You can also set `#!/usr/bin/env python` hashbang.
+    # You can also set as a hashbang any environment that you want, e.g: `#!/usr/bin/env python`.
     script: |
       #!/usr/bin/env bash
       printf "Here is some output of LXCFS environment variable, which also a pipeline parameter: %s\n" "$LXCFS"
