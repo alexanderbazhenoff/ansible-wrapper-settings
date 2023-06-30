@@ -32,7 +32,7 @@ parameters:
       description: Parameter just to check PERFORM_PING parameter pass.
     - name: EMAIL
       type: string
-      description: Email just to check parameters pass.
+      description: Email just to check parameters pass.<br><br><br><br>
 
 
 stages:
@@ -55,4 +55,5 @@ actions:
 
 scripts:
   script_name: |
+    #!/usr/bin/env bash
     echo "This is a test file" > test_file.txt
