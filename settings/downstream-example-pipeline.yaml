@@ -54,6 +54,7 @@ actions:
 
 
 scripts:
-  script_name: |
-    #!/usr/bin/env bash
-    echo "This is a test file" > test_file.txt
+  script_name:
+    script: |
+      #!/usr/bin/env bash
+      echo "This is a test file" > test_file.txt
