@@ -549,8 +549,7 @@ actions:
 - **name** `[строка]` *(обязательный)* - имя набора файлов для сборки файлов с node (например,
 [stash в Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build)).
 Фактически служит идентификатором набора файлов.
-- **directory** `[строка]` *(необязательный)* - путь в который будет произведено копирование именованного набора файлов
-(заданного в `name`) (см. [Пример 14](#пример-14)). Если ключ не задан, то перенос будет произведен в текущую папку.
+Для задания пути для переноса файла используйте [ключ действия](#ключ-stages) `dir` (см. [Пример 14](#пример-14)).
 
 #### Пример 14
 
@@ -566,6 +565,7 @@ stages:
         node: my_node
       - action: unstash_files_from_node_action_name
         node: another_node
+        dir: my_unstash_folder
 
 actions:
   stash_files_from_node_action_name:
@@ -575,7 +575,6 @@ actions:
     allow_empty: True
   unstash_files_from_node_action_name:
     name: my_stash_name
-    directory: my_folder
 ```
 
 ### Action: запуск нижестоящего pipeline
