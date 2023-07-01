@@ -57,7 +57,7 @@ parameters:
       choices:
         - install lxc action name
         - show ansible hostname action name
-        - run downstream job action name
+        - run downstream job with artifacts action name
     # Just warn and not do not fail the whole pipeline when `EMAIL` value is empty. Regular expression defined as a
     # list, which will be merged into a huge string. You can also split parameters blocks using several `<br>` at the
     # end of description value.
@@ -231,6 +231,10 @@ stages:
         fail_only: True
         node:
           name: master
+      - before_message: Running a downstream pipeline without getting file artifacts just to check handling.
+        action: run downstream job action name
+      - before_message: Running a downstream pipeline with getting unexisting artifacts file.
+        action: run downstream job with incorrect artifacts file action name
 
 
 # All possible kinds of actions set here.
@@ -263,7 +267,7 @@ actions:
   # parameter value and `EMAIL` with `$EMAIL` value. Do not propagate errors of a downstream pipeline, but wait for the
   # completion. Finally, copy `test_file.txt` to `downstream_job_artifacts_folder_name` folder in workspace of
   # `downstream-example-pipeline` as artifacts, but ignore when this file is absent. Fingerprints are also enabled.
-  run downstream job action name:
+  run downstream job with artifacts action name:
     pipeline: downstream-example-pipeline
     parameters:
       # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter.
@@ -279,6 +283,32 @@ actions:
       fingerprint: True
       target_directory: downstream_job_artifacts_folder_name
       optional: True
+
+  # Run a downstream pipeline with getting unexisting artifacts file just to show error handling.
+  run downstream job with incorrect artifacts file action name:
+    pipeline: downstream-example-pipeline
+    parameters:
+      - name: DOWNSTREAM_JOB_PARAMETER_1
+        type: boolean
+        value: $PERFORM_PING
+      - name: EMAIL
+        type: string
+        value: $EMAIL
+    propagate: False
+    copy_artifacts:
+      filter: no_such_file.txt
+
+  # Run a downstream pipeline just to test is it possible to skip getting artifacts.
+  run downstream job action name:
+    pipeline: downstream-example-pipeline
+    parameters:
+      - name: DOWNSTREAM_JOB_PARAMETER_1
+        type: boolean
+        value: $PERFORM_PING
+      - name: EMAIL
+        type: string
+        value: $EMAIL
+
 
   # Stash any file in any subdirectory of `subdirectory_in_workspace_for_repository` folder in workspace with
   # `stash_name` naming.
