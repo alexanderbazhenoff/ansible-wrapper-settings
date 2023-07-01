@@ -269,7 +269,6 @@ actions:
   # `downstream-example-pipeline` as artifacts, but ignore when this file is absent. Fingerprints are also enabled.
   run downstream job with artifacts action name:
     pipeline: downstream-example-pipeline
-    propagate: False
     parameters:
       # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter.
       - name: DOWNSTREAM_JOB_PARAMETER_1
@@ -278,6 +277,7 @@ actions:
       - name: EMAIL
         type: string
         value: $EMAIL
+    propagate: False
     copy_artifacts:
       filter: test_file.txt
       fingerprint: True
