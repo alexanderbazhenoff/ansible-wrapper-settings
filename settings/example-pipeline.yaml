@@ -162,7 +162,7 @@ parameters:
     - name: LXCFS
       type: boolean
       default: False
-      description: Install lxcfs instead of lxc.
+      description: Install lxcfs instead of lxc.<br><br><br><br>
 
 
 stages:
