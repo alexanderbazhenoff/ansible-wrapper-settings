@@ -334,7 +334,7 @@ actions:
   # Archive the content of `settings` directory as pipeline artifact. There's no path specified, action already started
   # in `settings` directory.
   archive additional artifacts action name:
-    artifacts: *
+    artifacts: '*.*'
     allow_empty: True
 
   # Actions to run scripts.
