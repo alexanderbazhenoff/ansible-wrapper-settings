@@ -243,7 +243,7 @@ actions:
   git_clone_action_name:
     repo_url: https://github.com/alexanderbazhenoff/ansible-collection-linux.git
     repo_branch: main
-    directory: subdirectory_in_workspace_for_repository
+    directory: sources/subdirectory_in_workspace_for_repository
 
   # Install an ansible collections from Ansible Galaxy.
   ansible_galaxy_install_action_name:
