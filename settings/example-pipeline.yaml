@@ -324,8 +324,8 @@ actions:
   # `test_file.txt` file.
   action archive artifacts action name:
     artifacts: |
-      subdirectory_in_workspace_for_repository/roles/*.*, subdirectory_in_workspace_for_repository/test_file.txt
-    excludes: subdirectory_in_workspace_for_repository/roles/*.md
+      subdirectory_in_workspace_for_repository/roles/**/*.*, subdirectory_in_workspace_for_repository/test_file.txt
+    excludes: subdirectory_in_workspace_for_repository/roles/**/*.md
     allow_empty: True
 
   # Actions to run scripts.
