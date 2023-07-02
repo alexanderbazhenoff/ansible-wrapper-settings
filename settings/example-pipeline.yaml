@@ -176,7 +176,6 @@ stages:
       - before_message: Clone sources to make an artifacts just for example
         action: git_clone_action_name
         build_name: $PIPELINE_ACTION-$EMAIL--#$BUILD_NUMBER
-        dir: subdirectory_in_workspace_for_repository
       # Take a look at before, after, fail and success messages.
       - action: ansible_galaxy_install_action_name
         after_message: Installing collections to run lxfs ansible role done.
@@ -281,7 +280,7 @@ actions:
     copy_artifacts:
       filter: test_file.txt
       fingerprint: True
-      target_directory: downstream_job_artifacts_folder_name
+      target_directory: subdirectory_in_workspace_for_repository
       optional: True
 
   # Run a downstream pipeline with getting unexisting artifacts file just to show error handling.
