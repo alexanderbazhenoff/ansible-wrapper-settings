@@ -203,6 +203,7 @@ stages:
       - action: run custom code as a part of pipeline action name
       - action: run bash script action name
       - action: archive additional artifacts action name
+        dir: settings
 
   - name: stage_3
     actions:
