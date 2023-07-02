@@ -183,7 +183,7 @@ stages:
         success_message: Installing ansible collections finished.
         stop_on_fail: True
       - before message: |
-          Install comminity.docker collection just fo example of sing collection install, because it's not required.
+          Install community.docker collection just fo example of sing collection install, because it's not required.
         action: ansible_galaxy_install_action_name_2
       - action: $PIPELINE_ACTION
       - action: stash files action name
