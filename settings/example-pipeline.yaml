@@ -176,7 +176,7 @@ stages:
       - before_message: Clone sources to make an artifacts just for example
         action: git_clone_action_name
         build_name: $PIPELINE_ACTION-$EMAIL--#$BUILD_NUMBER
-        dir: sources
+        dir: subdirectory_in_workspace_for_repository
       # Take a look at before, after, fail and success messages.
       - action: ansible_galaxy_install_action_name
         after_message: Installing collections to run lxfs ansible role done.
@@ -243,7 +243,7 @@ actions:
   git_clone_action_name:
     repo_url: https://github.com/alexanderbazhenoff/ansible-collection-linux.git
     repo_branch: main
-    directory: sources/subdirectory_in_workspace_for_repository
+    directory: subdirectory_in_workspace_for_repository
 
   # Install an ansible collections from Ansible Galaxy.
   ansible_galaxy_install_action_name:
