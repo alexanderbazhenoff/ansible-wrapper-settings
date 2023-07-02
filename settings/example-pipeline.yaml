@@ -192,7 +192,7 @@ stages:
       - action: unstash files action name
         node:
           label: ansible29
-      - action: action archive artifacts action name
+      - action: archive artifacts action name
         node:
           label: ansible29
 
@@ -202,8 +202,9 @@ stages:
     actions:
       - action: run custom code as a part of pipeline action name
       - action: run bash script action name
-      - action: email report action name
-      - action: mattermost report action name
+      - before_message: Archive additional artifacts just to test with 'dir' key.
+        action: archive additional artifacts action name
+        dir: settings
 
   - name: stage_3
     actions:
@@ -234,6 +235,9 @@ stages:
         action: run downstream job action name
       - before_message: Running a downstream pipeline with getting unexisting artifacts file.
         action: run downstream job with incorrect artifacts file action name
+      # Finally, send all pipeline reports.
+      - action: email report action name
+      - action: mattermost report action name
 
 
 # All possible kinds of actions set here.
@@ -322,10 +326,15 @@ actions:
   # Archive as pipeline artifact any file from cloned from a git ansible collection, including unexisting file
   # `test_file.txt`, but except markdown files inside the roles. Do not fail the whole pipeline execution on unexisting
   # `test_file.txt` file.
-  action archive artifacts action name:
+  archive artifacts action name:
     artifacts: |
       subdirectory_in_workspace_for_repository/roles/**/*.*, subdirectory_in_workspace_for_repository/test_file.txt
     excludes: subdirectory_in_workspace_for_repository/roles/**/*.md
+
+  # Archive the content of `settings` directory as pipeline artifact. There's no path specified, action already started
+  # in `settings` directory.
+  archive additional artifacts action name:
+    artifacts: *
     allow_empty: True
 
   # Actions to run scripts.
@@ -350,6 +359,9 @@ actions:
 
       Overall report is:
       $multilineReport
+      
+      where failed actions are:
+      $multilineReportFailed
 
       Check pipeline console for details: $BUILD_URL/console
       This report was generated automatically, please do not reply.
