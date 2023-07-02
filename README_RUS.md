@@ -532,7 +532,7 @@ actions:
 
 ### Action: сборка файлов с node (stash)
 
-- **name** `[строка]` *(обязательный)* - имя набора файлов для сборки файлов с node (например,
+- **stash** `[строка]` *(обязательный)* - имя набора файлов для сборки файлов с node (например,
 [stash в Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build)).
 Фактически служит идентификатором набора файлов.
 - **includes** `[строка]` *(необязательный)* - маска пути и имен (или их список через запятую) для сборки файлов с node.
@@ -546,7 +546,7 @@ actions:
 
 ### Action: перенос файлов на node (unstash)
 
-- **name** `[строка]` *(обязательный)* - имя набора файлов для сборки файлов с node (например,
+- **unstash** `[строка]` *(обязательный)* - имя набора файлов для сборки файлов с node (например,
 [stash в Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build)).
 Фактически служит идентификатором набора файлов.
 Для задания пути для переноса файла используйте [ключ действия](#ключ-stages) `dir` (см. [Пример 14](#пример-14)).
@@ -556,7 +556,7 @@ actions:
 ```yaml
 # Фрагмент конфигурационного файла с описанием стадий и действия сборки файлов с node: из папки logs в workspace
 # на node 'my_node' в папку 'my_folder' в workspace на node 'another_node' копируются все файлы за исключением файлов
-# в json-формате. Допускается отсутствие файлов.
+# в json-формате. Допускается отсутствие файлов по условиям, заданным в `includes`, так как установлен `allow_empty`.
 
 stages:
   - name: stash_unstash
@@ -569,12 +569,12 @@ stages:
 
 actions:
   stash_files_from_node_action_name:
-    name: my_stash_name
+    stash: my_stash_name
     includes: logs/*
     excludes: logs/*.json
     allow_empty: True
   unstash_files_from_node_action_name:
-    name: my_stash_name
+    unstash: my_stash_name
 ```
 
 ### Action: запуск нижестоящего pipeline
