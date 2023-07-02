@@ -197,7 +197,7 @@ stages:
           label: ansible29
 
   - name: stage_2
-    # Actions in this (scripts and reports) stage will start in parallel.
+    # Actions in this stage will start in parallel.
     parallel: True
     actions:
       - action: run custom code as a part of pipeline action name
