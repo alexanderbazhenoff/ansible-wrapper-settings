@@ -202,9 +202,9 @@ stages:
     actions:
       - action: run custom code as a part of pipeline action name
       - action: run bash script action name
-      - before_message: Archive additional artifacts just to test with 'dir' key.
-        action: archive additional artifacts action name
-        dir: settings
+      #- before_message: Archive additional artifacts just to test with 'dir' key.
+      #  action: archive additional artifacts action name
+      #  dir: settings
 
   - name: stage_3
     actions:
@@ -235,6 +235,9 @@ stages:
         action: run downstream job action name
       - before_message: Running a downstream pipeline with getting unexisting artifacts file.
         action: run downstream job with incorrect artifacts file action name
+
+  - name: stage_4
+    actions:
       # Finally, send all pipeline reports.
       - action: email report action name
       - action: mattermost report action name
