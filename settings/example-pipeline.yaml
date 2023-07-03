@@ -316,6 +316,9 @@ actions:
       - name: DOWNSTREAM_JOB_PARAMETER_1
         type: boolean
         value: $PERFORM_PING
+      - name: DOWNSTREAM_JOB_PARAMETER_2
+        type: string
+        value: $multilineReport
       - name: EMAIL
         type: string
         value: $EMAIL

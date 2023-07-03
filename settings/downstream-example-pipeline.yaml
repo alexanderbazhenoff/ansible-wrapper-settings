@@ -29,7 +29,10 @@ parameters:
   optional:
     - name: DOWNSTREAM_JOB_PARAMETER_1
       type: boolean
-      description: Parameter just to check PERFORM_PING parameter pass.
+      description: Parameter to check PERFORM_PING parameter pass from upstream pipeline.
+    - name: DOWNSTREAM_JOB_PARAMETER_2
+      type: text
+      description: Just to pass report text from upstream pipeline.
     - name: EMAIL
       type: string
       description: Email just to check parameters pass.<br><br><br><br>
@@ -57,4 +60,4 @@ scripts:
   script_name:
     script: |
       #!/usr/bin/env bash
-      echo "This is a test file" > test_file.txt
+      echo "This is a test file.\n$DOWNSTREAM_JOB_PARAMETER_2" > test_file.txt
