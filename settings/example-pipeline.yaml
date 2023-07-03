@@ -245,8 +245,8 @@ stages:
   - name: report_stage
     actions:
       # Send all pipeline reports.
-      - action: email report action name
-      - action: mattermost report action name
+      #- action: email report action name
+      #- action: mattermost report action name
       # Save formatted reports. This action will save only previous action and stages reports.
       - action: save formatted reports script action name
       # And finally archive them as pipeline file artifacts.
