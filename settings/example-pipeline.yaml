@@ -202,7 +202,9 @@ stages:
     actions:
       - action: run custom code as a part of pipeline action name
       - action: run bash script action name
-      - action: archive additional artifacts action name
+      - before_message: Archive additional artifacts...
+        action: archive additional artifacts action name
+        success_message: Additional artifacts was successfully archived.
         dir: settings
 
   - name: stage_3
@@ -237,9 +239,13 @@ stages:
 
   - name: report_stage
     actions:
-      # Finally, send all pipeline reports.
+      # Send all pipeline reports.
       - action: email report action name
       - action: mattermost report action name
+      # Save formatted reports. This action will save only previous action and stages reports.
+      - action: save formatted reports script action name
+      # And finally archive them as pipeline file artifacts.
+      - action: archive reports files as artifacts action name
 
 
 # All possible kinds of actions set here.
@@ -337,7 +343,10 @@ actions:
   # in `settings` directory.
   archive additional artifacts action name:
     artifacts: '*.*'
-    allow_empty: True
+
+  # Archive reports artifacts.
+  archive reports files as artifacts action name:
+    artifacts: 'actions_report.txt, stages_report.txt'
 
   # Actions to run scripts.
   run custom code as a part of pipeline action name:
@@ -386,9 +395,12 @@ actions:
       ```
       Please ignore this automatic report.
 
-  # Run a final script that exits with error (but this will be ignored by setting up the key `ignore_fail` in `stages`.
+  # Run a script that exits with error (but this will be ignored by setting up the key `ignore_fail` in `stages`).
   run bash final script action name:
     script: script_name_3
+
+  save formatted reports script action name:
+    script: save_formatted_reports_script_script_name
 
 
 # All possible kinds of script running here.
@@ -404,6 +416,7 @@ scripts:
     teamcity: |
       // some kotlin code here to print 'PIPELINE_ACTION' and 'EMAIL' pipeline parameters:
       print (String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
+
   script_name_2:
     # You can also set as a hashbang any environment that you want, e.g: `#!/usr/bin/env python`.
     script: |
@@ -412,10 +425,18 @@ scripts:
       printf "while the whole environment variables looks like: %s\n" "$(env)"
 
   script_name_3:
+    # This bash script with error code shows you error handling in actions.
     script: |
       #!/usr/bin/env bash
       echo "All done, but exit 1."
       exit 1
+
+  save_formatted_reports_script_script_name:
+    # Save action and stage reports to text files.
+    script: |
+      #!/usr/bin/env bash
+      echo "$multilineReport" > actions_report.txt
+      echo "$multilineReportStages" > stages_report.txt
 
 
 # Playbooks are here, where ansible ping will be skipped when `PERFORM_PING` pipeline parameter wasn't set.
