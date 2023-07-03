@@ -235,7 +235,7 @@ stages:
       - before_message: Running a downstream pipeline with getting unexisting artifacts file.
         action: run downstream job with incorrect artifacts file action name
 
-  - name: stage_4
+  - name: report_stage
     actions:
       # Finally, send all pipeline reports.
       - action: email report action name
