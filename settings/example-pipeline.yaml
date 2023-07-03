@@ -150,6 +150,11 @@ parameters:
         - '|(?=[\["()<>@,;:\\".\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*\>(?:('
         - '?:\r\n)?[ \t])*))*)?;\s*)'
       description: Email to send report.<br><br><br><br>
+    - name: DOWNSTREAM_PIPELINE_NAME
+      type: string
+      default: downstream-example-pipeline
+      description: Downstream pipeline name.<br><br><br><br>
+
 
   optional:
     # Obviously, if boolean parameters are already injected to pipeline it will always be defined. So you don't need to
@@ -279,12 +284,15 @@ actions:
   # completion. Finally, copy `test_file.txt` to `downstream_job_artifacts_folder_name` folder in workspace of
   # `downstream-example-pipeline` as artifacts, but ignore when this file is absent. Fingerprints are also enabled.
   run downstream job with artifacts action name:
-    pipeline: downstream-example-pipeline
+    pipeline: $DOWNSTREAM_PIPELINE_NAME
     parameters:
       # Take a look at value pass: you should pass a value as `$FOO` for boolean parameter.
       - name: DOWNSTREAM_JOB_PARAMETER_1
         type: boolean
         value: $PERFORM_PING
+      - name: DOWNSTREAM_JOB_PARAMETER_2
+        type: string
+        value: $multilineReport
       - name: EMAIL
         type: string
         value: $EMAIL
@@ -297,11 +305,14 @@ actions:
 
   # Run a downstream pipeline with getting unexisting artifacts file just to show error handling.
   run downstream job with incorrect artifacts file action name:
-    pipeline: downstream-example-pipeline
+    pipeline: $DOWNSTREAM_PIPELINE_NAME
     parameters:
       - name: DOWNSTREAM_JOB_PARAMETER_1
         type: boolean
         value: $PERFORM_PING
+      - name: DOWNSTREAM_JOB_PARAMETER_2
+        type: string
+        value: $multilineReport
       - name: EMAIL
         type: string
         value: $EMAIL
@@ -311,7 +322,7 @@ actions:
 
   # Run a downstream pipeline just to test is it possible to skip getting artifacts.
   run downstream job action name:
-    pipeline: downstream-example-pipeline
+    pipeline: $DOWNSTREAM_PIPELINE_NAME
     parameters:
       - name: DOWNSTREAM_JOB_PARAMETER_1
         type: boolean
