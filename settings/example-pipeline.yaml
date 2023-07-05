@@ -404,9 +404,11 @@ actions:
     text: |
       Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME.
       Overall report is:
+      
       ```
       $multilineReport
       ```
+      
       Please ignore this automatic report.
 
   # Run a script that exits with error (but this will be ignored by setting up the key `ignore_fail` in `stages`).
