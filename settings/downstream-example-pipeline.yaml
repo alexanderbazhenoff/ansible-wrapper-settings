@@ -60,4 +60,5 @@ scripts:
   script_name:
     script: |
       #!/usr/bin/env bash
-      echo "This is a test file.\n$DOWNSTREAM_JOB_PARAMETER_2" > test_file.txt
+      echo "This is a test file." > test_file.txt
+      echo "$DOWNSTREAM_JOB_PARAMETER_2" > test_file.txt
