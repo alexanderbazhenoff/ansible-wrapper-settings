@@ -374,7 +374,6 @@ actions:
   email report action name:
     report: email
     to: $EMAIL
-    reply_to: $EMAIL
     subject: Test email report
     body: |
       Hi,
