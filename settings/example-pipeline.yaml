@@ -379,7 +379,7 @@ actions:
       Hi,
 
       I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME' pipeline, finished with
-      '$currentBuild_result' state. As you see sending report to $EMAIL done.
+      $currentBuild_result state. As you see sending report to $EMAIL done.
 
       Overall report is:
       $multilineReport
@@ -387,11 +387,11 @@ actions:
       where failed actions are:
       $multilineReportFailed
 
-      Check pipeline console for details: $BUILD_URL/console
+      Check pipeline console for details: $BUILD_URLconsole
       This report was generated automatically, please do not reply.
 
       Sincerely,
-      Your Jenkins.
+      Your CI system.
 
   # Action that sends mattermost report to mattermost.com using token with pipeline name and stages and actions report
   # table.
