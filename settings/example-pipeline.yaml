@@ -387,7 +387,7 @@ actions:
       where failed actions are:
       $multilineReportFailed
 
-      Check pipeline console for details: $BUILD_URLconsole
+      Check pipeline console for details: $BUILD_URL/console
       This report was generated automatically, please do not reply.
 
       Sincerely,
