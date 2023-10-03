@@ -406,7 +406,7 @@ actions:
   clone_git_repository:
     repo_url: https://github.com/alexanderbazhenoff/ansible-collection-linux.git
     repo_branch: main
-    directory: subdirectory_in_workspace_for_repository
+    directory: ansible-collection-linux
   install_ansible_collection:
     script: install_collection_script
   install:
