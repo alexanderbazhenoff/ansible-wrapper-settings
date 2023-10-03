@@ -461,7 +461,7 @@ playbooks:
 
           - name: $ROLE_ACTION $ROLE_SUBJECT
             ansible.builtin.include_role:
-              name: common.linux.postgresql
+              name: alexanderbazhenoff.linux.postgresql
             vars:
               role_action: $ROLE_ACTION
               role_subject: $ROLE_SUBJECT
@@ -476,7 +476,8 @@ playbooks:
               install_psycopg2: $INSTALL_PSYCOPG2
               postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
               firewall_control: $FIREWALL_CONTROL
-              postgresql_conf: $POSTGRESQL_CONF
+              postgresql_conf: >
+                {{ '$POSTGRESQL_CONF' | default({}) | combine ( { item.split(':')[0]: item.split(':')[1] } ) }}
               pg_conf_content_mode: $PG_CONF_CONTENT_MODE
               hba_conf_content: $HBA_CONF_CONTENT
               postgresql_additional_packages:
@@ -513,7 +514,7 @@ playbooks:
 
           - name: $ROLE_ACTION $ROLE_SUBJECT
             ansible.builtin.include_role:
-              name: common.linux.postgresql
+              name: alexanderbazhenoff.linux.postgresql
             vars:
               role_action: $ROLE_ACTION
               role_subject: $ROLE_SUBJECT
