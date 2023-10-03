@@ -219,7 +219,7 @@ parameters:
         single 'quotes of value'.
       regex_replace:
         regex: \n
-        to: '\n            '
+        to: '\\n            '
     - name: PG_CONF_CONTENT_MODE
       type: choice
       choices:
