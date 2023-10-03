@@ -432,11 +432,12 @@ actions:
 
 
 scripts:
-  install_collection_script: |
-    #!/usr/bin/env bash
-    cd ansible-collection-linux || exit 1
-    ansible-galaxy collection build
-    ansible-galaxy collection install $(ls -1 | grep ".tar.gz")
+  install_collection_script:
+    script: |
+      #!/usr/bin/env bash
+      cd ansible-collection-linux || exit 1
+      ansible-galaxy collection build
+      ansible-galaxy collection install $(ls -1 | grep ".tar.gz")
 
 playbooks:
   install_uninstall_configure: |
