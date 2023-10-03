@@ -447,7 +447,7 @@ playbooks:
         gather_facts: True
 
         vars:
-          postgresql_conf_string: $POSTGRESQL_CONF
+          postgresql_conf_string: ${POSTGRESQL_CONF}
 
         tasks:
 
