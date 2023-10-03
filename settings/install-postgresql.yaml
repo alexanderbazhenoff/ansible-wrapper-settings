@@ -449,10 +449,6 @@ playbooks:
         become_method: sudo
         gather_facts: True
 
-        vars:
-          postgresql_conf_string: >
-            $POSTGRESQL_CONF
-
         tasks:
 
           - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
@@ -483,8 +479,8 @@ playbooks:
               install_psycopg2: $INSTALL_PSYCOPG2
               postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
               firewall_control: $FIREWALL_CONTROL
-              postgresql_conf: "{{ postgresql_conf_string | default({}) | 
-                combine( { item.split(':')[0]: item.split(':')[1] } ) }}"
+              postgresql_conf: >
+                $POSTGRESQL_CONF
               pg_conf_content_mode: $PG_CONF_CONTENT_MODE
               hba_conf_content: $HBA_CONF_CONTENT
               postgresql_additional_packages:
