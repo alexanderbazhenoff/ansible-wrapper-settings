@@ -217,6 +217,9 @@ parameters:
         Parameters from postgresql.conf with the same name here (see
         <a href=https://www.postgresql.org/docs/current/config-setting.html>documentation</a>). Double quotes to keep
         single 'quotes of value'.
+      regex_replace:
+        regex: '\n'
+        to: '            '
     - name: PG_CONF_CONTENT_MODE
       type: choice
       choices:
@@ -447,7 +450,8 @@ playbooks:
         gather_facts: True
 
         vars:
-          postgresql_conf_string: ${POSTGRESQL_CONF}
+          postgresql_conf_string: >
+            $POSTGRESQL_CONF
 
         tasks:
 
