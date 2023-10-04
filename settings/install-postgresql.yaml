@@ -480,7 +480,7 @@ playbooks:
               postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
               firewall_control: $FIREWALL_CONTROL
               postgresql_conf: |
-                $POSTGRESQL_CONF
+                {{ '$POSTGRESQL_CONF' | default({}) | combine ( { item.split(':')[0]: item.split(':')[1] } ) }}
               pg_conf_content_mode: $PG_CONF_CONTENT_MODE
               hba_conf_content: $HBA_CONF_CONTENT
               postgresql_additional_packages:
