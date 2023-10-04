@@ -219,7 +219,7 @@ parameters:
         single 'quotes of value'.
       regex_replace:
         regex: \n
-        to: '\\n            '
+        to: '\n            '
     - name: PG_CONF_CONTENT_MODE
       type: choice
       choices:
@@ -479,7 +479,7 @@ playbooks:
               install_psycopg2: $INSTALL_PSYCOPG2
               postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
               firewall_control: $FIREWALL_CONTROL
-              postgresql_conf: >
+              postgresql_conf: |
                 $POSTGRESQL_CONF
               pg_conf_content_mode: $PG_CONF_CONTENT_MODE
               hba_conf_content: $HBA_CONF_CONTENT
