@@ -215,7 +215,7 @@ parameters:
         listen_addresses: "'*'"
       regex_replace:
         regex: \n
-        to: '\n                '
+        to: '\\n                '
       description: >-
         Parameters from postgresql.conf with the same name here (see
         <a href=https://www.postgresql.org/docs/current/config-setting.html>documentation</a>). Double quotes to keep
