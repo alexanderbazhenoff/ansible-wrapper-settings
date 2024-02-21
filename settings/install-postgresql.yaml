@@ -214,7 +214,7 @@ parameters:
         superuser_reserved_connections: 3
         listen_addresses: "'*'"
       regex_replace:
-        regex: '\n$'
+        regex: \n
         to: '                \n'
       description: >-
         Parameters from postgresql.conf with the same name here (see
