@@ -4,7 +4,7 @@
 # alexanderbazhenoff.linux.postgresql ansible role: https://galaxy.ansible.com/alexanderbazhenoff/linux
 
 
-# Copyright (c) 2023 Alexander Bazhenov.
+# Copyright (c) 2023-2024 Alexander Bazhenov.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -476,9 +476,11 @@ playbooks:
               install_psycopg2: $INSTALL_PSYCOPG2
               postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
               firewall_control: $FIREWALL_CONTROL
-              postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') }}"
+              postgresql_conf: |
+                {{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') }}
               pg_conf_content_mode: $PG_CONF_CONTENT_MODE
-              hba_conf_content: $HBA_CONF_CONTENT
+              hba_conf_content: |
+                {{ lookup('ansible.builtin.env', 'HBA_CONF_CONTENT') }}
               postgresql_additional_packages:
                 - "{{ '$POSTGRESQL_ADDITIONAL_PACKAGES'.split(' ') | list }}"
 
