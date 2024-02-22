@@ -1,9 +1,11 @@
 ---
 
+# yamllint settings for 'unversal wrapper pipeline settings':
+# https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings
+
 extends: default
 ignore: |
   README.md
-  LICENSE
 
 rules:
   braces:
@@ -20,7 +22,7 @@ rules:
     level: error
   comments: disable
   comments-indentation: disable
-  document-start: disable
+  document-start: enable
   empty-lines:
     max: 2
     level: error
@@ -36,5 +38,5 @@ rules:
     type: unix
   trailing-spaces: enable
   truthy:
-    allowed-values: ['true', 'false']  # yamllint disable-line rule:truthy
+    allowed-values: ['True', 'False']
     check-keys: True
