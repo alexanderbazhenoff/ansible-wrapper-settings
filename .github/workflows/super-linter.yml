@@ -6,6 +6,7 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - '*'
 permissions: read-all
+
 jobs:
   build:
     name: Lint
@@ -28,7 +29,7 @@ jobs:
       - name: Super-linter
         uses: super-linter/super-linter@latest
         env:
-          VALIDATE_NATURAL_LANGUAGE: 'false'
+          VALIDATE_NATURAL_LANGUAGE: false  # yamllint disable-line rule:truthy
           DEFAULT_BRANCH: main
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
