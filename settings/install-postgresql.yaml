@@ -451,9 +451,13 @@ playbooks:
           - name: "Debugging formatting set fact"
             ansible.builtin.set_fact:
               dbg_postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | from_yaml }}"
+              dbg_postgresql_pkgs: "{{ '$POSTGRESQL_ADDITIONAL_PACKAGES'.split(' ') | list }}"
           - name: "Debugging formatting"
             ansible.builtin.debug:
               var: dbg_postgresql_conf
+          - name: "Debugging formatting"
+            ansible.playbook.debug:
+              var: dbg_postgresql_pkgs
 
           - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
             ansible.builtin.assert:
