@@ -2,9 +2,8 @@
 name: Super-Linter
 
 on:  # yamllint disable-line rule:truthy
-  push:
-    branches:
-      - '*'
+  push: null
+  pull_request: null
 permissions: read-all
 
 jobs:
