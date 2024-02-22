@@ -506,7 +506,8 @@ playbooks:
                   | regex_search('^create|drop|dump|rename|restore')) or
                   ('$ROLE_SUBJECT' == 'schemas' and '$ROLE_ACTION' | regex_search('^create|grant|revoke|drop')) or
                   ('$ROLE_SUBJECT' == 'privileges' and '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop')) or
-                  ('$ROLE_SUBJECT' == 'slots' and '$ROLE_ACTION' | regex_search('^create|drop'))
+                  ('$ROLE_SUBJECT' == 'slots' and '$ROLE_ACTION' | regex_search('^create|drop') or
+                  ('$ROLE_ACTION' == 'configure' and '$ROLE_SUBJECT' | regex_search('^hba_conf|postgresql_conf))
               fail_msg: >-
                 ROLE_SUBJECT=$ROLE_SUBJECT is not allowed for ROLE_ACTION=$ROLE_ACTION. Possible values are:
                 {% if '$ROLE_SUBJECT' == 'users' and not '$ROLE_ACTION' | regex_search('^create|drop') -%}
