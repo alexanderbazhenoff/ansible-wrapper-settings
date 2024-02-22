@@ -450,7 +450,7 @@ playbooks:
 
           - name: "Debugging formatting set fact"
             ansible.builtin.set_fact:
-              dbg_postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | map('from_yaml') }}"
+              dbg_postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | from_yaml }}"
           - name: "Debugging formatting"
             ansible.builtin.debug:
               var: dbg_postgresql_conf
