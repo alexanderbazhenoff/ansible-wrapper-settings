@@ -451,7 +451,8 @@ playbooks:
           - name: "Debugging formatting set fact"
             ansible.builtin.set_fact:
               dbg_postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | from_yaml }}"
-              dbg_postgresql_pkgs: "{{ lookup('ansible.builtin.env', '$POSTGRESQL_ADDITIONAL_PACKAGES') | split(' ') }}"
+              dbg_postgresql_pkgs: "{{ lookup('ansible.builtin.env', '$POSTGRESQL_ADDITIONAL_PACKAGES') | trim | 
+                split(' ') }}"
           - name: "Debugging formatting"
             ansible.builtin.debug:
               var: dbg_postgresql_conf
