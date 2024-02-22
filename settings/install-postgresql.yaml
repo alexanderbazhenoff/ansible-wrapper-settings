@@ -456,7 +456,7 @@ playbooks:
             ansible.builtin.debug:
               var: dbg_postgresql_conf
           - name: "Debugging formatting"
-            ansible.playbook.debug:
+            ansible.builtin.debug:
               var: dbg_postgresql_pkgs
 
           - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
