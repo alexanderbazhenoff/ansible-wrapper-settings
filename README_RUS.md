@@ -1,11 +1,7 @@
 # UNIVERSAL WRAPPER PIPELINE SETTINGS
 
-
-Набор конфигураций для 
-[universal wrapper pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline). Для ознакомления
-с функционалом pipeline'а можно перейти по
-[этой](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) ссылке, ниже будет представлено 
-подробное описание непосредственно самого формата [конфигурационных файлов](#основные-ключи-конфигурационных-файлов). 
+Описание формата [конфигурационных файлов](#основные-ключи-конфигурационных-файлов) для
+[Universal Jenkins Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) версии 1.0.0.
 
 Конфигурационный файл Universal Wrapper Pipeline должен соответствовать всем
 [стандартам yaml-синтаксиса](https://yaml.org/). На каждый wrapper pipeline - один файл (но возможны исключения с
