@@ -1,7 +1,7 @@
 ---
 
-# This is an 'install-postgresql' pipeline settings for 'universal-wrapper-pipeline', a wrapper for
-# alexanderbazhenoff.linux.postgresql ansible role: https://galaxy.ansible.com/alexanderbazhenoff/linux
+# 'Install Postgresql' Universal Wrapper Pipeline Settings,
+# a wrapper for alexanderbazhenoff.linux.postgresql ansible role.
 
 
 # Copyright (c) 2023-2024 Alexander Bazhenov.

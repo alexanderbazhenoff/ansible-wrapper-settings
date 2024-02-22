@@ -24,7 +24,7 @@ wrapper pipeline'ов c разными именами).
 
 Константа в pipeline имеет следующее значение:
 ```groovy
-final PipelineNameRegexReplace = ['^(admin|devops|qa)_'] as ArrayList
+final List PipelineNameRegexReplace = ['^(admin|devops|qa)_']
 ```
 Следовательно, pipeline'ы с именами:
 `admin_example-pipeline`, `devops_example-pipeline` и `qa_example-pipeline` будут ссылаться на один и тот же
