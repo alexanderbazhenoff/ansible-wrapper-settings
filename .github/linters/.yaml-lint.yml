@@ -1,6 +1,6 @@
 ---
 
-# yamllint settings for 'unversal wrapper pipeline settings':
+# yamllint settings for 'Universal Wrapper Pipeline Settings':
 # https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings
 
 extends: default
