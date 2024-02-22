@@ -28,6 +28,7 @@ jobs:
       - name: Super-linter
         uses: super-linter/super-linter@latest
         env:
+          VALIDATE_NATURAL_LANGUAGE: 'false'
           DEFAULT_BRANCH: main
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

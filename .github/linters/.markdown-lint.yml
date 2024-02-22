@@ -6,6 +6,8 @@ default: True
 # Path to configuration file to extend
 extends: null
 
+MD001: False
+
 # MD009/no-trailing-spaces : Trailing spaces : https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/md009.md
 MD009:
   # Spaces for line break
