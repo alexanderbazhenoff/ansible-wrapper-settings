@@ -448,9 +448,12 @@ playbooks:
 
         tasks:
 
-          - name: "Debugging format"
+          - name: "Debugging formatting set fact"
+            ansible.builtin.set_fact:
+              dbg_postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | map('from_yaml') }}"
+          - name: "Debugging formatting"
             ansible.builtin.debug:
-              msg: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | map('from_yaml') }}"
+              var: dbg_postgresql_conf
 
           - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
             ansible.builtin.assert:
