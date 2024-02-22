@@ -7,7 +7,7 @@
 # Russian: https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/blob/main/README_RUS.md
 
 
-# Copyright (c) 2023 Alexander Bazhenov.
+# Copyright (c) 2023-2024 Alexander Bazhenov.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -383,7 +383,7 @@ actions:
 
       Overall report is:
       $multilineReport
-      
+
       where failed actions are:
       $multilineReportFailed
 
@@ -403,11 +403,11 @@ actions:
     text: |
       Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME.
       Overall report is:
-      
+
       ```
       $multilineReport
       ```
-      
+
       Please ignore this automatic report.
 
   # Run a script that exits with error (but this will be ignored by setting up the key `ignore_fail` in `stages`).
