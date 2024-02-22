@@ -492,7 +492,8 @@ playbooks:
 
           - name: "Debugging formatting set fact"
             ansible.builtin.set_fact:
-              dbg_postgresql_users: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_USERS') | list | trim }}"
+              dbg_postgresql_users: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_USERS').splitlines() | 
+                map('from_yaml') | list }}"
 
           - name: "Debugging formatting dbg_postgresql_users"
             ansible.builtin.debug:
