@@ -213,10 +213,6 @@ parameters:
         max_connections: 100
         superuser_reserved_connections: 3
         listen_addresses: "'*'"
-      regex_replace:
-        regex: \n
-        to: |
-          '                '
       description: >-
         Parameters from postgresql.conf with the same name here (see
         <a href=https://www.postgresql.org/docs/current/config-setting.html>documentation</a>). Double quotes to keep
@@ -452,6 +448,10 @@ playbooks:
 
         tasks:
 
+          - name: "Debugging format"
+            ansible.builtin.debug:
+              msg: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | map('from_yaml') }}"
+
           - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
             ansible.builtin.assert:
               that:
@@ -480,8 +480,7 @@ playbooks:
               install_psycopg2: $INSTALL_PSYCOPG2
               postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
               firewall_control: $FIREWALL_CONTROL
-              postgresql_conf:
-                $POSTGRESQL_CONF
+              postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | map('from_yaml') }}"
               pg_conf_content_mode: $PG_CONF_CONTENT_MODE
               hba_conf_content: |
                 {{ lookup('ansible.builtin.env', 'HBA_CONF_CONTENT') }}
