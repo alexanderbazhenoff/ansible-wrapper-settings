@@ -483,7 +483,7 @@ playbooks:
               install_psycopg2: $INSTALL_PSYCOPG2
               postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
               firewall_control: $FIREWALL_CONTROL
-              postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | map('from_yaml') }}"
+              postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | from_yaml }}"
               pg_conf_content_mode: $PG_CONF_CONTENT_MODE
               hba_conf_content: |
                 {{ lookup('ansible.builtin.env', 'HBA_CONF_CONTENT') }}
