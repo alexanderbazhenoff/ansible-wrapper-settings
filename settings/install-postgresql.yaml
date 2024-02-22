@@ -455,9 +455,9 @@ playbooks:
                   ('$ROLE_ACTION' == '^configure' and '$ROLE_SUBJECT' | regex_search('^hba_conf|postgresql_conf'))
               fail_msg: >-
                 ROLE_SUBJECT=$ROLE_SUBJECT is not allowed for ROLE_ACTION=$ROLE_ACTION. Possible values are:
-                {% if '$ROLE_ACTION' == '^configure' and not '$ROLE_SUBJECT' | regex_search('^hba|postgresql') -%}
-                'hba_conf' or 'postgresql_conf'{% elif '$ROLE_ACTION' | regex_search('install') and
-                not '$ROLE_SUBJECT' | regex_search('^server|pgadmin') %}'server' or 'pgadmin'{% endif %}
+                {% if '$ROLE_ACTION' == 'configure' and not '$ROLE_SUBJECT' | regex_search('^hba|postgresql') -%}
+                'hba_conf' or 'postgresql_conf'{% elif '$ROLE_ACTION' == 'install' and not '$ROLE_SUBJECT' |
+                regex_search('^server|pgadmin') %}'server' or 'pgadmin'{% endif %}
 
           - name: $ROLE_ACTION $ROLE_SUBJECT
             ansible.builtin.include_role:
@@ -506,8 +506,7 @@ playbooks:
                   | regex_search('^create|drop|dump|rename|restore')) or
                   ('$ROLE_SUBJECT' == 'schemas' and '$ROLE_ACTION' | regex_search('^create|grant|revoke|drop')) or
                   ('$ROLE_SUBJECT' == 'privileges' and '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop')) or
-                  ('$ROLE_SUBJECT' == 'slots' and '$ROLE_ACTION' | regex_search('^create|drop')) or
-                  ('$ROLE_ACTION' == 'configure' and '$ROLE_SUBJECT' | regex_search('^hba_conf|postgresql_conf))
+                  ('$ROLE_SUBJECT' == 'slots' and '$ROLE_ACTION' | regex_search('^create|drop'))
               fail_msg: >-
                 ROLE_SUBJECT=$ROLE_SUBJECT is not allowed for ROLE_ACTION=$ROLE_ACTION. Possible values are:
                 {% if '$ROLE_SUBJECT' == 'users' and not '$ROLE_ACTION' | regex_search('^create|drop') -%}
@@ -517,9 +516,7 @@ playbooks:
                 '$ROLE_ACTION' | regex_search('^create|grant|revoke|drop') %}create|grant|revoke|drop
                 {% elif '$ROLE_SUBJECT' == 'privileges' and not
                 '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop') %}grant|create|revoke|drop
-                {% elif '$ROLE_SUBJECT' == 'slots' and not '$ROLE_ACTION' | regex_search('^create|drop') %}create|drop
-                {% elif '$ROLE_ACTION' == 'configure' and not '$ROLE_SUBJECT' | 
-                regex_search('^hba_conf|postgresql_conf) %}hba_conf|postgresql_conf{% endif %}
+                {% elif '$ROLE_SUBJECT' == 'slots' and not '$ROLE_ACTION' | regex_search('^create|drop') %}{% endif %}
 
           - name: $ROLE_ACTION $ROLE_SUBJECT
             ansible.builtin.include_role:
