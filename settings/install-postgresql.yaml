@@ -452,7 +452,7 @@ playbooks:
             ansible.builtin.assert:
               that:
                 - ('$ROLE_ACTION' | regex_search('install') and '$ROLE_SUBJECT' | regex_search('^server|pgadmin')) or
-                  ('$ROLE_ACTION' == '^configure' and '$ROLE_SUBJECT' | regex_search('^hba_conf|postgresql_conf'))
+                  ('$ROLE_ACTION' == 'configure' and '$ROLE_SUBJECT' | regex_search('^hba_conf|postgresql_conf'))
               fail_msg: >-
                 ROLE_SUBJECT=$ROLE_SUBJECT is not allowed for ROLE_ACTION=$ROLE_ACTION. Possible values are:
                 {% if '$ROLE_ACTION' == 'configure' and not '$ROLE_SUBJECT' | regex_search('^hba|postgresql') -%}
