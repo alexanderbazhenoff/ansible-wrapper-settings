@@ -525,7 +525,7 @@ playbooks:
             vars:
               role_action: $ROLE_ACTION
               role_subject: $ROLE_SUBJECT
-#              postgresql_users: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_USERS') | list }}
+              postgresql_users: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_USERS') | from_yaml }}"
 #              postgresql_databases: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_DATABASES') }}
 #              postgresql_schemas: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_SCHEMAS') }}
 #              postgresql_privileges: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_PRIVILEGES') }}
