@@ -27,7 +27,7 @@ parameters:
       description: Space separated IP or DNS list of the host(s) to perform ROLE_ACTION and ROLE_SUBJECT.
       regex_replace:
         regex: ' '
-        to: \\n
+        to: "\n"
     - name: SSH_LOGIN
       type: string
       regex: ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$
@@ -452,7 +452,6 @@ playbooks:
             ansible.builtin.set_fact:
               dbg_postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | from_yaml }}"
               dbg_postgresql_pkgs: "{{ '$POSTGRESQL_ADDITIONAL_PACKAGES'.split(' ') | trim }}"
-              dbg_ip_addresses: "{{ lookup('ansible.builtin.env', 'IP_ADDRESSES') }}"
 
           - name: "Debugging formatting dbg_postgresql_conf"
             ansible.builtin.debug:
@@ -461,10 +460,6 @@ playbooks:
           - name: "Debugging formatting dbg_postgresql_pkgs"
             ansible.builtin.debug:
               var: dbg_postgresql_pkgs
-
-          - name: "Debugging formatting dbg_ip_addresses"
-            ansible.builtin.debug:
-              var: dbg_ip_addresses
 
           - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
             ansible.builtin.assert:
