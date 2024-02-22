@@ -244,6 +244,9 @@ parameters:
       default: |
         - name: username
           password: my_password
+      regex_replace:
+        regex: ' '
+        to: "\\\n                "
       description: >-
         <b>User (role) management.</b><br><br>
         List of postgresql users (roles) parameters to perform role action (create, alter or drop) from database
@@ -493,7 +496,7 @@ playbooks:
           - name: "Debugging formatting set fact"
             ansible.builtin.set_fact:
               dbg_postgresql_users: 
-                - "{{ lookup('ansible.builtin.env', 'POSTGRESQL_USERS') | list }}"
+                $POSTGRESQL_USERS
 
           - name: "Debugging formatting dbg_postgresql_users"
             ansible.builtin.debug:
