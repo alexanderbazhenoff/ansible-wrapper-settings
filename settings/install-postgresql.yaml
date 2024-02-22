@@ -515,8 +515,8 @@ playbooks:
                 {% elif '$ROLE_SUBJECT' == 'schemas' and not
                 '$ROLE_ACTION' | regex_search('^create|grant|revoke|drop') %}create|grant|revoke|drop
                 {% elif '$ROLE_SUBJECT' == 'privileges' and not
-                '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop' %}grant|create|revoke|drop
-                {% elif '$ROLE_SUBJECT' == 'slots' and '$ROLE_ACTION' | regex_search('^create|drop') %}create|drop
+                '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop') %}grant|create|revoke|drop
+                {% elif '$ROLE_SUBJECT' == 'slots' and not '$ROLE_ACTION' | regex_search('^create|drop') %}create|drop
                 {% endif %}
 
           - name: $ROLE_ACTION $ROLE_SUBJECT
