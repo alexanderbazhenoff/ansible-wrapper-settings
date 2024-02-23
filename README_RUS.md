@@ -1,6 +1,8 @@
-# Описание формата конфигурационных файлов для Universal Wrapper Pipeline
+<!-- markdownlint-disable MD001 MD007 MD025 -->
+# Описание формата конфигурационных файлов для [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
 
 [![Super-Linter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 
 Конфигурационный файл Universal Wrapper Pipeline должен соответствовать всем
 [стандартам yaml-синтаксиса](https://yaml.org/). На каждый wrapper pipeline - один файл. Но возможны так же исключения с
