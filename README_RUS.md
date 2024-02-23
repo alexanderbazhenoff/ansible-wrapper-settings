@@ -1,8 +1,16 @@
-<!-- markdownlint-disable MD001 MD007 MD025 -->
+<!-- markdownlint-disable MD001 MD007 MD025 MD033 MD041 -->
+<div align='center'>
+
 # Описание формата конфигурационных файлов для [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
 
 [![Super-Linter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
+[![GitHub License](https://img.shields.io/github/license/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Create+your+pipelines+easier+and+faster%21%20&url=https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline&hashtags=devops,cicd,jenkins,ansible,yaml)
+
+<span style="font-size:0.8em;">[English](README.md) • [**Russian**](README_RUS.md)</span>
+</div>
 
 Конфигурационный файл Universal Wrapper Pipeline должен соответствовать всем
 [стандартам yaml-синтаксиса](https://yaml.org/). На каждый wrapper pipeline - один файл. Но возможны так же исключения с
