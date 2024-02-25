@@ -102,10 +102,68 @@ The key contains pipeline parameters, presented as a dictionary, which are divid
 
 ## 'stages' key
 
+#### Example 5
+
+#### Example 6
+
+#### Example 7
+
+#### Example 8
+
 ## 'actions' key
 
+### Action: clone sources with git
+
+#### Example 9
+
+### Action: install ansible collection from Ansible Galaxy
+
+#### Example 10
+
+### Action: run ansible playbook
+
+#### Example 11
+
+### Action: run script
+
+#### Example 12
+
+### Action: getting artifact files
+
+#### Example 13
+
+### Action: get files from node (stash)
+
+### Action: put files on node (unstash)
+
+#### Example 14
+
+### Action: run downstream pipeline
+
+#### Example 15
+
+### Action sending notifications
+
+#### Sending notifications via email
+
+#### Example 16
+
+#### Sending notifications via mattermost
+
+#### Example 17
+
 ## 'scripts' key
+
+#### Example 18
 
 ## 'playbooks' key
 
 ## 'inventories' key
+
+#### Example 19
+
+#### Example 20
+
+# Built-in pipeline parameters
+
+# Built-in pipeline variables
