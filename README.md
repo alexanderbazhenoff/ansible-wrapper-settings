@@ -81,14 +81,23 @@ inventories:
 
 The key contains pipeline parameters, presented as a dictionary, which are divided into three types:
 
-- [**required**](#required) `[list]` - mandatory parameters, without setting the values of which the current pipeline
-   run will end with an error. They are described inside the key of the same name [required](#required), nested in the
-   key [parameters](#parameters-key):
+- [**required**](#required) `[list]` - mandatory pipeline parameters, without setting the values of which the current
+   pipeline run will end with an error. They are described inside the key of the same name [required](#required), nested
+   in the key [parameters](#parameters-key):
 
   ```yaml
   parameters:
     required:
   ```
+
+- [**optional**](#optional) `[list]` - optional; their empty values will neither warnings results nor cause the
+  pipeline to stop with an error. Similar as 'required' these parameters are described in the key with corresponding
+  name nested in the 'parameters' key.
+- [**built-in**](#built-in-pipeline-parameters) - 'built-in' pipeline parameters: `SETTINGS_GIT_BRANCH`, `NODE_NAME`,
+  `NODE_TAG`, `UPDATE_PARAMETERS`, `DRY_RUN` and `DEBUG_MODE`. These parameters are already built directly into the
+   pipeline code (inside the `BuiltinPipelineParameters` constant). There is no need to set them in the configuration
+   file, but they can be used in pipeline configuration file to assign their values to other pipeline variables (see
+   `assign` in [Example 2](#example-2)), or use in playbooks and scripts.
 
 ### required
 
