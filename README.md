@@ -114,11 +114,94 @@ appropriate dictionary [`optional`](#optional) by specifying additional key opti
 The [required](#required) key is located inside the [parameters](#parameters-key) key and consists of a list of
 pipeline parameters, each of which has the following keys:
 
+- **name** `[string]` *(mandatory)* - pipeline parameter name.
+- **type** `[string]` *(mandatory)* - a parameter type that fully corresponds to the standard parameter types for
+  a pipeline. Can be `string` (string), `text` (multiline), `password` (password), `choice` (selection), `boolean`
+  (logical). Specifying the type of the pipeline parameter is mandatory, although in some cases it is possible to
+  autodetect the type and display the appropriate warning to fix.
+- **description** `[string]` *(mandatory)* - description of the pipeline parameter, similar to what is set in the
+  pipeline settings graphical interface.
+- **default** [depends on `type`] *(optional and compatible with a choice parameter type)* - default value of the
+  pipeline parameter. If the default value and the pipeline parameter are not specified, then when running pipeline
+  the parameter value will be equivalent to `False` for *boolean* and an empty field for string (including *password*)
+  parameters.
+- **choices** `[list]` *(compatible with and required for a choice parameter type only)* - possible selection options
+  for choice parameters.
+- **trim** `[boolean]` *(optional and compatible with a string parameter type only)* - remove leading and trailing
+  spaces in the parameter string value. Default is `False`.
+- **on_empty** `[dict]` *(optional)* - options for specifying actions if the parameter when starting the pipeline is not
+   specified (or empty) (see [Example 2](#example-2)). Contains the following nested keys:
 
+    - **assign** `[string]` *(optional)* - the name of the pipeline parameter which value will be assigned when
+      parameter is not specified (empty). It is also possible to assign environment variables, and therefore Jenkins or
+      Teamcity variables: `$NODE_NAME`, `$JOB_NAME`, etc. (see [Variable substitution](#variable-substitution)).
+    - **fail** `[logical]` *(optional, not compatible with the `warn` key)* - a switch to terminate the pipeline with an
+      error if the pipeline parameter is not specified. If the pipeline parameter is required and nested in
+      [required](#required), then there is no need to specify `fail: True`.
+    - **warn** `[boolean]` *(optional, not compatible with the `fail` key)* - a switch to display a warning, but
+      continue pipeline execution if the parameter is not specified.
+
+  If the pipeline parameter is inside [required](#required) and the `on_empty` key is not specified, then an empty
+  value for such a parameter will terminate the pipeline with an error.
+- **regex** `[string, or list]` *(optional)* - a regular expression, or a list of regular expression strings that will
+  be combined into a single string to check the pipeline parameter: if the parameter value does not match the regular
+  expression, the current pipeline run will stop with an error.
+- **regex_replace** `[dictionary]` *(optional)* - options to control the replacement of pipeline parameter values that
+  will be performed when substituting or setting pipeline parameter values. Available only for string (except
+  *password*) parameters. Contains the following nested keys:
+
+    - **regex** `[string]` *(required)* - regular expression to search for when replacing the contents of a pipeline
+      parameter.
+    - *(optional)* - replace matches with the content specified in this key (see [Example 3](#example-3)). If the value
+      or `to` key is not specified, then all regular expressions matches specified in the `regex` key will be removed.
+
+  Replacement of pipeline parameter values (with the `regex_replace` key data) is performing at the very beginning of
+  the pipeline launch: after possible substitution of other pipeline parameter values (`on_empty` key data) and checking
+  these values for `regex` match. Thus, `regex` specifies conditions for checking the original values after possible
+  substitution, and `regex_replace` specifies parameters for changing their values of pipeline parameters for usage in
+  [pipeline stages](#key-stages) (see [Example 3] (#example-3)).
 
 #### Example 2
 
+```yaml
+# Pipeline contains three parameters in the `required` key, but only the `LOGIN` parameter is required, omitting which
+# (an empty parameter value) will cause the pipeline to fail. If the `PASSWORD` parameters are not specified, then only
+# a warning will appear in the console and the pipeline will continue executing, and if `LOGIN_2` is not specified, then
+# a warning will be issued, and the value will be taken from the pipeline's `LOGIN` parameter.
+
+parameters:
+  required:
+    - name: LOGIN
+      type: string
+    - name: LOGIN_2
+      type: string
+      on_empty:
+        assign: $LOGIN
+        warn: True
+    - name: PASSWORD
+      type: password
+      on_empty:
+        warn: True
+```
+
 #### Example 3
+
+```yaml
+# A fragment of the configuration file with the required pipline parameter `IP_ADDRESSES`, where spaces will be replaced
+# With 'line feed' for substitution inside ansible inventory (not included in example, but means). Also pay attention to
+# the syntax in the value of the 'to' field in the regex_replace key of `IP_ADDRESSES` parameter. If pipeline stages use
+# this variable, its value will also be formatted: IPs (or hosts) will be separated by line breaks rather than by
+# spaces.
+
+parameters:
+  required:
+    - name: IP_ADDRESSES
+      type: string
+      description: Space separated IP or DNS list of the host(s).
+      regex_replace:
+        regex: ' '
+        to: "\\\n"
+```
 
 ### optional
 
@@ -191,3 +274,19 @@ pipeline parameters, each of which has the following keys:
 # Built-in pipeline parameters
 
 # Built-in pipeline variables
+
+# Variable substitution
+
+#### Example 21
+
+#### Example 22
+
+# Using variables in scripts and playbooks
+
+#### Example 23
+
+#### Example 24
+
+# Usage examples
+
+# URLs
