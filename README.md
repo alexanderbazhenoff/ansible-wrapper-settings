@@ -165,9 +165,9 @@ pipeline parameters, each of which has the following keys:
 
 ```yaml
 # Pipeline contains three parameters in the `required` key, but only the `LOGIN` parameter is required, omitting which
-# (an empty parameter value) will cause the pipeline to fail. If the `PASSWORD` parameters are not specified, then only
-# a warning will appear in the console and the pipeline will continue executing, and if `LOGIN_2` is not specified, then
-# a warning will be issued, and the value will be taken from the pipeline's `LOGIN` parameter.
+# (an empty parameter value) will cause the pipeline to fail. If the `PASSWORD` parameter is not specified, then only
+# a warning will appear in the console then the pipeline will continue executing, but if `LOGIN_2` is not specified,
+# then only a warning will be issued, then the value will be taken from the pipeline's `LOGIN` parameter.
 
 parameters:
   required:
