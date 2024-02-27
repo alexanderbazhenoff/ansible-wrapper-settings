@@ -95,11 +95,26 @@ The key contains pipeline parameters, presented as a dictionary, which are divid
   name nested in the 'parameters' key.
 - [**built-in**](#built-in-pipeline-parameters) - 'built-in' pipeline parameters: `SETTINGS_GIT_BRANCH`, `NODE_NAME`,
   `NODE_TAG`, `UPDATE_PARAMETERS`, `DRY_RUN` and `DEBUG_MODE`. These parameters are already built directly into the
-   pipeline code (inside the `BuiltinPipelineParameters` constant). There is no need to set them in the configuration
-   file, but they can be used in pipeline configuration file to assign their values to other pipeline variables (see
-   `assign` in [Example 2](#example-2)), or use in playbooks and scripts.
+  pipeline code (inside the `BuiltinPipelineParameters` constant). There is no need to set them in the configuration
+  file, but they can be used in pipeline configuration file to assign their values to other pipeline variables (see
+  `assign` in [Example 2](#example-2)), or use in playbooks and scripts.
+
+If at least one of the pipeline parameters specified in the configuration file does not match the current pipeline
+parameters, then all parameters will be resynchronized with the parameters in the configuration file. The checking is
+made by parameter names only; type, default values, and other parameter keys are ignored.
+
+The Pipeline may not have required parameters (key [required](#required)), and all parameters can be placed in
+[optional](#optional) key (see [Example 4](#example-4)), or not to have any parameters at all: in this case, only the
+empty 'parameters' key should be specified. Any required parameter can also become optional without moving it to the
+appropriate dictionary [`optional`](#optional) by specifying additional key options [`on_empty`](#required) (see
+[Example 2](#example-2)).
 
 ### required
+
+The [required](#required) key is located inside the [parameters](#parameters-key) key and consists of a list of
+pipeline parameters, each of which has the following keys:
+
+
 
 #### Example 2
 
