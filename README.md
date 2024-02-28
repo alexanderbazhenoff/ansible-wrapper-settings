@@ -123,12 +123,12 @@ pipeline parameters, each of which has the following keys:
   pipeline settings graphical interface.
 - **default** [depends on `type`] *(optional and compatible with a choice parameter type)* - default value of the
   pipeline parameter. If the default value and the pipeline parameter are not specified, then when running pipeline
-  the parameter value will be equivalent to `False` for *boolean* and an empty field for string (including *password*)
+  the parameter value will be equivalent to `false` for *boolean* and an empty field for string (including *password*)
   parameters.
 - **choices** `[list]` *(compatible with and required for a choice parameter type only)* - possible selection options
   for choice parameters.
 - **trim** `[boolean]` *(optional and compatible with a string parameter type only)* - remove leading and trailing
-  spaces in the parameter string value. Default is `False`.
+  spaces in the parameter string value. Default is `false`.
 - **on_empty** `[dict]` *(optional)* - options for specifying actions if the parameter when starting the pipeline is not
    specified (or empty) (see [Example 2](#example-2)). Contains the following nested keys:
 
@@ -164,10 +164,11 @@ pipeline parameters, each of which has the following keys:
 #### Example 2
 
 ```yaml
-# Pipeline contains three parameters in the `required` key, but only the `LOGIN` parameter is required, omitting which
-# (an empty parameter value) will cause the pipeline to fail. If the `PASSWORD` parameter is not specified, then only
-# a warning will appear in the console then the pipeline will continue executing, but if `LOGIN_2` is not specified,
-# then only a warning will be issued, then the value will be taken from the pipeline's `LOGIN` parameter.
+# Pipeline contains three parameters in the `required` key, but only the `LOGIN` parameter is
+# required, omitting which (an empty parameter value) will cause the pipeline to fail. If the
+# `PASSWORD` parameter is not specified, then only a warning will appear in the console then the
+# pipeline will continue executing, but if `LOGIN_2` is not specified, then only a warning will
+# be issued, then the value will be taken from the pipeline's `LOGIN` parameter.
 
 parameters:
   required:
@@ -187,10 +188,11 @@ parameters:
 #### Example 3
 
 ```yaml
-# A fragment of the configuration file with the required pipline parameter `IP_ADDRESSES`, where spaces will be replaced
-# With 'line feed' for substitution inside ansible inventory (not included in example, but means). Also pay attention to
-# the syntax in the value of the 'to' field in the regex_replace key of `IP_ADDRESSES` parameter. If pipeline stages use
-# this variable, its value will also be formatted: IPs (or hosts) will be separated by line breaks rather than by
+# A fragment of the configuration file with the required pipline parameter `IP_ADDRESSES`,
+# where spaces will be replaced with 'line feed' for substitution inside ansible inventory
+# (not included in example, but means). Also pay attention to the syntax in the value of the 'to'
+# field in the regex_replace key of `IP_ADDRESSES` parameter. If pipeline stages use this variable,
+# its value will also be formatted: IPs (or hosts) will be separated by line breaks rather than by
 # spaces.
 
 parameters:
@@ -205,9 +207,83 @@ parameters:
 
 ### optional
 
+The [optional](#optional) key is located inside the [parameters](#parameters-key) key and consists of a list of optional
+pipeline parameters. The structure and list of keys is similar to the [required](#required) key, except that there is no
+need to set `on_empty` key values here, since they will be ignored. Thus, only optional pipeline parameters are set in
+this key. There is no way to control the pipeline behavior if these parameters are empty.
+
 #### Example 4
 
+```yaml
+# A fragment of the pipeline configuration file containing only optional parameters `ONE` and `TWO`.
+
+parameters:
+  optional:
+    - name: ONE
+      type: string
+      description: Description of parameter ONE which type is string and default value is 'something'.
+      default: something
+    - name: TWO
+      type: choice
+      description: |
+        Description of parameter TWO which type is choices.
+        TWO parameter includes three choices ('one', 'two' and 'three')
+      choices:
+        - one
+        - two
+        - three 
+```
+
 ## 'stages' key
+
+The key contains a list of pipeline stages, each element of which has the following keys:
+
+- **name** `[string]` *(mandatory)* - name of the pipeline stage. [Variable substitution](#variable-substitution) is
+  possible as a key value (see [Example 22](#example-22)).
+- **parallel** `[logical]` *(optional)* - a switch, the setting of which leads to parallel launch the list of actions
+  (the `actions` key) at the current stage (see [Example 6](#example-6)). Default is `false`.
+- **actions** `[list]` *(mandatory)* - list of actions in current stage, each element of which has keys:
+
+  - **before_message** `[string]` *(optional)* - message string before starting the action (see the next `action` key).
+    [Variable substitution](#variable-substitution) is possible.
+  - **action** `[string]` *(required)* - name of the action, which is specified in the [actions](#actions-key) key in
+    the pipeline settings file (see [actions key](#actions-key)). Substitution of the value from the pipeline parameter
+    is allowed (see [Example 7](#example-7)). [Variable substitution](#variable-substitution) is possible.
+  - **after_message** `[line]` *(optional)* - the message string, which will be displayed after action completion
+    regardless of the execution result (see [Example 5](#example-5)). [Variable substitution](#variable-substitution) is
+    possible.
+  - **ignore_fail** `[boolean]` *(optional)* - a switch to ignore unsuccessful execution of the current action: if set,
+    the result of the current action will always be successful. Default is `false`.
+  - **stop_on_fail** `[boolean]` *(optional)* - a switch to stop pipeline execution when the action fails: if set, then
+    the entire pipeline will be completed immediately after the action fails. Default is `false`.
+  - **success_only** `[boolean]` *(optional, not compatible with the `fail_only` key)* - a switch to perform the current
+    action only if all previous actions were completed successfully, i.e. the action will be executed if the general
+    status of the current pipeline launch is not equal to 'FAILURE' (see [Example 6](#example-6)). Default is `false`.
+  - **fail_only** `[boolean]` *(optional, not compatible with the `success_only` key)* - flag to perform the current
+    action only if at least one of the previous actions was unsuccessful and the `ignore_fail` key was not set, i.e.
+    this is the opposite of `success_only` switch and the action will be performed if the overall status of the current
+    pipeline run is 'FAILURE'. Default is `false`.
+  - **dir** `[string]` *(optional)* - the name of the directory in which the action will be performed. If there is no
+    such directory, then it will be created inside the directory in which the pipeline started (for example, inside
+    `workspace` for Jenkins). It is allowed to specify any other full paths, for example: `/tmp` (see
+    [Example 6](#example-6)). [Variable substitution](#variable-substitution) is possible.
+  - **build_name** `[string]` *(optional)* - the name of the current build, which will be set before starting the
+    current action (see [Example 7](#example-7)). If the `success_only` or `fail_only` flags indicate skipping this
+    action, then the name of the current build (or current pipeline run) will not be changed.
+    [Variable substitution](#variable-substitution) is possible.
+  - **node** `[string or dictionary]` *(optional)* - key that determines the node change (for example, Jenkins or
+    Teamcity nodes). It can be specified as a string with the possibility of
+    [variable substitution](#variable-substitution) and then this value will be the name of the node, or otherwise it is
+    specified as a dictionary and can include the following keys:
+
+    - **name** `[string]` *(required, but not compatible with the `label` key)* - node name.
+      [Variable substitution](#variable-substitution) is possible.
+    - **label** `[string]` *(required, but not compatible with the `name` key)* - node tag (or *node label*).
+      [Variable substitution](#variable-substitution) is possible.
+    - **pattern** `[boolean]` *(optional)* - if the switch is enabled (`true`), then the search for node will be
+      performed by the string in the key `name`, or `label` and will be launched on the first one that matches search
+      pattern (see [Example 8](#example-8)). If the switch is disabled, the node will be selected only if there is a
+      complete match of the name (in the `name` key), or the node label (in the `label` key).
 
 #### Example 5
 

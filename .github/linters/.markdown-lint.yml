@@ -4,7 +4,7 @@
 # https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings
 
 # Default state for all rules
-default: True
+default: true
 
 # Path to configuration file to extend
 extends: null
@@ -14,9 +14,9 @@ MD009:
   # Spaces for line break
   br_spaces: 2
   # Allow spaces for empty lines in list items
-  list_item_empty_lines: False
+  list_item_empty_lines: false
   # Include unnecessary breaks
-  strict: False
+  strict: false
 
 # MD013/line-length: Line length : https://github.com/DavidAnson/markdownlint/blob/v0.32.1/doc/md013.md
 MD013:
@@ -25,11 +25,11 @@ MD013:
   # Number of characters for headings
   heading_line_length: 120
   # Number of characters for code blocks
-  code_block_line_length: 120
+  code_block_line_length: 100
   # Include tables
-  tables: False
+  tables: false
   # Include headings
-  headings: False
+  headings: false
 
 # MD012/no-multiple-blanks: Multiple consecutive blank lines
 MD012:

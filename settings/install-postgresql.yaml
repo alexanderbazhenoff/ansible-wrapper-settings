@@ -42,7 +42,7 @@ parameters:
         If this parameter is empy SSH_PASSWORD will be used.
       on_empty:
         assign: $SSH_PASSWORD
-        fail: True
+        fail: true
     - name: ROLE_ACTION
       type: choice
       choices:
@@ -73,7 +73,7 @@ parameters:
   optional:
     - name: CLEAN_INSTALL
       type: boolean
-      default: True
+      default: true
       description: Perform clean install
     - name: POSTGRESQL_VERSION
       type: string
@@ -81,22 +81,22 @@ parameters:
       description: Version of pgsql repository (e.g. 14, 15, 16).
     - name: POSTGRESQL_RECOMMENDED_VERSION
       type: boolean
-      default: False
+      default: false
       description: >-
         Install recommended version for current Linux distribution based on distribution repository or
         dnf modules. Useful when current version of PostgreSQL server instance is not available for your Linux
         distribution (e.g. check RedHat repository).
     - name: CLEAN_DATA_DIRECTORY
       type: boolean
-      default: False
+      default: false
       description: Clean-up PostgreSQL data directory
     - name: INSTALL_PSYCOPG2
       type: boolean
-      default: True
+      default: true
       description: Install <a href=https://pypi.org/project/psycopg2/>psycopg2</a>
     - name: INSTALL_PGADMIN
       type: boolean
-      default: False
+      default: false
     - name: PGADMIN_INSTALLATION_TYPE
       type: choice
       choices:
@@ -195,7 +195,7 @@ parameters:
       description: pgadmin4 password for administrator login via web UI.
     - name: FIREWALL_CONTROL
       type: boolean
-      default: True
+      default: true
       description: >-
         Add or remove firewalld and/or ufw rules on install or uninstall.
         Will be skipped when firewall disabled.<br><br><br><br>
@@ -236,7 +236,7 @@ parameters:
       default: ''
       description: >-
         Space separated list of additional PostgreSQL related packages to install, e.g: 'postgresql-contrib' or
-        'postgresql14-contrib' for <b>POSTGRESQL_RECOMMENDED_VERSION</b>=False (explore what packages available
+        'postgresql14-contrib' for <b>POSTGRESQL_RECOMMENDED_VERSION</b>=false (explore what packages available
         <a href=https://www.postgresql.org/download/linux/>here</a>). There is no automated version handling in this
         list, include versions in package names.here<br><br><br><br>
     - name: POSTGRESQL_USERS
@@ -252,12 +252,12 @@ parameters:
         <b>comment</b> (default: (omit)): Adds a comment on the user (equivalent to the COMMENT ON ROLE statement).<br>
         <b>password</b> (default: (omit)): Set the user's password.<br>
         <b>conn_limit</b> (default: (omit)): Specifies the user (role) connection limit.<br>
-        <b>no_password_changes</b> (default: False): If true, does not inspect the database for password changes. If the
+        <b>no_password_changes</b> (default: false): If true, does not inspect the database for password changes. If the
         user already exists, skips all password related checks. Useful when pg_authid is not accessible (such as in AWS
         RDS). Otherwise, makes password changes as necessary.<br>
         <b>database</b> (default: ''): Name of database to connect to and where user's permissions are granted.
-        <b>encrypted</b> (default: True): Whether the password is stored hashed in the database. You can specify an
-        unhashed password, and PostgreSQL ensures the stored password is hashed when encrypted=True is set. If you
+        <b>encrypted</b> (default: true): Whether the password is stored hashed in the database. You can specify an
+        unhashed password, and PostgreSQL ensures the stored password is hashed when encrypted=true is set. If you
         specify a hashed password, the module uses it as-is, regardless of the setting of encrypted. Note: Postgresql 10
         and newer does not support unhashed passwords.
         <b>role_attr_flags</b> (default: ''): PostgreSQL user attributes string in the format:
@@ -271,8 +271,8 @@ parameters:
         <b>ca_cert</b> (default: ''): Specifies the name of a file containing SSL certificate authority (CA)
         certificate(s). If the file exists, verifies that the server's certificate is signed by one of these
         authorities.<br>
-        <b>trust_input</b> (default: True): It makes sense to use False only when SQL injections through the options are
-        possible. If False, checks whether values of options name, password, privs, expires, role_attr_flags, groups,
+        <b>trust_input</b> (default: true): It makes sense to use false only when SQL injections through the options are
+        possible. If false, checks whether values of options name, password, privs, expires, role_attr_flags, groups,
         comment, session_role are potentially dangerous.<br><br><br><br>
     - name: POSTGRESQL_DATABASES
       type: text
@@ -303,8 +303,8 @@ parameters:
         prefer matches libpq default. Choices: "allow", "disable", "prefer", "require", "verify-ca", "verify-full".<br>
         <b>ca_cert</b> (default: ''): The name of a file containing SSL certificate authority (CA) certificate(s). If
         the file exists, the server's certificate will be verified to be signed by one of these authorities.<br>
-        <b>trust_input</b> (default: True): If False, check whether values of parameters owner, conn_limit, encoding,
-        db, template, tablespace, session_role are potentially dangerous. It makes sense to use False only when SQL
+        <b>trust_input</b> (default: true): If false, check whether values of parameters owner, conn_limit, encoding,
+        db, template, tablespace, session_role are potentially dangerous. It makes sense to use false only when SQL
         injections via the parameters are possible.<br><br><br><br>
     - name: POSTGRESQL_SCHEMAS
       type: text
@@ -317,13 +317,13 @@ parameters:
         List of parameters to add or remove schemas.<br><br>
         <b>name</b>: Name of the schema to add or remove.<br>
         <b>cascade_drop</b> (default: (omit)): Drop schema with CASCADE to remove child objects. Choices:
-        False/True.<br>
+        false/true.<br>
         <b>database</b> (default: postgres): Name of the database to connect to and add or remove the schema.<br>
         <b>owner</b> (default: (omit)): Name of the role to set as owner of the schema.
         <b>ssl_mode</b> (default: prefer): Determines how an SSL session is negotiated with the server.<br>
         <b>ca_cert</b> (default: ''): Specifies the name of a file containing SSL certificate authority (CA)
         certificate(s).<br>
-        <b>trust_input</b> (default: True): It makes sense only when SQL injections through the options are
+        <b>trust_input</b> (default: true): It makes sense only when SQL injections through the options are
         possible.<br><br><br><br>
     - name: POSTGRESQL_PRIVILEGES
       type: text
@@ -338,8 +338,8 @@ parameters:
         <b>roles</b>: Comma separated list of role (user/group) names to set permissions for. The special value PUBLIC
         can be provided instead to set permissions for the implicitly defined PUBLIC group.<br>
         <b>grant_option</b> (default: (omit)): Whether role may grant/revoke the specified privileges/group memberships
-        to others. Set to False to revoke GRANT OPTION, leave unspecified to make no changes. grant_option only has an
-        effect if role_action is grant. Choices: True, False.<br>
+        to others. Set to false to revoke GRANT OPTION, leave unspecified to make no changes. grant_option only has an
+        effect if role_action is grant. Choices: true, false.<br>
         <b>objs</b> (default: (omit)): Comma separated list of database objects to set privileges on. If type is table,
         partition table, sequence, function or procedure, the special value ALL_IN_SCHEMA can be provided instead to
         specify all database objects of type in the schema specified via schema. (This also works with
@@ -359,7 +359,7 @@ parameters:
         <b>ssl_mode</b> (default: (omit)): Determines how an SSL session is negotiated with the server.<br>
         <b>ca_cert</b> (default: ''): Specifies the name of a file containing SSL certificate authority (CA)
         certificate(s).<br>
-        <b>trust_input</b> (default: True): It makes sense only when SQL injections through the options are
+        <b>trust_input</b> (default: true): It makes sense only when SQL injections through the options are
         possible.<br>
     - name: POSTGRESQL_SLOTS
       type: text
@@ -369,9 +369,9 @@ parameters:
       description: >-
         <b>name</b>: Name of the replication slot to add or remove.<br>
         <b>db</b> (default: (omit)): Name of database to connect to.<br>
-        <b>immediately_reserve</b> (defaults: False): Specifies that the LSN slot be reserved immediately, otherwise on
-        the first connection. Optional parameter that when True specifies that the LSN for this replication slot be
-        reserved immediately, otherwise the default, False, specifies that the LSN is reserved on the first connection
+        <b>immediately_reserve</b> (defaults: false): Specifies that the LSN slot be reserved immediately, otherwise on
+        the first connection. Optional parameter that when true specifies that the LSN for this replication slot be
+        reserved immediately, otherwise the default, false, specifies that the LSN is reserved on the first connection
         from a streaming replication client. Is available from PostgreSQL version 9.6. Uses only with
         slot_type=physical. Mutually exclusive with slot_type=logical.<br>
         <b>slot_type</b> (default: physical): Slot type: logical or physical.
@@ -381,7 +381,7 @@ parameters:
         <b>ssl_mode</b> (default: prefer): Determines how an SSL session is negotiated with the server.<br>
         <b>ca_cert</b> (default: ''): Specifies the name of a file containing SSL certificate authority (CA)
         certificate(s).
-        <b>trust_input</b> (default: True): It makes sense only when SQL injections through the options are
+        <b>trust_input</b> (default: true): It makes sense only when SQL injections through the options are
         possible.<br><br><br><br>
 
 
@@ -392,11 +392,11 @@ stages:
       - action: clone_git_repository
         build_name: $ROLE_ACTION-$ROLE_SUBJECT--#$BUILD_NUMBER
       - action: install_ansible_collection
-        success_only: True
+        success_only: true
   - name: run postgresql role
     actions:
       - action: $ROLE_ACTION
-        success_only: True
+        success_only: true
 
 
 actions:
@@ -442,9 +442,9 @@ scripts:
 playbooks:
   install_uninstall_configure: |
       - hosts: all
-        become: True
+        become: true
         become_method: sudo
-        gather_facts: True
+        gather_facts: true
 
         tasks:
 
@@ -484,9 +484,9 @@ playbooks:
 
   db_instance_management: |
       - hosts: all
-        become: True
+        become: true
         become_method: sudo
-        gather_facts: True
+        gather_facts: true
 
         tasks:
 
