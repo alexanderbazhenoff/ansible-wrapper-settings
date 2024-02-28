@@ -285,13 +285,99 @@ The key contains a list of pipeline stages, each element of which has the follow
       pattern (see [Example 8](#example-8)). If the switch is disabled, the node will be selected only if there is a
       complete match of the name (in the `name` key), or the node label (in the `label` key).
 
+    To launch an action on any free node, you should specify an empty key `node`, or `node: null` (see
+    [example 6](#example-6)).
+
 #### Example 5
+
+```yaml
+# A fragment of the configuration file setting up `stage_1` with customized messages.
+
+stages:
+  - name: stage_1
+    actions:
+      - before_message: Starting 'action_name_1'...
+        action: action_name_1
+        after_message: Just finished 'action_name_1' execution.
+      - before_message: Then starting 'action_name_2'...
+        action: action_name_2
+        fail_message: A custom message for 'action_name_2' that means it was failed.
+        success_message: |
+          A custom message for 'action_name_2' that means it was complete without errors.
+```
 
 #### Example 6
 
+```yaml
+# A fragment of a configuration file setting up the stage `stage_name` with parallel action run.
+# `action_name_2` will be launched on any free node, while the other actions will be launched
+# on the same node where it was originally pipeline was started. `action_name_3` will be executed
+# only if the previous two actions have been finished successfully. On executing `action_name_1`
+# inside the current folder where the pipeline started (for example, for Jenkins this folder
+# called `workspace`) the folder `temp` will be created, while the execution of `action_name_2`
+# will be executed in system temporary folder `/tmp`.
+
+  - name: stage_name
+    parallel: true
+    actions:
+      - action: action_name_1
+        dir: temp
+      - action: action_name_2
+        dir: /tmp
+        node:
+      - action: action_name_3
+        success_only: true
+```
+
 #### Example 7
 
+```yaml
+# A fragment of a configuration file with the pipeline parameter `PIPELINE_ACTION`,
+# which specifies the name of the action in `stage_name`. Before the action is executed,
+# the current build (or pipeline run) will be named as the `PIPELINE_ACTION` parameter
+# defined.
+
+parameters:
+  required:
+    - name: PIPELINE_ACTION
+      type: choice
+      description: Action to perform.
+      choices:
+        - action_one
+        - action_two
+stages:
+  - name: stage_name
+    actions:
+      - action: $PIPELINE_ACTION
+        build_name: $PIPELINE_ACTION
+```
+
 #### Example 8
+
+```yaml
+# A fragment of the configuration file setting up a `build_stage` with the choice of node
+# (displayed as a message to the console before the start of the action - `before_message`).
+
+stages:
+  - name: build_stage
+    actions:
+      - before_message: Starting build on 'build-x64-node-01.domain.com' jenkins node...
+        action: build_action
+        node: build-x64-node-01.domain.com
+      - before_message: Starting build on any jenkins node name starts with 'build-x64-node-'...
+        action: build_action
+        node:
+          name: build-x64-node-
+          pattern: true
+      - before_message: Starting build on any jenkins node with label 'build_nodes'...
+        action: build_action
+        node:
+          label: build_nodes
+      - before_message: Starting build on any jenkins node with label contains '_nodes'...
+        action: build_action
+        node:
+          label: _nodes
+```
 
 ## 'actions' key
 
