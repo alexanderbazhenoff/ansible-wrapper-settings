@@ -150,7 +150,7 @@ pipeline parameters, each of which has the following keys:
   will be performed when substituting or setting pipeline parameter values. Available only for string (except
   *password*) parameters. Contains the following nested keys:
 
-    - **regex** `[string]` *(required)* - regular expression to search for when replacing the contents of a pipeline
+    - **regex** `[string]` *(mandatory)* - regular expression to search for when replacing the contents of a pipeline
       parameter.
     - *(optional)* - replace matches with the content specified in this key (see [Example 3](#example-3)). If the value
       or `to` key is not specified, then all regular expressions matches specified in the `regex` key will be removed.
@@ -246,7 +246,7 @@ The key contains a list of pipeline stages, each element of which has the follow
 
   - **before_message** `[string]` *(optional)* - message string before starting the action (see the next `action` key).
     [Variable substitution](#variable-substitution) is possible.
-  - **action** `[string]` *(required)* - name of the action, which is specified in the [actions](#actions-key) key in
+  - **action** `[string]` *(mandatory)* - name of the action, which is specified in the [actions](#actions-key) key in
     the pipeline settings file (see [actions key](#actions-key)). Substitution of the value from the pipeline parameter
     is allowed (see [Example 7](#example-7)). [Variable substitution](#variable-substitution) is possible.
   - **after_message** `[line]` *(optional)* - the message string, which will be displayed after action completion
@@ -415,7 +415,7 @@ performed.
 
 ### Action: clone sources with git
 
-- **repo_url** `[string]` *(required)* - link to the GitLab/GitHub repository.
+- **repo_url** `[string]` *(mandatory)* - link to the GitLab/GitHub repository.
 - **repo_branch** `[string]` *(optional)* - name of the branch in the repository. If the key is missing, then `main`
   branch.
 - **credentials** `[string]` *(optional)* - CredentialsID for accessing the repository (see [Example 9](#example-9)).
@@ -443,7 +443,7 @@ actions:
 
 ### Action: install ansible collection from Ansible Galaxy
 
-- **collection** `[string, or list]` *(required)* - namespace and name of the collection from
+- **collection** `[string, or list]` *(mandatory)* - namespace and name of the collection from
   [Ansible Galaxy](https://galaxy.ansible.com/) for installation (see [Example 10](#example-10)), or a list of them.
 
 The collection is always installing forcibly (using parameter `force`), which ensures their constant updating. 
@@ -466,7 +466,7 @@ actions:
 
 ### Action: run ansible playbook
 
-- **playbook** `[string]` *(required)* - playbook name (see [Example 11](#example-11) and [playbooks](#playbooks-key)
+- **playbook** `[string]` *(mandatory)* - playbook name (see [Example 11](#example-11) and [playbooks](#playbooks-key)
   key). [Variable substitution](#variable-substitution) is possible.
 - **inventory** `[string]` *(optional)* - inventory name (see the [inventories](#inventories-key) key). If this key is
   missing, then `default` ansible inventory inside the [inventories](#inventories-key) key is searched.
@@ -524,18 +524,87 @@ all its changes will be inherited by other stages and actions of the pipeline. W
 inside scripts will not be inherited by other stages and actions of the pipeline. To save values as a result of the
 script, use built-in pipeline variables, or save the result to a file.
 
-All scripts (except of “as part of the pipeline”](#key-scripts)) are running through a shell call. To select the
+All scripts (except [of “as part of the pipeline”](#scripts-key)) are running through a shell call. To select the
 appropriate environment, you should specify an appropriate hashbang.
 
 ### Action: get artifact files
 
+- **artifacts** `[string]` *(mandatory)* - path and name mask (or a comma-separated list of them) for
+  [archiving artifact files](https://www.jenkins.io/doc/pipeline/tour/tests-and-artifacts/).
+  [Variable substitution](#variable-substitution) is possible.
+- **excludes** `[string]` *(optional)* - path and name mask (or a comma-separated list of them) to exclude from
+  archiving (see [Example 13](#example-13)). [Variable substitution](#variable-substitution) is possible.
+- **allow_empty** `[boolean]` *(optional)* - flag that allows the absence of files that meet the conditions, specified
+  in `artifacts` and `excludes`. By default, `false`, that means that absence of files that satisfy conditions will
+  cause an error.
+- **fingerprint** `[boolean]` *(optional)* - a switch to include a 
+  [checksum for artifact files](https://www.jenkins.io/doc/book/using/fingerprints/). Default is `false`.
+
 #### Example 13
+
+```yaml
+# A fragment of the configuration file setting up the action to get regression testing logs,
+# unit tests and general results (except unit test logs in JSON format). Missing files are
+# allowed, checksum calculation is disabled.
+
+actions:
+  archive_artifacts_action_name:
+    artifacts: regression_tests/**/logs/*, unit_tests/**/logs/*, results.txt
+    excludes: unit_tests/**/logs/*.json
+    allow_empty: true
+    fingerprint: false
+```
 
 ### Action: get files from node (stash)
 
+- **stash** `[string]` *(mandatory)* - the name of the files set to get files from node (for example,
+[stash in Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build)).
+  In fact, this is an identifier for a file set. [Variable substitution](#variable-substitution) is possible.
+- **includes** `[string]` *(optional)* - path and name mask (or a comma-separated list of them) for building files with
+  node. [Variable substitution](#variable-substitution) is possible.
+- **excludes** `[string]` *(optional)* - path and name mask (or a comma-separated list of them) to exclude files from
+  obtaining (see [Example 14](#example-14)). [Variable substitution](#variable-substitution) is possible.
+- **default_excludes** `[boolean]` *(optional)* - a switch to enable default exceptions (for example, for Jenkins, Ant
+  exceptions will have [the following list](https://ant.apache.org/manual/dirtasks.html#defaultexcludes)). Default is
+  `true`.
+- **allow_empty** `[boolean]` *(optional)* - a switch that allows the absence of files that meet the conditions,
+  specified in `artifacts` and `excludes`. The default is `false`, when the absence of files that satisfy the conditions
+  in `includes`, `excludes` and `default_excludes` will cause an error.
+
 ### Action: transfer files to node (unstash)
 
+- **unstash** `[string]` *(required)* - name of a set of files for building files with node (for example,
+[stash in Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build )).
+  In fact this is an identifier for a file set. [Variable substitution](#variable-substitution) is possible. To set the
+  path to transfer the files in, use [action key](#stages-key) `dir` (see [Example 14](#example-14)).
+
 #### Example 14
+
+```yaml
+# A fragment of the configuration file setting up the stage and actions of to move files
+# between nodes: all files except files in json format are copied from the logs folder in
+# the workspace on node 'my_node' to the 'my_folder' folder in the workspace on node
+# 'another_node'. The absence of files specified in the `includes` condition is allowed,
+# since `allow_empty` is set.
+
+stages:
+  - name: stash_unstash
+    actions:
+      - action: stash_files_from_node_action_name
+        node: my_node
+      - action: unstash_files_from_node_action_name
+        node: another_node
+        dir: my_unstash_folder
+
+actions:
+  stash_files_from_node_action_name:
+    stash: my_stash_name
+    includes: logs/*
+    excludes: logs/*.json
+    allow_empty: true
+  unstash_files_from_node_action_name:
+    unstash: my_stash_name
+```
 
 ### Action: run downstream pipeline
 
