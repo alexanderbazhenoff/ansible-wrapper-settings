@@ -5,7 +5,7 @@
 
 [![Super-Linter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
-[![GitHub License](https://img.shields.io/github/license/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/alexanderbazhenoff/universal-wrapper-pipeline-settings)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Create+your+pipelines+easier+and+faster%21%20&url=https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline&hashtags=devops,cicd,jenkins,ansible,yaml)
 
@@ -159,7 +159,7 @@ pipeline parameters, each of which has the following keys:
   the pipeline launch: after possible substitution of other pipeline parameter values (`on_empty` key data) and checking
   these values for `regex` match. Thus, `regex` specifies conditions for checking the original values after possible
   substitution, and `regex_replace` specifies parameters for changing their values of pipeline parameters for usage in
-  [pipeline stages](#key-stages) (see [Example 3] (#example-3)).
+  [pipeline stages](#stages-key) (see [Example 3] (#example-3)).
 
 #### Example 2
 
@@ -446,7 +446,7 @@ actions:
 - **collection** `[string, or list]` *(mandatory)* - namespace and name of the collection from
   [Ansible Galaxy](https://galaxy.ansible.com/) for installation (see [Example 10](#example-10)), or a list of them.
 
-The collection is always installing forcibly (using parameter `force`), which ensures their constant updating. 
+The collection is always installing forcibly (using parameter `force`), which ensures their constant updating.
 [Variable substitution](#variable-substitution) is possible in all collection names.
 
 #### Example 10
@@ -537,7 +537,7 @@ appropriate environment, you should specify an appropriate hashbang.
 - **allow_empty** `[boolean]` *(optional)* - flag that allows the absence of files that meet the conditions, specified
   in `artifacts` and `excludes`. By default, `false`, that means that absence of files that satisfy conditions will
   cause an error.
-- **fingerprint** `[boolean]` *(optional)* - a switch to include a 
+- **fingerprint** `[boolean]` *(optional)* - a switch to include a
   [checksum for artifact files](https://www.jenkins.io/doc/book/using/fingerprints/). Default is `false`.
 
 #### Example 13
@@ -574,7 +574,7 @@ actions:
 ### Action: transfer files to node (unstash)
 
 - **unstash** `[string]` *(required)* - name of a set of files for building files with node (for example,
-[stash in Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build )).
+[stash in Jenkins](https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps/#stash-stash-some-files-to-be-used-later-in-the-build)).
   In fact this is an identifier for a file set. [Variable substitution](#variable-substitution) is possible. To set the
   path to transfer the files in, use [action key](#stages-key) `dir` (see [Example 14](#example-14)).
 
