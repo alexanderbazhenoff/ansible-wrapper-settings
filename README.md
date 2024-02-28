@@ -443,15 +443,89 @@ actions:
 
 ### Action: install ansible collection from Ansible Galaxy
 
+- **collection** `[string, or list]` *(required)* - namespace and name of the collection from
+  [Ansible Galaxy](https://galaxy.ansible.com/) for installation (see [Example 10](#example-10)), or a list of them.
+
+The collection is always installing forcibly (using parameter `force`), which ensures their constant updating. 
+[Variable substitution](#variable-substitution) is possible in all collection names.
+
 #### Example 10
+
+```yaml
+# An example of configuration file with an action installing one Ansible collection
+# `namespace.collection_name` and collections list.
+
+actions:
+  ansible_galaxy_install_action_name:
+    collections: namespace.collection_name
+  ansible_galaxy_install_list_action_name:
+    collections:
+      - namespace_1.collection_name_1
+      - namespace_2.collection_name_2
+```
 
 ### Action: run ansible playbook
 
+- **playbook** `[string]` *(required)* - playbook name (see [Example 11](#example-11) and [playbooks](#playbooks-key)
+  key). [Variable substitution](#variable-substitution) is possible.
+- **inventory** `[string]` *(optional)* - inventory name (see the [inventories](#inventories-key) key). If this key is
+  missing, then `default` ansible inventory inside the [inventories](#inventories-key) key is searched.
+
+All environment variables (and pipeline parameters), as well as
+[Built-in pipeline variables](#built-in-pipeline-variables) will be available during playbook run. For example,
+to get the value of `universalPipelineWrapperBuiltIns.myCustomReport` inside a playbook, just specify its key as an
+environment variable: `$myCustomReport`.
+
 #### Example 11
+
+```yaml
+# A fragment of the configuration file with launching playbook as an action and
+# `ping_playbook_name` itself.
+
+actions:
+  ping_action_name:
+    playbook: ping_playbook_name
+
+playbooks:
+  ping_playbook_name: |
+    - hosts: all
+      tasks:
+        - name: Ping
+          ansible.builtin.ping:
+```
 
 ### Action: run script
 
+- **script** `[line]` *(mandatory)* - the name of the script to run it as a separate script ([Example 12](#example-12)),
+  or run as part of this pipeline (see the [scripts](#scripts-key) key).
+  [Variable substitution](#variable-substitution) is possible.
+
 #### Example 12
+
+```yaml
+# A fragment of the configuration file with running the script as an action
+# and the `bash_script_name` itself.
+
+actions:
+  run_script_action_name:
+    script: bash_script_name
+
+scripts:
+  bash_script_name:
+    script: |
+      #!/usr/bin/env bash
+      printf "This is a %s script.\n" "$(cut -d'/' -f4 <<<"$SHELL")"
+```
+
+In a running script, same as a [playbooks](#action-run-ansible-playbook), environment variables and variables built into
+the pipeline are also available. When [running a script "as part of a pipeline"](#scripts-key) it is also possible to
+change key values of [built-in pipeline variables](#built-in-pipeline-variables) `universalPipelineWrapperBuiltIns`:
+all its changes will be inherited by other stages and actions of the pipeline. While changes to environment variables
+inside scripts will not be inherited by other stages and actions of the pipeline. To save values as a result of the
+script, use built-in pipeline variables, or save the result to a file.
+
+All scripts (except of “as part of the pipeline”](#key-scripts)) are running through a shell call. To select the
+appropriate environment, you should specify an appropriate hashbang.
 
 ### Action: get artifact files
 
