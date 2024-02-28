@@ -381,9 +381,65 @@ stages:
 
 ## 'actions' key
 
+The key is a dictionary and defines named actions, where each nested key is the name of the action, and its values are
+the action parameters:
+
+```yaml
+actions:
+  action_name_1:
+    action_parameter_1: value_1
+    action_parameter_2: value_2
+```
+
+The action type is determined by the key parameters specified in it. The following types of actions are supported:
+
+- [**source cloning (git)**](#action-clone-sources-with-git),
+- [**install ansible collection from Ansible Galaxy**](#action-install-ansible-collection-from-ansible-galaxy),
+- [**run ansible playbook**](#action-run-ansible-playbook),
+- [**run script**](#action-run-script),
+- [**get artifact files**](#action-get-artifact-files),
+- [**get files from node (stash)**](#action-get-files-from-node-stash),
+- [**transfer files to node (unstash)**](#action-transfer-files-to-node-unstash),
+- [**run downstream pipeline**](#action-run-downstream-pipeline),
+- [**notifications send**](#action-notifications-send) ([email](#sending-notifications-via-email), or
+  [mattermost](#sending-notifications-via-mattermost)).
+
+[Variable substitution](#variable-substitution) is possible in any string values of the action parameters.
+
+If any action was specified in the `actions` key, but wasn't specified in the `stages` key (or its action name wasn't
+passed during variable substitution), this action will be ignored. Also, if the `action` field in an action list
+element in `stages` contains an empty value at the moment of checking the syntax and pipeline configuration parameters
+(for example, the variable will be specified later in one of the stage's scripts, so a link from `stages` to `actions`
+has not been set yet - see [Example 18](#example-18)), then checking the syntax and parameters of this action won't be
+performed.
+
 ### Action: clone sources with git
 
+- **repo_url** `[string]` *(required)* - link to the GitLab/GitHub repository.
+- **repo_branch** `[string]` *(optional)* - name of the branch in the repository. If the key is missing, then `main`
+  branch.
+- **credentials** `[string]` *(optional)* - CredentialsID for accessing the repository (see [Example 9](#example-9)).
+If the key is missing, then the value is taken from the `GitCredentialsID` constant in the library
+["jenkins-shared-library"](https://github.com/alexanderbazhenoff/jenkins-shared-library/blob/main/src/org/alx/commonFunctions.groovy).
+- **directory** `[string]` *(optional)* - directory inside the workspace for cloning. If the key is missing, project
+cloning will be done into the workspace.
+
+[Variable substitution](#variable-substitution) is possible in all keys of this action.
+
 #### Example 9
+
+```yaml
+# A fragment of the configuration file setting the action with defined CredentialsID to clone
+# sources from GitLab via ssh into the `subdirectory_name` folder located in the workspace,
+# and switching to the `develop` branch.
+
+actions:
+  git_clone_action_name:
+    repo_url: ssh://git@gitlab.com:username/project-name.git
+    repo_branch: develop
+    directory: subdirectory_name
+    credentials: a123b01c-456d-7890-ef01-2a34567890b1
+```
 
 ### Action: install ansible collection from Ansible Galaxy
 
@@ -397,13 +453,13 @@ stages:
 
 #### Example 12
 
-### Action: getting artifact files
+### Action: get artifact files
 
 #### Example 13
 
 ### Action: get files from node (stash)
 
-### Action: put files on node (unstash)
+### Action: transfer files to node (unstash)
 
 #### Example 14
 
@@ -411,7 +467,7 @@ stages:
 
 #### Example 15
 
-### Action sending notifications
+### Action: notifications send
 
 #### Sending notifications via email
 
