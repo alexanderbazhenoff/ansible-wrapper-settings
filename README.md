@@ -164,8 +164,8 @@ pipeline parameters, each of which has the following keys:
 #### Example 2
 
 ```yaml
-# Pipeline contains three parameters in the `required` key, but only the `LOGIN` parameter is
-# required, omitting which (an empty parameter value) will cause the pipeline to fail. If the
+# This Pipeline contains three parameters in the `required` key, but only the `LOGIN` parameter
+# is required, omitting which (an empty parameter value) will cause the pipeline to fail. If the
 # `PASSWORD` parameter is not specified, then only a warning will appear in the console then the
 # pipeline will continue executing, but if `LOGIN_2` is not specified, then only a warning will
 # be issued, then the value will be taken from the pipeline's `LOGIN` parameter.
@@ -188,7 +188,7 @@ parameters:
 #### Example 3
 
 ```yaml
-# A fragment of the configuration file with the required pipline parameter `IP_ADDRESSES`,
+# A part of the configuration file with the required pipline parameter `IP_ADDRESSES`,
 # where spaces will be replaced with 'line feed' for substitution inside ansible inventory
 # (not included in example, but means). Also pay attention to the syntax in the value of the 'to'
 # field in the regex_replace key of `IP_ADDRESSES` parameter. If pipeline stages use this variable,
@@ -215,7 +215,7 @@ this key. There is no way to control the pipeline behavior if these parameters a
 #### Example 4
 
 ```yaml
-# A fragment of the pipeline configuration file containing only optional parameters `ONE` and `TWO`.
+# A part of the pipeline configuration file containing only optional parameters `ONE` and `TWO`.
 
 parameters:
   optional:
@@ -291,7 +291,7 @@ The key contains a list of pipeline stages, each element of which has the follow
 #### Example 5
 
 ```yaml
-# A fragment of the configuration file setting up `stage_1` with customized messages.
+# A part of the configuration file setting up `stage_1` with customized messages.
 
 stages:
   - name: stage_1
@@ -309,7 +309,7 @@ stages:
 #### Example 6
 
 ```yaml
-# A fragment of a configuration file setting up the stage `stage_name` with parallel action run.
+# A part of a configuration file setting up the stage `stage_name` with parallel action run.
 # `action_name_2` will be launched on any free node, while the other actions will be launched
 # on the same node where it was originally pipeline was started. `action_name_3` will be executed
 # only if the previous two actions have been finished successfully. On executing `action_name_1`
@@ -332,7 +332,7 @@ stages:
 #### Example 7
 
 ```yaml
-# A fragment of a configuration file with the pipeline parameter `PIPELINE_ACTION`,
+# A part of a configuration file with the pipeline parameter `PIPELINE_ACTION`,
 # which specifies the name of the action in `stage_name`. Before the action is executed,
 # the current build (or pipeline run) will be named as the `PIPELINE_ACTION` parameter
 # defined.
@@ -355,7 +355,7 @@ stages:
 #### Example 8
 
 ```yaml
-# A fragment of the configuration file setting up a `build_stage` with the choice of node
+# A part of the configuration file setting up a `build_stage` with the choice of node
 # (displayed as a message to the console before the start of the action - `before_message`).
 
 stages:
@@ -429,7 +429,7 @@ cloning will be done into the workspace.
 #### Example 9
 
 ```yaml
-# A fragment of the configuration file setting the action with defined CredentialsID to clone
+# A part of the configuration file setting the action with defined CredentialsID to clone
 # sources from GitLab via ssh into the `subdirectory_name` folder located in the workspace,
 # and switching to the `develop` branch.
 
@@ -479,7 +479,7 @@ environment variable: `$myCustomReport`.
 #### Example 11
 
 ```yaml
-# A fragment of the configuration file with launching playbook as an action and
+# A part of the configuration file with launching playbook as an action and
 # `ping_playbook_name` itself.
 
 actions:
@@ -503,7 +503,7 @@ playbooks:
 #### Example 12
 
 ```yaml
-# A fragment of the configuration file with running the script as an action
+# A part of the configuration file with running the script as an action
 # and the `bash_script_name` itself.
 
 actions:
@@ -543,7 +543,7 @@ appropriate environment, you should specify an appropriate hashbang.
 #### Example 13
 
 ```yaml
-# A fragment of the configuration file setting up the action to get regression testing logs,
+# A part of the configuration file setting up the action to get regression testing logs,
 # unit tests and general results (except unit test logs in JSON format). Missing files are
 # allowed, checksum calculation is disabled.
 
@@ -581,7 +581,7 @@ actions:
 #### Example 14
 
 ```yaml
-# A fragment of the configuration file setting up the stage and actions of to move files
+# A part of the configuration file setting up the stage and actions of to move files
 # between nodes: all files except files in json format are copied from the logs folder in
 # the workspace on node 'my_node' to the 'my_folder' folder in the workspace on node
 # 'another_node'. The absence of files specified in the `includes` condition is allowed,
@@ -608,17 +608,184 @@ actions:
 
 ### Action: run downstream pipeline
 
+An action that specifies a downstream pipeline run, or a job (hereinafter 'pipeline'), getting results and artifact
+files for the current pipeline run.
+
+- **pipeline** `[string]` *(mandatory)* - the name of downstream pipeline.
+  [Variable substitution](#variable-substitution) is possible.
+- **parameters** `[list]` - *(optional)* - list of parameters. If a downstream pipeline is parameterized, then each
+  element of the list is a parameter and has the following keys (see [Example 15](#example-15)):
+
+  - **name** `[string]` *(mandatory)* - downstream pipeline parameter name.
+  - **type** `[string]` *(mandatory)* - downstream pipeline parameter type: `string`, `text`, `password`, or `boolean`.
+  - **value** `[string or logical]` *(mandatory)* - string or logical value, depending on a downstream parameter type.
+    [Variable substitution](#variable-substitution) is possible.
+
+- **propagate** `[boolean]` *(optional)* - pass completion status from the downstream pipeline: if set to `true`, or the
+  key is not specified, then failure of a downstream pipeline will bring an error in the upstream pipeline. However, if
+  `ignore_fail` is set for the current action in upstream pipeline, then the error will be transmitted, but the pipeline
+  will not end with an error and will continue execution - see [stages key](#stages-key)). If `propagate` is not set,
+  the completion status of the downstream pipeline will not be passed to the upstream (for Jenkins this is a
+  *'Propagate errors'* option). Default is `true`.
+- **wait** `[boolean]` *(optional)* - wait for the downstream pipeline to complete: if set, or not specified, then wait.
+  Otherwise, the upstream pipeline will not wait, and it will be impossible to receive completion status and artifact
+  files from the downstream pipeline. Actually in Jenkins it is 'Wait for completion' option. Default is `true`.
+- **copy_artifacts** `[dictionary]` *(optional)* - additional parameters for copying artifact files from a dowstream
+  pipeline (see [Example 15](#example-15) and [Copy Artifacts](https://plugins.jenkins.io/copyartifact/) plugin for
+  Jenkins):
+
+  - **filter** `[string]` *(mandatory)* - mask of paths and names (or a comma-separated list of them) to get artifact
+    files from a downstream pipeline. [Variable substitution](#variable-substitution) is possible.
+  - **excludes** `[string]` *(optional)* - a mask of paths and names (or a comma-separated list of them) to exclude
+    artifact files from the list. [Variable substitution](#variable-substitution) is possible.
+  - **target_directory** `[string]` *(optional)* - path inside the workspace to which artifact files will be copied.
+    If the key is not specified, then the artifact files will be copied to the workspace directly.
+    [Variable substitution](#variable-substitution) is possible.
+  - **optional** `[boolean]` *(optional)* - if `true`, then the upstream pipeline will not fail with an error if there
+    are no artifact files that match the conditions in the `filter` and `excludes` keys. Otherwise, if there are no
+    artifact files, the pipeline will fail with an error at the running the downstream pipeline action. However, if
+    `ignore_fail` is set in the stage definition, then the error will be passed to the upstream pipeline, but the
+    pipeline will not end with an error and will continue execution (see [stages key](#stages-key)). Default is `false`.
+  - **flatten** `[boolean]` *(optional)* - `true` to ignoring a directory structure of copied artifact files. If the key
+    is not specified, or `false`, then the entire directory structure will be preserved. Default is `false`.
+  - **fingerprint** `[boolean]` *(optional)* - a switch to enable
+    [checksum for artifact files](https://www.jenkins.io/doc/book/using/fingerprints/). Default is `false`.
+
+  Please note that
+  [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) copies artifact
+  files from the downstream pipelines called by itself. There is no selection “by last successful”, “by last completed”
+  and/or by pipeline/job name.
+
 #### Example 15
+
+```yaml
+---
+
+# An example of a configuration file defining the only pipeline parameter
+# `UPSTREAM_PARAMETER`, the stage `run_downstream_pipeline_stage_name` and the
+# action to launch `downstream_pipeline_name` downstream pipeline, to which the
+# value of the upstream parameter `UPSTREAM_PARAMETER` is passed. If the execution
+# of the downstream pipeline `downstream_pipeline_name` fails, or during its execution
+# the logs folder is empty, then this will not cause errors.
+
+parameters:
+  required:
+    - name: UPSTREAM_PARAMETER
+      type: string
+      
+stages:
+  - name: run_downstream_pipeline_stage_name
+    actions:
+        action: run_jenkins_pipeline_action_name
+
+actions:
+  run_jenkins_pipeline_action_name:
+    pipeline: downstream_pipeline_name
+    parameters:
+      - name: UPSTREAM_PARAMETER
+        type: string
+        value: $UPSTREAM_PARAMETER
+    propagate: false
+    copy_artifacts:
+      filter: logs/*
+      fingerprint: true
+      target_directory: logs
+      optional: true
+```
 
 ### Action: notifications send
 
+- **report** `[string]` *(required)* - method for sending notifications. [Variable substitution](#variable-substitution)
+  is possible. Supported:
+
+  - [**via email**](#sending-notifications-via-email) (see [Example 16](#example-16)) - value is set to `email`,
+  - [**via mattermost**](#sending-notifications-via-mattermost) (see [Example 17](#example-17)) - value is set to
+    `mattermost`.
+
+The other keys parameters depend on the method of sending notifications.
+
 #### Sending notifications via email
+
+To send email notifications in Jenkins, you will need [Email Extension](https://plugins.jenkins.io/email-ext/).
+
+- **to** `[string]` *(mandatory)* - recipient(s) addresses. [Variable substitution](#variable-substitution) is possible.
+- **reply_to** `[string]` *(optional)* - email address to respond to this notification.
+  [Variable substitution](#variable-substitution) is possible. Default for Jenkins is `'$DEFAULT_REPLYTO'`.
+- **subject** `[string]` *(optional)* - mail subject. [Variable substitution](#variable-substitution) is possible.
+- **body** `[string]` *(optional)* - mail text. [Variable substitution](#variable-substitution) is possible.
 
 #### Example 16
 
-#### Sending notifications via mattermost
+```yaml
+---
+
+# An example of a configuration file specifying the only pipeline parameter `EMAIL`,
+# which set a list of recipients separated by a space (will be replaced by ', '),
+# the only stage and action of sending a notification via email. The mail text contains
+# built-in Jenkins variables: `env.JOB_NAME` (current pipeline build name),
+# `env.BUILD_URL` (URL to the current build), as well as the `multilineReport` (key of
+# `universalPipelineWrapperBuiltIns` variable) and `EMAIL` pipeline parameter.
+
+parameters:
+  required:
+    - name: EMAIL
+      type: string
+      description: Space separated email recipients list.
+      regex_replace:
+        regex: ' '
+        to: ', '
+      
+stages:
+  - name: email_report_stage_name
+    actions:
+        action: email_report_action_name
+
+actions:
+  email_report_action_name:
+    report: email
+    to: $EMAIL
+    subject: Test email report
+    body: |
+      Hi,
+      
+      I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME' pipeline, finished with
+      '$currentBuild_result' state. As you see sending report to $EMAIL done.
+      
+      Overall report is:
+      $multilineReport
+      
+      Check pipeline console for details: $BUILD_URL/console
+      This report was generated automatically, please do not reply.
+      
+      Sincerely,
+      Your Jenkins.
+```
+
+#### Sending notifications via Mattermost
+
+- **url** `[string]` *(mandatory)* - URL of Mattermost webhook, containing the channel key. For example:
+  `https://mattermost.com/hooks/<token>` (see [Example 17](#example-17)).
+  [Variable substitution](#variable-substitution) is possible.
+- **text** `[string]` *(mandatory)* - notification text. [Variable substitution](#variable-substitution) is possible.
 
 #### Example 17
+
+```yaml
+# A part of the configuration file with the task of sending a notification to
+# Mattermost. URL and token are just for example.
+
+actions:
+  mattermost_report_action_name:
+    report: mattermost
+    url: https://mattermost.com/hooks/31895e09lg2m0g44dk4qeb847s
+    text: |
+      Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME.
+      Overall report is:
+      ```
+      $multilineReport
+      ```
+      Please ignore this automatic report.
+```
 
 ## 'scripts' key
 
