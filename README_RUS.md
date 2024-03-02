@@ -992,12 +992,12 @@ inventory и скриптах через переменные окружения
 
 # Встроенные в pipeline переменные
 
-Переменная universal wrapper pipeline `universalPipelineWrapperBuiltIns` *[словарь, или Map]* содержит вспомогательные
-ключи, которые можно использовать в конфигурационном файле (например, при формировании отчетов):
+Встроенная в Universal Wrapper Pipeline переменная `universalPipelineWrapperBuiltIns` *[словарь, или Map]* содержит
+вспомогательные, которые можно использовать в конфигурационном файле (например, при формировании отчетов):
 
 - `universalPipelineWrapperBuiltIns.multilineReportMap` *[словарь, или Map]* - содержит словарь статусов и информацию о
-  каждом действии в стадиях pipeline. Ключ предназначен для использования в кодовых вставках "запуск кода как часть
-  pipeline". Структура Map'а идентична описанию функции `addPipelineStepsAndUrls()` в
+  каждом действии в стадиях pipeline. Ключ предназначен для использования в коде "как часть pipeline". Структура Map'а
+  идентична описанию функции `addPipelineStepsAndUrls()` в
   [jenkins-shared-library](https://github.com/alexanderbazhenoff/jenkins-shared-library) в функции и выглядит:
 
   ```groovy

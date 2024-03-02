@@ -943,6 +943,52 @@ inventories:
 
 # Built-in pipeline parameters
 
+The built-in `universalPipelineWrapperBuiltIns` variable *[dictionary, or Map]* contains keys that can be used in the
+configuration file (for example, when generating reports):
+
+- `universalPipelineWrapperBuiltIns.multilineReportMap` *[dictionary, or Map]* - contains a dictionary of statuses and
+  information about each action in the pipeline stages. The key is intended to be used in code "as part of a pipeline".
+  The structure of the Map is identical to the description of the `addPipelineStepsAndUrls()` function in
+  [jenkins-shared-library](https://github.com/alexanderbazhenoff/jenkins-shared-library) in the function and looks like:
+
+  ```groovy
+  universalPipelineWrapperBuiltIns.multilineReport = [
+          'stage_1[0]': [
+              name : 'stage_1 [0]',
+              state: true|false,
+              url  : 'Information about 1st action in stage_1.'
+          ],
+          'stage_1[1]': [
+              name : 'stage_1 [1]',
+              state: true|false,
+              url  : 'Information about 2nd action in stage_1.'
+          ],
+          'stage_2[0]': [
+              name : 'stage_2 [0]',
+              state: true|false,
+              url  : 'Information about 1st action in stage_2.'
+          ]
+  ]
+  ```
+
+- `universalPipelineWrapperBuiltIns.multilineReportMapStages` *[dictionary, or Map]* - contains only a dictionary of
+  stage states. The structure is similar to *multilineReportMap*:
+
+  ```groovy
+  universalPipelineWrapperBuiltIns.multilineReportMapStages = [
+          'stage_1': [
+              name : 'stage_1',
+              state: true|false,
+              url  : '6 actions.'
+          ],
+          'stage_2': [
+              name : 'stage_2',
+              state: true|false,
+              url  : '4 actions in parallel.'
+          ]
+  ]
+  ```
+
 # Built-in pipeline variables
 
 # Variable substitution
