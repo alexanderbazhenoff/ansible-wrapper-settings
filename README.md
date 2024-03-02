@@ -135,7 +135,7 @@ pipeline parameters, each of which has the following keys:
     - **assign** `[string]` *(optional)* - the name of the pipeline parameter which value will be assigned when
       parameter is not specified (empty). It is also possible to assign environment variables, and therefore Jenkins or
       Teamcity variables: `$NODE_NAME`, `$JOB_NAME`, etc. (see [Variable substitution](#variable-substitution)).
-    - **fail** `[logical]` *(optional, not compatible with the `warn` key)* - a switch to terminate the pipeline with an
+    - **fail** `[boolean]` *(optional, not compatible with the `warn` key)* - a switch to terminate the pipeline with an
       error if the pipeline parameter is not specified. If the pipeline parameter is required and nested in
       [required](#required), then there is no need to specify `fail: True`.
     - **warn** `[boolean]` *(optional, not compatible with the `fail` key)* - a switch to display a warning, but
@@ -240,7 +240,7 @@ The key contains a list of pipeline stages, each element of which has the follow
 
 - **name** `[string]` *(mandatory)* - name of the pipeline stage. [Variable substitution](#variable-substitution) is
   possible as a key value (see [Example 22](#example-22)).
-- **parallel** `[logical]` *(optional)* - a switch, the setting of which leads to parallel launch the list of actions
+- **parallel** `[boolean]` *(optional)* - a switch, the setting of which leads to parallel launch the list of actions
   (the `actions` key) at the current stage (see [Example 6](#example-6)). Default is `false`.
 - **actions** `[list]` *(mandatory)* - list of actions in current stage, each element of which has keys:
 
@@ -618,7 +618,7 @@ files for the current pipeline run.
 
   - **name** `[string]` *(mandatory)* - downstream pipeline parameter name.
   - **type** `[string]` *(mandatory)* - downstream pipeline parameter type: `string`, `text`, `password`, or `boolean`.
-  - **value** `[string or logical]` *(mandatory)* - string or logical value, depending on a downstream parameter type.
+  - **value** `[string or boolean]` *(mandatory)* - string or logical value, depending on a downstream parameter type.
     [Variable substitution](#variable-substitution) is possible.
 
 - **propagate** `[boolean]` *(optional)* - pass completion status from the downstream pipeline: if set to `true`, or the
@@ -789,7 +789,41 @@ actions:
 
 ## 'scripts' key
 
+The key contains scripts, where each nested key is the name of that script, and its value is a dictionary with script
+parameters and script content. Scripts can also be executed “as part of a pipeline” (see [Example 18](#example-18)).
+
+- **pipeline** `[boolean]` *(optional)* - if this switch specified or set, then the script is executed 'as part of the
+  pipeline' (see [Example 18](#example-18)) and then you must also set the key, indicating in which CI tool (or
+  environment) this script should be executed: `jenkins`, `teamcity`, etc. If the key is not specified, or `false`, set
+  the code inside a `scripts` key that t will be executed 'separately from the pipeline' (although when launched it will
+  also inherit all environment variables) (see [Example 18](#example-12)). The difference is that in the first case you
+  can run code that native to the CI tool (Groovy for Jenkins, or Kotlin for Teamcity). In the second case you can run a
+  script in any language (perhaps you may need to install it on node) that will start as a subprocess from a pipeline.
+- **script** `[string]` *(required if not `pipeline: true`)* - script contents. Acceptable use hashbang (see
+  [Example 18](#example-12)).
+- **jenkins** `[string]` *(optional)* - code to execute only when run in Jenkins "as part of the pipeline". All pipeline
+  variables will be inherited (see [Built-in pipeline variables](#built-in-pipeline-variables)).
+- **teamcity** `[string]` *(optional)* - code to execute only when run in Teamcity "as part of the pipeline". All
+  pipeline variables will be inherited (see [Built-in pipeline variables](#built-in-pipeline-variables)).
+
 #### Example 18
+
+```yaml
+# A part of the configuration file with an action to run the code
+# 'as part of the pipeline' for Jenkins and Teamcity.
+
+actions:
+  run_part_of_pipeline_action_name:
+    script: script_name
+
+scripts:
+  script_name:
+      pipeline: true
+      jenkins: |
+        println String.format('EMAIL provided for %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
+      teamcity: |
+        println(String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
+```
 
 ## 'playbooks' key
 
