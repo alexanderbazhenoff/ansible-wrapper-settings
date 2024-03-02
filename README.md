@@ -1248,6 +1248,52 @@ scripts:
 
 #### Example 24
 
+To use pipeline parameters or environment variables, you may need to format the values of these parameters or variables.
+Let's say the pipeline parameter `FOO` contains some dictionary (dict) like:
+
+```yaml
+key1: value1
+key2: value2
+```
+
+Then it needs to be passed in an ansible playbook variable as a dictionary. And the pipeline parameter `BAR` contains a
+space-separated list (list) of the form `one two three` and it must be passed in the ansible playbook variable as a
+list. The transfer of environment variables (or pipeline parameters) inside the playbook will take the following form:
+
+```yaml
+# An example of setting the variables FOO (dict) and BAR (list) in ansible playbook
+# inside the configuration file.
+
+playbooks:
+  playbook_name: |
+      - hosts: all
+        become: true
+        become_method: sudo
+        gather_facts: true
+
+        tasks:
+
+          - name: "Set ansible_variable_foo=FOO as dict, ansible_variable_bar=BAR as list"
+            ansible.builtin.set_fact:
+              ansible_variable_foo: "{{ lookup('ansible.builtin.env', 'FOO') | from_yaml }}"
+              ansible_variable_bar: "{{ '$BAR'.split(' ') | trim }}"
+
+# Note that setting up variables whose values are multiline directly by inserting them
+# inside a playbook 'ansible_variable_foo: $FOO' will break yaml formatting in a playbook.
+```
+
 # Configuration file examples
 
+- [`example-pipeline.yaml`](settings/example-pipeline.yaml): an abstract but working example with the maximum set of
+  supported options and usage comments. Some actions end with an error, but this is normal for demonstrating their
+  handling and console logging.
+- [`downstream-example-pipeline.yaml`](settings/downstream-example-pipeline.yaml): an abstract but working example of
+  how to configure the launch of downstream pipelines and work with artifact files.
+- [`install-postgresql.yaml`](settings/install-postgresql.yaml) - example wrapper for installing PostgreSQL for Linux
+  using the ansible role
+  [postgresql](https://github.com/alexanderbazhenoff/ansible-collection-linux/tree/main/roles/postgresql).
+
 # URLs
+
+- [**jenkins Universal Wrapper Pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
+  source code.

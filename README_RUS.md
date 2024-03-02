@@ -1141,7 +1141,8 @@ parameters:
       description: Choose an action to perform.
     - name: ACTION_SUBJECT
       type: string
-      # В качестве значения по умолчанию задан существующий ansible playbook, или одноименный pipeline.
+      # В качестве значения по умолчанию задан существующий ansible playbook, или
+      # одноименный pipeline.
       default: subject_name
       description: Specify an ansible playbook or downstream pipeline name here.
 
@@ -1284,12 +1285,13 @@ key1: value1
 key2: value2
 ```
 
-Его нужно передать в переменной ansible playbook'а как словарь. А параметр pipeline `BAR` содержит разделенный
-пробелами список (list) вида `one two three` и его нужно передать в переменной ansible playbook'а как список. Тогда
-передача переменных окружения (или параметров pipeline'а) внутри playbook примет следующий вид:
+И далее его нужно передать в переменной ansible playbook'а как словарь. А параметр pipeline `BAR` содержит разделенный
+пробелами список (list) вида `one two three` и его нужно передать в переменной ansible playbook'а как список. Передача
+переменных окружения (или параметров pipeline'а) внутри playbook примет следующий вид:
 
 ```yaml
-# Пример задания переменных FOO (dict) и BAR (list) в ansible playbook'е внутри конфигурационного файла.
+# Пример задания переменных FOO (dict) и BAR (list) в ansible playbook'е внутри
+# конфигурационного файла.
 
 playbooks:
   playbook_name: |
@@ -1305,24 +1307,23 @@ playbooks:
               ansible_variable_foo: "{{ lookup('ansible.builtin.env', 'FOO') | from_yaml }}"
               ansible_variable_bar: "{{ '$BAR'.split(' ') | trim }}"
 
-# Обратите внимание, что задание переменных, чьи значения многострочные, напрямую: 'ansible_variable_foo: $FOO' нарушит
-# yaml-форматирование в playbook'е.
+# Обратите внимание, чьи значения многострочные, что задание переменных
+# посредством вставки напрямую в playbook напрямую 'ansible_variable_foo:
+# $FOO' нарушит yaml-форматирование в playbook'е.
 ```
 
 # Примеры конфигурационных файлов
 
-Директория [settings](settings) данного проекта содержит наглядные рабочие примеры:
-
 - [`example-pipeline.yaml`](settings/example-pipeline.yaml): абстрактный, но рабочий пример с максимально
-  поддерживаемым набором опций и комментариями. Некоторые действия (actions) заканчиваются ошибкой, но это нормально для
-  демонстрации их обработки (handle) и логирования.
+  поддерживаемым набором опций и комментариями об их использовании. Некоторые действия (actions) заканчиваются ошибкой,
+  но это нормально для демонстрации их обработки (handle) и логирования в консоли.
 - [`downstream-example-pipeline.yaml`](settings/downstream-example-pipeline.yaml): абстрактный, но рабочий пример того,
   как конфигурировать запуск downstream pipeline'ы и работу с файлами-артефактами.
 - [`install-postgresql.yaml`](settings/install-postgresql.yaml) - пример-обертка (wrapper) для установки PostgreSQL для
   Linux с использованием ansible роли
-  [postgresql](https://github.com/alexanderbazhenoff/ansible-collection-linux/tree/main/roles/postgresql)
+  [postgresql](https://github.com/alexanderbazhenoff/ansible-collection-linux/tree/main/roles/postgresql).
 
 # Ссылки
 
 - Исходный код
-[**jenkins Universal Wrapper Pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
+  [**jenkins Universal Wrapper Pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
