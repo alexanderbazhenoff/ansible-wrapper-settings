@@ -943,6 +943,26 @@ inventories:
 
 # Built-in pipeline parameters
 
+- `SETTINGS_GIT_BRANCH` - branch from which pipeline settings will be loaded.
+- `NODE_NAME` - the name of the node on which the
+  [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) will be
+  launched.
+- `NODE_TAG` - node tag (or *node label*).
+  [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) starts on the
+  node to which this tag is assigned.
+- `UPDATE_PARAMETERS` - if enabled, then update the pipeline parameters from the configuration file without performing
+  stages and actions. Can be used if the pipeline parameters are changed in the configuration file, but anything except
+  the name (type, default values, description, or handling).
+- `DRY_RUN` - if enabled, no actions and changes will be performed, but service messages will be displayed in the
+  console as if the 'dry run' had not been enabled.
+- `DEBUG_MODE` - режим отладки для детализированного логирования в консоль.
+
+All [pipeline-built-in parameters](#pipeline-built-in-parameters) are available for use in playbooks, inventory, scripts
+and pipelines by the same way as in any other pipelines: for example, the "DRY_RUN" parameter in Jenkins will be
+available through the environment variable `DRY_RUN` and the Groovy variables `env.DRY_RUN` and `params_DRY_RUN`.
+
+# Built-in pipeline variables
+
 The built-in `universalPipelineWrapperBuiltIns` variable *[dictionary, or Map]* contains keys that can be used in the
 configuration file (for example, when generating reports):
 
@@ -989,7 +1009,48 @@ configuration file (for example, when generating reports):
   ]
   ```
 
-# Built-in pipeline variables
+- `universalPipelineWrapperBuiltIns.multilineReport` *[string]* - contains a text table of statuses and information
+  about each action and stage of the pipeline. The content is identical to *multilineReportMap*, but more printable.
+  This key does not contain color codes (ASCII colors), that is more convenient for inserting when generating various
+  [notifications](#action-notifications-send).
+- `universalPipelineWrapperBuiltIns.multilineReportStages` *[string]* - contains only a text table of stage states. No
+  color codes included, because of intended for generating the text of various
+  [notifications](#action-notifications-send). The overall stage execution status will be updated only after all actions
+  in the stage have been completed.
+- `universalPipelineWrapperBuiltIns.multilineReportFailed` *[string]* - contains a text table of only failed actions in
+  stages. Contains an empty string when all actions are completed successfully. No color codes included, because of 
+  intended for generating the text of various [notifications](#action-notifications-send).
+- `universalPipelineWrapperBuiltIns.currentBuild_result` *[string]* - contains overall execution state of the current
+  pipeline run: `SUCCESS`, or `FAILED` (for example, for Jenkins its contents are identical to `currentBuild.result`).
+- `universalPipelineWrapperBuiltIns.multilineReportStagesFailed` *[string]* - contains a text table of only failed
+  stages. Contains an empty string when all stages are completed successfully. No color codes, because of intended for
+  generating the text of various [notifications](#action-notifications-send). The overall stage execution updates
+  only after all actions in the stage have been completed.
+- `universalPipelineWrapperBuiltIns.currentBuild_result` *[string]* - contains an overall execution state of the current
+  pipeline run: `SUCCESS`, or `FAILED` (for example, for Jenkins this value is identical to `currentBuild.result`).
+- `universalPipelineWrapperBuiltIns.ansibleCurrentInstallationName` *[string]* (deprecated) - contains the name of the
+  ansible installation (for example, in Jenkins its value is set in the
+  [Global Configuration Tool](https://issues.jenkins.io/browse/JENKINS-67209). Not used and will probably be removed
+  soon as recent changes in [jenkins shared library](https://github.com/alexanderbazhenoff/jenkins-shared-library) runs
+  ansible playbooks through a shell call by default.
+
+When running scripts ['as part of a pipeline'](#scripts-key), it is also allowed to
+[create your own keys](#using-variables-in-scripts-and-playbooks) for the `universalPipelineWrapperBuiltIns` variable.
+For example:
+
+```groovy
+universalPipelineWrapperBuiltIns.myCustomReport = 'Some text of my custom report'
+```
+
+Upon completion of the current script call "as part of a pipeline", these keys will be updated for the entire pipeline.
+Built-in pipeline variable keys are not accessible when running scripts ['as part of the pipeline'](#scripts-key), but
+they are accessible in environment variables of the same name (see
+[Using variables in scripts and playbooks](#using-variables-in-scripts-and-playbooks) and [Example 23](#example-23)):
+
+```groovy
+// The value of universalPipelineWrapperBuiltIns.multilineReport can be output as:
+println env.multilineReport
+```
 
 # Variable substitution
 

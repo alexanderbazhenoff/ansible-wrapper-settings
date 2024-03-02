@@ -974,21 +974,20 @@ inventories:
 
 - `SETTINGS_GIT_BRANCH` - ветка из которой будут загружаться pipeline settings.
 - `NODE_NAME` - имя node, на которой будет запущен
-  [universal wrapper pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
+  [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
 - `NODE_TAG` - тег ноды (или *node label*).
-  [Universal wrapper pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) будет запущен
+  [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) будет запущен
   на той node, которой присвоен данный тег.
-- `UPDATE_PARAMETERS` - просто обновить параметры pipeline из конфигурационного файла без выполнения стадий и действий.
-  Необходимо в том случае, если в конфигурационном файле изменены параметры pipeline (например: тип, значения по
-  умолчанию, описание, или обработка самого параметра), а не его имя.
-- `DRY_RUN` - "пробный прогон" при котором никаких изменений не будет произведено, но в консоли будут отображаться
-  сообщения, как если бы пробный прогон не был включен.
+- `UPDATE_PARAMETERS` - если включен, то обновить параметры pipeline из конфигурационного файла без выполнения стадий и
+  действий. Можно использовать в случае, если в конфигурационном файле изменены параметры pipeline, но имя параметра
+  осталось прежним (тип, значения по умолчанию, описание, или его обработка).
+- `DRY_RUN` - "пробный прогон" при котором действия не будут выполнены и никаких изменений не будет произведено, но в
+  консоли будут отображаться сообщения, как если бы пробный прогон не был включен.
 - `DEBUG_MODE` - режим отладки для детализированного логирования в консоль.
 
 Все [встроенные в pipeline параметры](#встроенные-в-pipeline-параметры) доступны для использования в playbook'ах,
-inventory и скриптах через переменные окружения: например, `DRY_RUN` в скриптах, или `env.DRY_RUN` для скриптов,
-выполняемых "как часть pipeline". Для Jenkins параметры pipeline так же являются ключами `params`: например,
-`params.NODE_TAG`.
+inventory, скриптах и pipeline'ах аналогично любым другим pipeline'ам: например, параметр "DRY_RUN" в Jenkins будет
+доступен через переменную окружения `DRY_RUN` и переменные Groovy - `env.DRY_RUN` и `params_DRY_RUN`.
 
 # Встроенные в pipeline переменные
 
@@ -1040,8 +1039,7 @@ inventory и скриптах через переменные окружения
 
 - `universalPipelineWrapperBuiltIns.multilineReport` *[строка]* - содержит текстовую таблицу статусов и информацию о
   каждом действии и стадии pipeline. Содержимое идентично *multilineReportMap*, только имеет удобный для чтения формат.
-  В отличие от вывода такой же таблицы в console Jenkins, или Teamcity (при завершении работы pipeline) этот ключ не
-  содержит цветовых кодов (ASCII colours) и, таким образом, удобен для вставки при формировании текста различных
+  Этот ключ не содержит цветовых кодов (ASCII colours) и, таким образом, удобен для вставки при формировании различных
   [уведомлений](#action-отправка-уведомлений).
 - `universalPipelineWrapperBuiltIns.multilineReportStages` *[строка]* - содержит только текстовую таблицу статусов
   стадий. Не содержит цветовых кодов, предназначен для формирования текста различных
@@ -1055,24 +1053,26 @@ inventory и скриптах через переменные окружения
   предназначен для формирования текста различных [уведомлений](#action-отправка-уведомлений). Общий статус выполнения
   стадии будет обновлен только после выполнения всех действий в стадии.
 - `universalPipelineWrapperBuiltIns.currentBuild_result` *[строка]* - содержит общий статус выполнения текущего
-  запуска pipeline: `SUCCESS`, или `FAILED` (например, для Jenkins ее содержимое идентично `currentBuild.result`).
-- `universalPipelineWrapperBuiltIns.ansibleCurrentInstallationName` *[строка]* содержит имя ansible установки,
-  [заданное в jenkins Global Configuration Tool](https://issues.jenkins.io/browse/JENKINS-67209). Менять её значение в
-  действиях pipeline'а допускается, но не рекомендуется: для задания имени пользуйтесь константой pipeline
-  `AnsibleInstallationName`, или `OrgAlxGlobals.GitCredentialsID` в
-  [jenkins shared library](https://github.com/alexanderbazhenoff/jenkins-shared-library).
+  запуска pipeline: `SUCCESS`, или `FAILED` (например, для Jenkins значение идентично `currentBuild.result`).
+- `universalPipelineWrapperBuiltIns.ansibleCurrentInstallationName` *[строка]* (устарело) - содержит имя ansible
+  установки (например, в Jenkins ее значение задается в
+  [Global Configuration Tool](https://issues.jenkins.io/browse/JENKINS-67209). Не используется и, вероятно, в скором
+  времени будет удалена, поскольку последние изменения
+  [jenkins shared library](https://github.com/alexanderbazhenoff/jenkins-shared-library) по умолчанию осуществляют
+  запуск ansible playbook'ов напрямую через вызов shell.
 
-  Для внутренних нужд при [запуске скриптов "как часть pipeline'а"](#ключ-scripts) допускается так же
-  [создание своих ключей](#использование-переменных-в-скриптах-и-playbookах) для переменной
-  `universalPipelineWrapperBuiltIns`. Например:
+При запуске скриптов ["как часть pipeline'а"](#ключ-scripts) допускается так же
+[создание своих ключей](#использование-переменных-в-скриптах-и-playbookах) для переменной
+`universalPipelineWrapperBuiltIns`. Например:
 
-  ```groovy
-  universalPipelineWrapperBuiltIns.myCustomReport = 'Some text of my custom report'
-  ```
+```groovy
+universalPipelineWrapperBuiltIns.myCustomReport = 'Some text of my custom report'
+```
 
-По завершении выполнения скрипта эти ключи будут обновлены для всего pipeline. Встроенные в pipeline ключи переменной
-при [запуске скриптов "как часть pipeline'а"](#ключ-scripts) недоступны, но они будут доступны в одноименной переменной
-окружения (см. [Использование переменных в скриптах и playbook'ах](#использование-переменных-в-скриптах-и-playbookах) и
+По завершении выполнения текущего вызова скрипта "как часть pipeline" эти ключи будут обновлены для всего pipeline.
+Встроенные в pipeline ключи переменной при запуске скриптов ["как часть pipeline'а"](#ключ-scripts) недоступны, но они
+доступны в одноименной переменной окружения (см.
+[Использование переменных в скриптах и playbook'ах](#использование-переменных-в-скриптах-и-playbookах) и
 [Пример 23](#пример-23)):
 
 ```groovy
@@ -1312,4 +1312,4 @@ playbooks:
 # Ссылки
 
 - Исходный код
-[**jenkins universal wrapper pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
+[**jenkins Universal Wrapper Pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
