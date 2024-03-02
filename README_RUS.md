@@ -356,6 +356,7 @@ parameters:
       choices:
         - action_one
         - action_two
+
 stages:
   - name: stage_name
     actions:
@@ -687,7 +688,7 @@ parameters:
   required:
     - name: UPSTREAM_PARAMETER
       type: string
-      
+
 stages:
   - name: run_downstream_pipeline_stage_name
     actions:
@@ -752,7 +753,7 @@ parameters:
       regex_replace:
         regex: ' '
         to: ', '
-      
+
 stages:
   - name: email_report_stage_name
     actions:
@@ -765,16 +766,17 @@ actions:
     subject: Test email report
     body: |
       Hi,
-      
-      I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME' pipeline, finished with
-      '$currentBuild_result' state. As you see sending report to $EMAIL done.
-      
+
+      I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME'
+      pipeline, finished with '$currentBuild_result' state. As you see sending
+      report to $EMAIL done.
+
       Overall report is:
       $multilineReport
-      
+
       Check pipeline console for details: $BUILD_URL/console
       This report was generated automatically, please do not reply.
-      
+
       Sincerely,
       Your Jenkins.
 ```
@@ -846,9 +848,11 @@ scripts:
   script_name:
       pipeline: true
       jenkins: |
-        println String.format('EMAIL provided for %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
+        println String.format('EMAIL provided for %s action is awesome: %s',
+            env.PIPELINE_ACTION, env.EMAIL)
       teamcity: |
-        println(String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
+        println(String.format("EMAIL provided for %s action is awesome: %s",
+            env.PIPELINE_ACTION, env.EMAIL))
 ```
 
 ## Ключ "playbooks"
@@ -882,9 +886,9 @@ parameters:
   required:
     - name: IP_ADDRESSES
       type: string
-      description: |
-        Space separated IP or DNS list of the host(s) to asnible ping: try to connect to host, verify a usable python
-        and return.
+      description: >-
+        Space separated IP or DNS list of the host(s) to asnible ping: try to connect
+        to host, verify a usable python and return.
       regex_replace:
         regex: ' '
         to: "\\\n"
@@ -1302,14 +1306,14 @@ playbooks:
 
         tasks:
 
-          - name: "Setting up ansible_variable_foo (FOO) as dict and ansible_variable_bar (BAR) as list"
+          - name: "Set ansible_variable_foo=FOO as dict, ansible_variable_bar=BAR as list"
             ansible.builtin.set_fact:
               ansible_variable_foo: "{{ lookup('ansible.builtin.env', 'FOO') | from_yaml }}"
               ansible_variable_bar: "{{ '$BAR'.split(' ') | trim }}"
 
-# Обратите внимание, чьи значения многострочные, что задание переменных
-# посредством вставки напрямую в playbook напрямую 'ansible_variable_foo:
-# $FOO' нарушит yaml-форматирование в playbook'е.
+# Обратите внимание, чьи значения многострочные, что задание переменных посредством вставки
+# напрямую в playbook напрямую 'ansible_variable_foo: $FOO' нарушит yaml-форматирование в
+# playbook'е.
 ```
 
 # Примеры конфигурационных файлов

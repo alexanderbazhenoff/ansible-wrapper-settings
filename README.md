@@ -164,11 +164,12 @@ pipeline parameters, each of which has the following keys:
 #### Example 2
 
 ```yaml
-# This Pipeline contains three parameters in the `required` key, but only the `LOGIN` parameter
-# is required, omitting which (an empty parameter value) will cause the pipeline to fail. If the
-# `PASSWORD` parameter is not specified, then only a warning will appear in the console then the
-# pipeline will continue executing, but if `LOGIN_2` is not specified, then only a warning will
-# be issued, then the value will be taken from the pipeline's `LOGIN` parameter.
+# This Pipeline contains three parameters in the `required` key, but only the `LOGIN`
+# parameter is required, omitting which (an empty parameter value) will cause the
+# pipeline to fail. If the `PASSWORD` parameter is not specified, then only a warning will
+# appear in the console then the pipeline will continue executing, but if `LOGIN_2` is not
+# specified, then only a warning will be issued, then the value will be taken from the
+# pipeline's `LOGIN` parameter.
 
 parameters:
   required:
@@ -190,10 +191,10 @@ parameters:
 ```yaml
 # A part of the configuration file with the required pipline parameter `IP_ADDRESSES`,
 # where spaces will be replaced with 'line feed' for substitution inside ansible inventory
-# (not included in example, but means). Also pay attention to the syntax in the value of the 'to'
-# field in the regex_replace key of `IP_ADDRESSES` parameter. If pipeline stages use this variable,
-# its value will also be formatted: IPs (or hosts) will be separated by line breaks rather than by
-# spaces.
+# (not included in example, but means). Also pay attention to the syntax in the value of the
+# 'to' field in the regex_replace key of `IP_ADDRESSES` parameter. If pipeline stages use this
+# variable, its value will also be formatted: IPs (or hosts) will be separated by line breaks
+# rather than by spaces.
 
 parameters:
   required:
@@ -215,17 +216,19 @@ this key. There is no way to control the pipeline behavior if these parameters a
 #### Example 4
 
 ```yaml
-# A part of the pipeline configuration file containing only optional parameters `ONE` and `TWO`.
+# A part of the pipeline configuration file containing only optional parameters `ONE` and
+# `TWO`.
 
 parameters:
   optional:
     - name: ONE
       type: string
-      description: Description of parameter ONE which type is string and default value is 'something'.
+      description: >-
+        Description of parameter ONE which type is string and default value is 'something'.
       default: something
     - name: TWO
       type: choice
-      description: |
+      description: >-
         Description of parameter TWO which type is choices.
         TWO parameter includes three choices ('one', 'two' and 'three')
       choices:
@@ -345,6 +348,7 @@ parameters:
       choices:
         - action_one
         - action_two
+
 stages:
   - name: stage_name
     actions:
@@ -364,7 +368,8 @@ stages:
       - before_message: Starting build on 'build-x64-node-01.domain.com' jenkins node...
         action: build_action
         node: build-x64-node-01.domain.com
-      - before_message: Starting build on any jenkins node name starts with 'build-x64-node-'...
+      - before_message: >-
+          Starting build on any jenkins node name starts with 'build-x64-node-'...
         action: build_action
         node:
           name: build-x64-node-
@@ -748,8 +753,8 @@ actions:
     body: |
       Hi,
       
-      I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME' pipeline, finished with
-      '$currentBuild_result' state. As you see sending report to $EMAIL done.
+      I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME' pipeline,
+      finished with '$currentBuild_result' state. As you see sending report to $EMAIL done.
       
       Overall report is:
       $multilineReport
@@ -820,9 +825,11 @@ scripts:
   script_name:
       pipeline: true
       jenkins: |
-        println String.format('EMAIL provided for %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
+        println String.format('EMAIL provided for %s action is awesome: %s',
+            env.PIPELINE_ACTION, env.EMAIL)
       teamcity: |
-        println(String.format("EMAIL provided for %s action is awesome: %s", env.PIPELINE_ACTION, env.EMAIL))
+        println(String.format("EMAIL provided for %s action is awesome: %s",
+            env.PIPELINE_ACTION, env.EMAIL))
 ```
 
 ## 'playbooks' key
@@ -854,9 +861,9 @@ parameters:
   required:
     - name: IP_ADDRESSES
       type: string
-      description: |
-        Space separated IP or DNS list of the host(s) to asnible ping: try to connect to host, verify a usable python
-        and return.
+      description: >-
+        Space separated IP or DNS list of the host(s) to asnible ping: try to connect to host,
+        verify a usable python and return.
       regex_replace:
         regex: ' '
         to: "\\\n"
@@ -915,7 +922,7 @@ playbooks:
       become_method: sudo
       gather_facts: true
       tasks:
-        - name: Install curl using ansible.builtin.package ansible module Generic OS package manager
+        - name: Install curl using ansible.builtin.package ansible module
           ansible.builtin.package:
           name: curl
           state: present
