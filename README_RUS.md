@@ -1213,24 +1213,24 @@ inventories:
 
 # Использование переменных в скриптах и playbook'ах
 
-Все переменные окружения доступны во время выполнения скриптов (как при их
-[запуске "как часть pipeline'а"](#ключ-scripts), так и отдельно). Переменные окружения едины для всех запусков и всего
-pipeline, поэтому следует уделить внимание их обновлению при параллельном запуске действий. Ключи
+Все переменные окружения доступны к использованию, как во время выполнения скриптов, так и при запуске кода "как часть
+pipeline'а"](#ключ-scripts). Переменные окружения едины для параллельных запусков действий и всего pipeline. Ключи
 [встроенной в pipeline переменной](#встроенные-в-pipeline-переменные) `universalPipelineWrapperBuiltIns` доступны так же
-в переменных окружения, но сама переменная не передается при запуске скрипта. И лишь по завершению действия скрипта
-выполненного "как часть pipeline'а" созданные внутри ключи добавятся в переменную `universalPipelineWrapperBuiltIns`
-(см. [Пример 23](#пример-23)). При именовании переменных внутри bash, или shell скриптов, а так же при создании ключей
-переменной `universalPipelineWrapperBuiltIns` избегайте создания уже существующих ключей, параметров pipeline и
-переменных окружения. Для быстрой справки можно использовать shell команду `env`, или `println env` для groovy.
+в переменных окружения, но во встроенной переменной одноименные ключи создадутся лишь по завершению действия скрипта
+(см. [Пример 23](#пример-23)). Избегайте создания уже существующих ключей переменной `universalPipelineWrapperBuiltIns`
+при именовании переменных внутри shell скриптов, параметров pipeline, а так же при создании новых ключей (например: для
+быстрой справки можно использовать shell команду `env`, или `println env` в Jenkins и Groovy).
 
 #### Пример 23
 
 ```yaml
-# Фрагмент конфигурационного файла с описаниями действий и скриптами:
+# Фрагмент конфигурационного файла с заданием действий и скриптов:
 # - bash скрипт для задания переменной окружения и ее отображения;
-# - отображение этой переменной окружения и создание ключа `myKey` для переменной `universalPipelineWrapperBuiltIns` в 
-#   запуске скрипта "как часть pipeline" для Jenkins;
-# - скрипт для вывода значения этого ключа как переменной окружения запускаемый "как часть pipeline";
+# - отображение этой переменной окружения и создание ключа `myKey`
+#   для переменной `universalPipelineWrapperBuiltIns` в запуске
+#   скрипта "как часть pipeline" в Jenkins;
+# - скрипт для вывода значения этого ключа как переменной окружения
+#   запускаемый "как часть pipeline";
 # - bash скрипт для вывода значения этого ключа.
 
 actions:
@@ -1248,20 +1248,26 @@ scripts:
     script: |
       #!/usr/bin/env bash
       MY_ENV_VARIABLE='my env variable text'
-      printf "MY_ENV_VARIABLE was defined. Now it's '%s'.\n" "$MY_ENV_VARIABLE"
+      printf "MY_ENV_VARIABLE was defined. Now it's '%s'.\n" \
+        "$MY_ENV_VARIABLE"
   script_2:
     pipeline: true
-    # Обратите внимание, что объявление переменной universalPipelineWrapperBuiltIns внутри скрипта так же как и return
-    # для ее возврата указывать не требуется. Любой тип ключа по завершении скрипта "как часть pipeline" будет
-    # преобразован в строковое значение одноименной переменной окружения.
+    # Обратите внимание, что объявление переменной 
+    # universalPipelineWrapperBuiltIns внутри скрипта так же как и return
+    # для ее возврата указывать не требуется. Любой тип ключа по завершении
+    # скрипта "как часть pipeline" будет преобразован в строковое значение
+    # одноименной переменной окружения.
     jenkins: |
-      println String.format('Print my MY_ENV_VARIABLE env variable: %s', env.MY_ENV_VARIABLE)
+      println String.format('Print my MY_ENV_VARIABLE env variable: %s',
+          env.MY_ENV_VARIABLE)
       universalPipelineWrapperBuiltIns.myKey = 'my key text'
-      println String.format('Print myKey: %s', universalPipelineWrapperBuiltIns.myKey)
+      println String.format('Print myKey: %s',
+          universalPipelineWrapperBuiltIns.myKey)
   script_3:
     pipeline: true
     jenkins: |
-      println String.format('Now myKey is available in groovy code as environment variable only: %s', env.myKey)
+      println String.format('%s as environment variable only: %s',
+          'Now myKey is available in groovy code', env.myKey)
   script_4:
     script: |
       #!/usr/bin/env bash
@@ -1303,7 +1309,7 @@ playbooks:
 # yaml-форматирование в playbook'е.
 ```
 
-# Примеры использования
+# Примеры конфигурационных файлов
 
 Директория [settings](settings) данного проекта содержит наглядные рабочие примеры:
 

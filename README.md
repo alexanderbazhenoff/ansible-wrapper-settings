@@ -1183,10 +1183,71 @@ inventories:
 
 # Using variables in scripts and playbooks
 
+All environment variables are available for use, both during script execution and when running code
+['as part of a pipeline'](#scripts-key). Environment variables are the same for parallel action launches and the entire
+pipeline. The keys of the [built-in pipeline variable](#built-in-pipeline-variables) `universalPipelineWrapperBuiltIns`
+are also available in environment variables, but in the built-in variable the keys of the same name will be created only
+upon completion of the script (see [Example 23](#example-23)). Please avoid creating existing
+`universalPipelineWrapperBuiltIns` variable keys when naming variables inside shell scripts, pipeline parameters, or
+when creating new keys (you can use the `env` shell command, or `println env` in Jenkins and Groovy for quick
+reference).
+
 #### Example 23
+
+#### Пример 23
+
+```yaml
+# A part of the configuration file with actions and scripts defining:
+# - bash script for setting the environment variable and displaying it;
+# - display this environment variable and create a key `myKey` for the
+#   variable `universalPipelineWrapperBuiltIns` in running 'as part of
+#   pipeline' Jenkins script;
+# - a script to display key value as an environment variable, launched
+#   'as part of the pipeline';
+# - bash script to display the value of this key.
+
+actions:
+  setup_env_variable:
+    script: script_1
+  show_variable_and_setup_keys:
+    script: script_2
+  show_updated_key_as_env_variable_in_groovy:
+    script: script_3
+  show_updated_key_as_env_variable_in_bash:
+    script: script_4
+
+scripts:
+  script_1:
+    script: |
+      #!/usr/bin/env bash
+      MY_ENV_VARIABLE='my env variable text'
+      printf "MY_ENV_VARIABLE was defined. Now it's '%s'.\n" \
+        "$MY_ENV_VARIABLE"
+  script_2:
+    pipeline: true
+    # Please note that declaring the universalPipelineWrapperBuiltIns variable
+    # inside the script, as well as return, is not required to return it. Any
+    # type of key at the end of the script “as part of the pipeline” will be
+    # converted to the string value of the environment variable of the same name.
+    jenkins: |
+      println String.format('Print my MY_ENV_VARIABLE env variable: %s',
+          env.MY_ENV_VARIABLE)
+      universalPipelineWrapperBuiltIns.myKey = 'my key text'
+      println String.format('Print myKey: %s',
+          universalPipelineWrapperBuiltIns.myKey)
+  script_3:
+    pipeline: true
+    jenkins: |
+      println String.format('%s as environment variable only: %s',
+          'Now myKey is available in groovy code', env.myKey)
+  script_4:
+    script: |
+      #!/usr/bin/env bash
+      printf "Print myKey in bash: '%s'.\n" "$myKey"
+```
 
 #### Example 24
 
-# Usage examples
+# Configuration file examples
 
 # URLs
