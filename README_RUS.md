@@ -1082,21 +1082,21 @@ println env.multilineReport
 
 # Подстановка переменных
 
-В конфигурационном файле в качестве значений в некоторых ключах может быть указано значение любого параметра pipeline,
-или переменной окружения (если подстановка возможна, то это указано в описании ключа конфигурационного файла выше).
-Допускается использование нескольких переменных, комбинированных с обычными текстовыми строками (см.
-[Пример 21](#пример-21)). В [описании действий](#ключ-actions) в конфигурационном файле так же допускается подстановка
-[встроенных в pipeline переменных](#встроенные-в-pipeline-переменные) (см. [Пример 22](#пример-22)), для которых не
-требуется полное указание имени переменной (например: `universalPipelineWrapperBuiltIns.multilineReport`, как если бы
-эта переменная использовалась внутри скрипта, исполняемого "как часть pipeline'а" (см. [Пример 18](#пример-18))), а
-нужно всего лишь указать ключ этой переменной (например, `$multilineReport`).
+В конфигурационном файле в большинстве строковых значений ключей может использоваться любой параметр pipeline, или
+переменная окружения (если подстановка возможна, то это указано в описании ключа конфигурационного файла выше).
+Допускается использование нескольких переменных, комбинированных с обычными текстом (см. [Пример 21](#пример-21)).
+В [описании действий](#ключ-actions) в конфигурационном файле так же допускается подстановка
+[встроенных в pipeline переменных](#встроенные-в-pipeline-переменные) (см. [Пример 22](#пример-22)): например, для
+подстановки значения ключа `universalPipelineWrapperBuiltIns.multilineReport` можно указать только имя ключа, аналогично
+тому, как если бы вы хотели использовать подстановку переменной окружения - `$multilineReport`(см. [Пример 18](#пример-18)).
 
 #### Пример 21
 
 ```yaml
 ---
-# Фрагмент конфигурационного файла, в котором в `before_message` и `action` производится
-# подстановка параметров pipeline.
+
+# Фрагмент конфигурационного файла с подстановкой параметров
+# pipeline в ключах `before_message` и `action`.
 
 parameters:
   required:
@@ -1110,7 +1110,8 @@ parameters:
 stages:
   - name: own stage
     actions:
-      - before_message: Ready to perform action combined from FOO='$FOO', BAR='$BAR' and BAZ='$BAZ' values.
+      - before_message: |
+          Starting the action combined from FOO='$FOO', BAR='$BAR' and BAZ='$BAZ' values.
         action: $FOO$BAR$BAZ
 ```
 
@@ -1119,8 +1120,9 @@ stages:
 ```yaml
 ---
 
-# Пример конфигурационного файла для запуска ansible playbook, или pipeline (параметр `ACTION`),
-# имя которых задается переменной `ACTION_SUBJECT`. Имя пользователя `USERNAME` так же передается
+# Пример конфигурационного файла для запуска ansible playbook, или pipeline
+# (выбирается параметром `ACTION`). Имя playbook, или pipeline задается
+# параметром `ACTION_SUBJECT`. Имя пользователя `USERNAME` так же передается
 # в playbook, или pipeline.
 
 parameters:
@@ -1128,8 +1130,9 @@ parameters:
     - name: USERNAME
       type: string
       default: 'jenkins'
-      description: |
-        Run action under specified username (use in ansible inventory for login or pass to downstream pipeline).
+      description: >-
+        Run action under specified username (use in ansible inventory for login
+        or pass to downstream pipeline).
     - name: ACTION
       type: choice
       choices:
@@ -1143,8 +1146,9 @@ parameters:
       description: Specify an ansible playbook or downstream pipeline name here.
 
 stages:
-  # Будет произведена подстановка параметра pipeline `ACTION` в имя стадии и первое действие. Параметр `USERNAME`
-  # будет так же подставлен в сообщение перед действием.
+  # Будет произведена подстановка параметра pipeline `ACTION` в имя стадии и
+  # первое действие. Параметр `USERNAME` будет так же подставлен в сообщение
+  # перед действием.
   - name: $ACTION report
     actions:
       - before_message: Ready to $ACTION under $USERNAME
@@ -1164,15 +1168,18 @@ actions:
     report: email
     to: '$DEFAULT_REPLYTO'
     subject: Test email report
-    # В сообщение будет произведена, как подстановка переменных окружения (`JOB_NAME`, `EMAIL` и `BUILD_URL`), так и
-    # встроенных в pipeline переменных (`currentBuild_result` и `multilineReport`). Обратите внимание, что для
-    # встроенных переменных в качестве значений ключа `body` указывать полное имя `universalPipelineWrapperBuiltIns` не
+    # В сообщение будет произведена, как подстановка переменных окружения
+    # (`JOB_NAME`, `EMAIL` и `BUILD_URL`), так и встроенных в pipeline
+    # переменных (`currentBuild_result` и `multilineReport`). Обратите
+    # внимание, что для встроенных переменных в качестве значения ключа
+    # `body` указывать полное имя `universalPipelineWrapperBuiltIns` не
     # нужно.
     body: |
       Hi,
 
-      I've just run a test for universal jenkins wrapper pipeline for '$JOB_NAME' pipeline, finished with
-      '$currentBuild_result' state. As you see sending report to $EMAIL done.
+      I've just run a test for universal jenkins wrapper pipeline for
+      '$JOB_NAME' pipeline, finished with '$currentBuild_result' state.
+      As you see sending report to $EMAIL done.
 
       Overall report is:
       $multilineReport

@@ -1054,9 +1054,132 @@ println env.multilineReport
 
 # Variable substitution
 
+In the configuration file, most string key values can use any pipeline parameter or environment variable (if
+substitution is possible, this is indicated in the key description above). It is allowed to use several variables
+combined with plain text (see [Example 21](#example-21)). [Built-in pipeline variables](#built-in-pipeline-variables)
+substitution is also possible inside the action description (see [Example 22](#example-22)): for example, for variable
+substitution of `universalPipelineWrapperBuiltIns.multilineReport` key value, you can just mention the same key name,
+like the same way you use environment variable - `$multilineReport` (see [Example 18](#example-18)).
+
 #### Example 21
 
+```yaml
+---
+
+# A part of the configuration file with substitution of pipeline parameters
+# in the `before_message` and `action` keys.
+
+parameters:
+  required:
+    - name: FOO
+      type: string
+    - name: BAR
+      type: string
+    - name: BAZ
+      type: string
+
+stages:
+  - name: own stage
+    actions:
+      - before_message: |
+          Starting the action combined from FOO='$FOO', BAR='$BAR' and BAZ='$BAZ' values.
+        action: $FOO$BAR$BAZ
+```
+
 #### Example 22
+
+```yaml
+---
+
+# An example of a configuration file for launching an ansible playbook or pipeline
+# (selected by the `ACTION` parameter). The name of the playbook or pipeline is
+# specified by the `ACTION_SUBJECT` parameter. The username `USERNAME` is also
+# passed to the playbook or pipeline.
+
+parameters:
+  required:
+    - name: USERNAME
+      type: string
+      default: 'jenkins'
+      description: >-
+        Run action under specified username (use in ansible inventory for login
+        or pass to downstream pipeline).
+    - name: ACTION
+      type: choice
+      choices:
+        - run playbook
+        - run pipeline
+      description: Choose an action to perform.
+    - name: ACTION_SUBJECT
+      type: string
+      # The default value is set equal to an existing ansible playbook name or a pipeline.
+      default: subject_name
+      description: Specify an ansible playbook or downstream pipeline name here.
+
+stages:
+  # The pipeline `ACTION` parameter will be substituted into the stage name and the first
+  # action. The `USERNAME` parameter will also be inserted into the message before the
+  # action.
+  - name: $ACTION report
+    actions:
+      - before_message: Ready to $ACTION under $USERNAME
+        action: $ACTION
+      - action: email report
+
+actions:
+  run playbook:
+    playbook: $ACTION_SUBJECT
+  run pipeline:
+    pipeline: $ACTION_SUBJECT
+    parameters:
+      - name: USERNAME
+        type: string
+        value: $USERNAME
+  email report:
+    report: email
+    to: '$DEFAULT_REPLYTO'
+    subject: Test email report
+    # The message will be filled with both environment variables (`JOB_NAME`, `EMAIL`
+    # and `BUILD_URL`) and variables built into the pipeline (`currentBuild_result`
+    # and `multilineReport`). Note that for built-in variables, you do not need to
+    # specify the full name `universalPipelineWrapperBuiltIns` as the value of the
+    # `body` key.
+    body: |
+      Hi,
+
+      I've just run a test for universal jenkins wrapper pipeline for
+      '$JOB_NAME' pipeline, finished with '$currentBuild_result' state.
+      As you see sending report to $EMAIL done.
+
+      Overall report is:
+      $multilineReport
+
+      Check pipeline console for details: $BUILD_URL/console
+      This report was generated automatically, please do not reply.
+
+      Sincerely,
+      Your CI.
+        
+playbooks:
+  subject_name: |
+    - hosts: all
+      tasks:
+        - name: "Perform ansible ping on the host(s)"
+          ansible.builtin.ping:
+
+inventories:
+  default: |
+    [all]
+    192.168.0.200
+    192.168.0.201
+    [all:vars]
+    ansible_connection=ssh
+    ansible_become_user=root
+    ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+    ansible_ssh_user=$USERNAME
+    ansible_ssh_pass=my_password
+    ansible_become_pass=my_password
+```
 
 # Using variables in scripts and playbooks
 
