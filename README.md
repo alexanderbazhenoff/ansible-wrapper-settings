@@ -964,7 +964,7 @@ inventories:
   console as if the 'dry run' had not been enabled.
 - `DEBUG_MODE` - режим отладки для детализированного логирования в консоль.
 
-All [pipeline-built-in parameters](#pipeline-built-in-parameters) are available for use in playbooks, inventory, scripts
+All [pipeline-built-in parameters](#built-in-pipeline-parameters) are available for use in playbooks, inventory, scripts
 and pipelines by the same way as in any other pipelines: for example, the "DRY_RUN" parameter in Jenkins will be
 available through the environment variable `DRY_RUN` and the Groovy variables `env.DRY_RUN` and `params_DRY_RUN`.
 
@@ -1025,7 +1025,7 @@ configuration file (for example, when generating reports):
   [notifications](#action-notifications-send). The overall stage execution status will be updated only after all actions
   in the stage have been completed.
 - `universalPipelineWrapperBuiltIns.multilineReportFailed` *[string]* - contains a text table of only failed actions in
-  stages. Contains an empty string when all actions are completed successfully. No color codes included, because of 
+  stages. Contains an empty string when all actions are completed successfully. No color codes included, because of
   intended for generating the text of various [notifications](#action-notifications-send).
 - `universalPipelineWrapperBuiltIns.currentBuild_result` *[string]* - contains overall execution state of the current
   pipeline run: `SUCCESS`, or `FAILED` (for example, for Jenkins its contents are identical to `currentBuild.result`).
