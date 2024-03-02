@@ -827,11 +827,119 @@ scripts:
 
 ## 'playbooks' key
 
+The key contains ansible playbooks, where each nested key is the name of this script, and its values are the contents of
+the playbook (see [Example 19](#example-19)). [Variable substitution](#variable-substitution) is possible.
+
 ## 'inventories' key
+
+The key contains an ansible inventory, where each nested key is the name of that inventory, and its value is the
+contents of the inventory. [Variable substitution](#variable-substitution) is possible.
+
+For all playbooks, at least one inventory with the name `default` must be specified in the configuration file, which
+will be used for all playbooks (see [Example 19](#example-19)) in this configuration file. Each playbook can also have
+its own inventory: in this case, the inventory is created with the same name as the playbook to which it corresponds
+(see [Example 20](#example-20)). [Variable substitution](#variable-substitution) is possible.
 
 #### Example 19
 
+```yaml
+---
+
+# An example of a configuration file with pipeline parameters, stages, actions, playbook
+# and default inventory. All pipeline parameters specify hosts credentials for which
+# anisble ping will be performed. There is one single inventory named `default`, but in
+# this example the inventory could also have the name `run_ansible_playbook_action_name`.
+
+parameters:
+  required:
+    - name: IP_ADDRESSES
+      type: string
+      description: |
+        Space separated IP or DNS list of the host(s) to asnible ping: try to connect to host, verify a usable python
+        and return.
+      regex_replace:
+        regex: ' '
+        to: "\\\n"
+    - name: SSH_LOGIN
+      type: string
+      description: SSH login for all specified hosts.
+    - name: SSH_PASSWORD
+      type: password
+      description: SSH password for all specified hosts.
+
+stages:
+  - name: stage_name
+    actions:
+      - action: run_ansible_playbook_action_name
+
+actions:
+  run_ansible_playbook_action_name:
+    playbook: playbook_name
+
+playbooks:
+  playbook_name: |
+    - hosts: all
+      tasks:
+        - name: Perform ansible ping on the host(s)
+          ansible.builtin.ping:
+
+inventories:
+  default: |
+    [all]
+    $IP_ADDRESSES
+    [all:vars]
+    ansible_connection=ssh
+    ansible_become_user=root
+    ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+    ansible_ssh_user=$SSH_LOGIN
+    ansible_ssh_pass=$SSH_PASSWORD
+```
+
 #### Example 20
+
+```yaml
+# A fragment of a configuration file with two playbooks
+# (`ansible_ping_playbook_name` and `install_curl_playbook_name`) and inventory for
+# each of them: when executing `ansible_ping_playbook_name`, authentication occurs
+# using a password, when executing `install_curl_playbook_name` using an ssh key.
+
+playbooks:
+  ansible_ping_playbook_name: |
+    - hosts: all
+      tasks:
+        - name: Perform ansible ping on the host(s)
+          ansible.builtin.ping:
+  install_curl_playbook_name: |
+    - hosts: all
+      become: true
+      become_method: sudo
+      gather_facts: true
+      tasks:
+        - name: Install curl using ansible.builtin.package ansible module Generic OS package manager
+          ansible.builtin.package:
+          name: curl
+          state: present
+
+inventories:
+  ansible_ping_playbook_name: |
+    [all]
+    $IP_ADDRESSES
+    [all:vars]
+    ansible_connection=ssh
+    ansible_become_user=root
+    ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+    ansible_ssh_user=$SSH_LOGIN
+    ansible_ssh_pass=$SSH_PASSWORD
+  install_curl_playbook_name: |
+    [all]
+    $IP_ADDRESSES
+
+    [all:vars]
+    ansible_connection=ssh
+    ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+    ansible_user=$SSH_LOGIN
+    ansible_ssh_private_key_file=~/.ssh/id_rsa
+```
 
 # Built-in pipeline parameters
 
