@@ -1,9 +1,10 @@
 <!-- markdownlint-disable MD001 MD007 MD025 MD033 MD041 -->
 <div align='center'>
 
-# [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline) format description
+# Settings file format description for [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
 
 [![Super-Linter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+[![Release for Jenkins](https://img.shields.io/github/v/release/alexanderbazhenoff/jenkins-universal-wrapper-pipeline?label=release%20for%20Jenkins)](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![GitHub License](https://img.shields.io/github/license/alexanderbazhenoff/universal-wrapper-pipeline-settings)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
