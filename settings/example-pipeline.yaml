@@ -50,7 +50,7 @@ parameters:
         If this parameter is empy SSH_PASSWORD will be used.
       on_empty:
         assign: $SSH_PASSWORD
-        fail: False
+        fail: false
     # Define action by choices of `PIPELINE_ACTION`. Using spaces in action and stage names are allowed.
     - name: PIPELINE_ACTION
       type: choice
@@ -65,7 +65,7 @@ parameters:
       type: string
       default: my-email@domain.net
       on_empty:
-        warn: True
+        warn: true
       regex:
         - '(?:(?:\r\n)?[ \t])*(?:(?:(?:[^()<>@,;:\\".\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t]'
         - ')+|\Z|(?=[\["()<>@,;:\\".\[\]]))|"(?:[^\"\r\\]|\\.|(?:(?:\r\n)?[ \t]))*"(?:(?:'
@@ -162,11 +162,11 @@ parameters:
     # parameters, which are always injected first on pipeline parameters update.
     - name: PERFORM_PING
       type: boolean
-      default: False
+      default: false
       description: Perform ansible ping.
     - name: LXCFS
       type: boolean
-      default: False
+      default: false
       description: Install lxcfs instead of lxc.<br><br><br><br>
 
 
@@ -186,7 +186,7 @@ stages:
         after_message: Installing collections to run lxfs ansible role done.
         fail_message: Installing ansible collections failed.
         success_message: Installing ansible collections finished.
-        stop_on_fail: True
+        stop_on_fail: true
       - before message: |
           Install community.docker collection just fo example of sing collection install, because it's not required.
         action: ansible_galaxy_install_action_name_2
@@ -203,7 +203,7 @@ stages:
 
   - name: stage_2
     # Actions in this stage will start in parallel.
-    parallel: True
+    parallel: true
     actions:
       - action: run custom code as a part of pipeline action name
       - action: run bash script action name
@@ -217,24 +217,24 @@ stages:
       # All errors in the first action will be ignored. Take a look at conditions and messages in other actions.
       - before_message: Running action with exit code 1 on any node...
         action: run bash final script action name
-        ignore_fail: True
+        ignore_fail: true
         node:
       - before_message: |
           This action will never run because requires at least one action with fail, but all completed with SUCCESS.
         action: run bash final script action name
-        fail_only: True
+        fail_only: true
       # Take a look at 'node' key: you can specify them by 'node' sub-key or just as string value of a node key.
       - before_message: This action will run on master node only when all actions completed with SUCCESS...
         action: run bash final script action name
-        success_only: True
+        success_only: true
         node: master
       - before_message: |
           This action will never run because requires all actions completed with SUCCESS, but previous was failed.
         action: run bash final script action name
-        success_only: True
+        success_only: true
       - before_message: This action will run on master node only when at least one action completed with FAILURE...
         action: run bash final script action name
-        fail_only: True
+        fail_only: true
         node:
           name: master
       - before_message: Running a downstream pipeline without getting file artifacts just to check handling.
@@ -296,12 +296,12 @@ actions:
       - name: EMAIL
         type: string
         value: $EMAIL
-    propagate: False
+    propagate: false
     copy_artifacts:
       filter: test_file.txt
-      fingerprint: True
+      fingerprint: true
       target_directory: subdirectory_in_workspace_for_repository
-      optional: True
+      optional: true
 
   # Run a downstream pipeline with getting unexisting artifacts file just to show error handling.
   run downstream job with incorrect artifacts file action name:
@@ -316,7 +316,7 @@ actions:
       - name: EMAIL
         type: string
         value: $EMAIL
-    propagate: False
+    propagate: false
     copy_artifacts:
       filter: no_such_file.txt
 
@@ -424,7 +424,7 @@ scripts:
   # Run a code as a part of pipeline including code for Jenkins and Teamcity that will be selected in the appropriate
   # environment.
   script_name_1:
-    pipeline: True
+    pipeline: true
     jenkins: |
       // some groovy code here to print 'PIPELINE_ACTION' and 'EMAIL' pipeline parameters:
       println String.format('EMAIL provided for %s action is awesome: %s', env.PIPELINE_ACTION, env.EMAIL)
@@ -468,9 +468,9 @@ playbooks:
 
   run_role_playbook_name: |
     - hosts: all
-      become: True
+      become: true
       become_method: sudo
-      gather_facts: True
+      gather_facts: true
 
       tasks:
 

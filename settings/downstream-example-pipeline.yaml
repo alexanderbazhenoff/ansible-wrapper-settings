@@ -53,7 +53,7 @@ actions:
     script: script_name
   archive_artifacts_action_name:
     artifacts: test_file.txt
-    allow_empty: False
+    allow_empty: false
 
 
 scripts:
