@@ -76,7 +76,7 @@ jobs:
         uses: willgarcia/workflow-wait-action@main
         with:
           interval: 2
-          initial_delay: 40
+          initial_delay: 80
 
       - name: Download English Wiki as an artifact
         uses: actions/download-artifact@v4
@@ -101,7 +101,7 @@ jobs:
         uses: willgarcia/workflow-wait-action@main
         with:
           interval: 2
-          initial_delay: 40
+          initial_delay: 80
 
       - name: Download Russian Wiki as an artifact
         uses: actions/download-artifact@v4
