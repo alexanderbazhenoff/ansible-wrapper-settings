@@ -23,14 +23,30 @@ jobs:
           ref: development
           path: jenkins_src
 
-      - name: Checkout UWP for Jenkins docs repository
+      - name: Checkout UWP for Jenkins docs repository (English)
         uses: actions/checkout@v4
         with:
           repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline.wiki
           path: docs_eng
 
-      - name: Checkout UWP settings docs repository
+      - name: Checkout UWP settings docs repository (Russian)
         uses: actions/checkout@v4
         with:
           repository: alexanderbazhenoff/universal-wrapper-pipeline-settings.wiki
           path: docs_rus
+
+      - name: Build English Wiki
+        run: python3 .github/workflows/docs_parser.py
+
+      - name: Build Russian Wiki
+        run: python3 .github/workflows/docs_parser.py
+        env:
+          CI_DOCS_LANG: rus
+
+#      - name: Push English Wiki
+#        uses: stefanzweifel/git-auto-commit-action@v5
+#        with:
+#          repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline.wiki
+#          branch: master
+#          commit_message: Automated Wiki update
+#          file_pattern: '*.md'
