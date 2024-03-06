@@ -29,13 +29,11 @@ jobs:
       - name: Checkout UWP for Jenkins docs repository
         uses: actions/checkout@v4
         with:
-          repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline/wiki
-          ref: updates
+          repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline.wiki
           path: docs_eng
 
       - name: Checkout UWP settings docs repository
         uses: actions/checkout@v4
         with:
-          repository: alexanderbazhenoff/universal-wrapper-pipeline-settings/wiki
-          ref: updates
+          repository: alexanderbazhenoff/universal-wrapper-pipeline-settings.wiki
           path: docs_run
