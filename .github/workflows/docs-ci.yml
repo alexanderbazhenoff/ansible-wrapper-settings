@@ -9,7 +9,7 @@ permissions:
 jobs:
 
   build_docs:
-    name: Build Wiki Documentation
+    name: Build Wiki
     runs-on: ubuntu-latest
 
     steps:
@@ -27,13 +27,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline.wiki
-          path: docs_eng
+          path: wiki_eng
 
       - name: Checkout UWP settings docs repository (Russian)
         uses: actions/checkout@v4
         with:
           repository: alexanderbazhenoff/universal-wrapper-pipeline-settings.wiki
-          path: docs_rus
+          path: wiki_rus
 
       - name: Build English Wiki
         run: python3 .github/workflows/docs_parser.py
@@ -42,6 +42,36 @@ jobs:
         run: python3 .github/workflows/docs_parser.py
         env:
           CI_DOCS_LANG: rus
+
+      - name: Upload English Wiki as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: uwp_wiki_eng
+          path: wiki_eng/*
+          if-no-files-found: error
+          retention-days: 1
+          overwrite: true
+
+      - name: Upload Russian Wiki as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: uwp_wiki_rus
+          path: wiki_rus/*
+          if-no-files-found: error
+          retention-days: 1
+          overwrite: true
+
+  push_eng_wiki:
+    name: Push English Wiki
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Russian Wiki as an artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: uwp_wiki_eng
+      - name: ls english
+        run: ls -lha
 
 #      - name: Push English Wiki
 #        uses: stefanzweifel/git-auto-commit-action@v5

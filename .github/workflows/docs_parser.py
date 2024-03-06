@@ -24,7 +24,7 @@ SETTINGS_URL = (
 )
 SETTINGS_REGEX = "\\]\\(settings/"
 WIKI_FILES = ["Home.md", "Settings file format.md"]
-WIKI_PATH_PREFIX = "docs_"
+WIKI_PATH_PREFIX = "wiki_"
 LANG = os.environ.get("CI_DOCS_LANG", "eng")
 README_POSTFIX = "_RUS" if LANG == "rus" else ""
 REGEX_PREFIX = "<!-- docs-ci-cut-"
