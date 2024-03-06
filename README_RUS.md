@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD001 MD007 MD025 MD033 MD041 -->
+<!-- docs-ci-begin-cut -->
 <div align='center'>
 
 # Описание формата конфигурационных файлов для [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
@@ -12,6 +13,7 @@
 
 <span style="font-size:0.8em;">[English](README.md) • [**Russian**](README_RUS.md)</span>
 </div>
+<!-- docs-ci-end-cut -->
 
 Конфигурационный файл Universal Wrapper Pipeline должен соответствовать всем
 [стандартам yaml-синтаксиса](https://yaml.org/). На каждый wrapper pipeline - один файл. Но возможны так же исключения с
@@ -19,7 +21,7 @@
 wrapper pipeline'ов c разными именами. Общая структура конфигурационных файлов описана в разделе
 ["Основные ключи конфигурационных файлов"](#основные-ключи-конфигурационных-файлов).
 
-## Имена конфигурационных файлов
+# Имена конфигурационных файлов
 
 Файл конфигурации должен быть именован как `имя-пайлайна.yaml` и по умолчанию располагаться внутри репозитория по пути
 `settings/` (можно задать константой pipeline'а `SettingsRelativePathPrefix`, или переменной окружения
@@ -1328,7 +1330,10 @@ playbooks:
   Linux с использованием ansible роли
   [postgresql](https://github.com/alexanderbazhenoff/ansible-collection-linux/tree/main/roles/postgresql).
 
+<!-- docs-ci-begin-cut -->
 # Ссылки
 
 - Исходный код
   [**jenkins Universal Wrapper Pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
+
+<!-- docs-ci-end-cut -->
