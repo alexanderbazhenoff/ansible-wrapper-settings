@@ -3,14 +3,17 @@
 name: Docs CI
 on:    # yamllint disable-line rule:truthy
   - push
-permissions:
-  contents: write
+permissions: read-all
 
 jobs:
 
   build_docs:
     name: Build Wiki
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
 
     steps:
       - name: Checkout UWP settings src repository
@@ -64,6 +67,9 @@ jobs:
   push_eng_wiki:
     name: Update English Wiki
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      statuses: write
 
     steps:
       - name: Pause until all workflows are completed
@@ -80,14 +86,15 @@ jobs:
       - name: Push English Wiki
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline.wiki
-          branch: master
           commit_message: Automated Wiki update
           file_pattern: '*.md'
 
   push_rus_wiki:
     name: Update Russian Wiki
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      statuses: write
 
     steps:
       - name: Pause until all workflows are completed
@@ -104,7 +111,5 @@ jobs:
       - name: Push Russian Wiki
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          repository: alexanderbazhenoff/universal-wrapper-pipeline-settings.wiki
-          branch: master
           commit_message: Automated Wiki update
           file_pattern: '*.md'
