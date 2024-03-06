@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline
-          ref: updates
+          ref: development
           path: jenkins_src
 
       - name: Checkout UWP for Jenkins docs repository
