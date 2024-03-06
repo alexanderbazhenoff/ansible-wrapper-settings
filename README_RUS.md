@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD001 MD007 MD025 MD033 MD041 -->
-<!-- docs-ci-begin-cut -->
+<!-- docs-ci-cut-begin -->
 <div align='center'>
 
 # Описание формата конфигурационных файлов для [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
@@ -14,7 +14,7 @@
 
 <span style="font-size:0.8em;">[English](README.md) • [**Russian**](README_RUS.md)</span>
 </div>
-<!-- docs-ci-end-cut -->
+<!-- docs-ci-cut-end -->
 
 Конфигурационный файл Universal Wrapper Pipeline должен соответствовать всем
 [стандартам yaml-синтаксиса](https://yaml.org/). На каждый wrapper pipeline - один файл. Но возможны так же исключения с
@@ -1331,10 +1331,10 @@ playbooks:
   Linux с использованием ansible роли
   [postgresql](https://github.com/alexanderbazhenoff/ansible-collection-linux/tree/main/roles/postgresql).
 
-<!-- docs-ci-begin-cut -->
+<!-- docs-ci-cut-begin -->
 # Ссылки
 
 - Исходный код
   [**jenkins Universal Wrapper Pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
 
-<!-- docs-ci-end-cut -->
+<!-- docs-ci-cut-end -->

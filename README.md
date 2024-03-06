@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD001 MD007 MD025 MD033 MD041 -->
-<!-- docs-ci-begin-cut -->
+<!-- docs-ci-cut-begin -->
 <div align='center'>
 
 # Settings file format description for [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
@@ -14,7 +14,7 @@
 
 <span style="font-size:0.8em;">[**English**](README.md) • [Russian](README_RUS.md)</span>
 </div>
-<!-- docs-ci-end-cut -->
+<!-- docs-ci-cut-end -->
 
 The Universal Wrapper Pipeline configuration file should be corresponded to all
 [yaml syntax standards](https://yaml.org/). One single settings file for one single wrapper pipeline. But exceptions
@@ -1304,10 +1304,10 @@ playbooks:
   using the ansible role
   [postgresql](https://github.com/alexanderbazhenoff/ansible-collection-linux/tree/main/roles/postgresql).
 
-<!-- docs-ci-begin-cut -->
+<!-- docs-ci-cut-begin -->
 # URLs
 
 - [**jenkins Universal Wrapper Pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
   source code.
 
-<!-- docs-ci-end-cut -->
+<!-- docs-ci-cut-end -->

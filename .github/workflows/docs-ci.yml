@@ -8,16 +8,13 @@ permissions:
 
 jobs:
 
-  english_docs:
-    name: Release from push
+  build_docs:
+    name: Build Wiki Documentation
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout UWP settings src repository
         uses: actions/checkout@v4
-        with:
-          repository: alexanderbazhenoff/universal-wrapper-pipeline-settings
-          ref: updates
 
       - name: Checkout UWP for Jenkins src repository
         uses: actions/checkout@v4
@@ -36,4 +33,4 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: alexanderbazhenoff/universal-wrapper-pipeline-settings.wiki
-          path: docs_run
+          path: docs_rus
