@@ -1,0 +1,41 @@
+---
+
+name: Docs CI
+on:    # yamllint disable-line rule:truthy
+  - push
+permissions:
+  contents: write
+
+jobs:
+
+  english_docs:
+    name: Release from push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout UWP settings src repository
+        uses: actions/checkout@v4
+        with:
+          repository: alexanderbazhenoff/universal-wrapper-pipeline-settings
+          ref: updates
+
+      - name: Checkout UWP for Jenkins src repository
+        uses: actions/checkout@v4
+        with:
+          repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline
+          ref: updates
+          path: jenkins_src
+
+      - name: Checkout UWP for Jenkins docs repository
+        uses: actions/checkout@v4
+        with:
+          repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline.wiki
+          ref: updates
+          path: docs_eng
+
+      - name: Checkout UWP settings docs repository
+        uses: actions/checkout@v4
+        with:
+          repository: alexanderbazhenoff/universal-wrapper-pipeline-settings.wiki.git
+          ref: updates
+          path: docs_run
