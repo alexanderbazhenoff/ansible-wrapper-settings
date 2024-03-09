@@ -20,6 +20,7 @@ runs:
     - uses: actions/checkout@v4
       with:
         repository: ${{ env.CI_WIKI_REPO }}
+        ref: master
         path: wiki_${{ env.CI_WIKI_LANG }}
 
     - run: python3 .github/workflows/docs_parser.py
