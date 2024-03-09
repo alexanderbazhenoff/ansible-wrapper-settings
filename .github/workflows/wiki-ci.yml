@@ -4,7 +4,7 @@ name: Wiki CI
 on:    # yamllint disable-line rule:truthy
   push:
     branches:
-      - *
+      - '**'
   workflow_call:
       secrets:
         GH_PERSONAL_TOKEN:
