@@ -17,6 +17,6 @@ runs:
     - run: |
         mkdir wiki_${CI_WIKI_LANG}
         python3 .github/workflows/docs_parser.py
-        find . -not -name 'wiki_${CI_WIKI_LANG}' -print0 | xargs -0 rm -rf
+        find . -name '*' -not -name 'wiki_${CI_WIKI_LANG}' -print0 | xargs -0 rm -rf
         ls -lha
       shell: bash
