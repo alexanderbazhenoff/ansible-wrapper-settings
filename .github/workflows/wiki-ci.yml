@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI_WIKI_LANG: eng
-      CI_WIKI_REPO: alexanderbazhenoff/jenkins-universal-wrapper-pipeline.wiki
+      CI_WIKI_REPO: alexanderbazhenoff/jenkins-universal-wrapper-pipeline.wiki.git
     permissions:
       contents: write
       packages: read
