@@ -1,16 +1,20 @@
 <!-- markdownlint-disable MD001 MD007 MD025 MD033 MD041 -->
+<!-- docs-ci-cut-begin -->
 <div align='center'>
 
 # Описание формата конфигурационных файлов для [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
 
 [![Super-Linter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+[![Wiki CI](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/wiki-ci.yml/badge.svg?branch=main)](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/wiki)
+[![Release for Jenkins](https://img.shields.io/github/v/release/alexanderbazhenoff/jenkins-universal-wrapper-pipeline?label=release%20for%20Jenkins)](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![GitHub License](https://img.shields.io/github/license/alexanderbazhenoff/universal-wrapper-pipeline-settings)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
-[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Create+your+pipelines+easier+and+faster%21%20&url=https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline&hashtags=devops,cicd,jenkins,ansible,yaml)
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Create+your+pipelines+easier+and+faster%21%20&url=https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings&hashtags=devops,cicd,jenkins,ansible,yaml)
 
 <span style="font-size:0.8em;">[English](README.md) • [**Russian**](README_RUS.md)</span>
 </div>
+<!-- docs-ci-cut-end -->
 
 Конфигурационный файл Universal Wrapper Pipeline должен соответствовать всем
 [стандартам yaml-синтаксиса](https://yaml.org/). На каждый wrapper pipeline - один файл. Но возможны так же исключения с
@@ -18,7 +22,7 @@
 wrapper pipeline'ов c разными именами. Общая структура конфигурационных файлов описана в разделе
 ["Основные ключи конфигурационных файлов"](#основные-ключи-конфигурационных-файлов).
 
-## Имена конфигурационных файлов
+# Имена конфигурационных файлов
 
 Файл конфигурации должен быть именован как `имя-пайлайна.yaml` и по умолчанию располагаться внутри репозитория по пути
 `settings/` (можно задать константой pipeline'а `SettingsRelativePathPrefix`, или переменной окружения
@@ -1327,7 +1331,10 @@ playbooks:
   Linux с использованием ansible роли
   [postgresql](https://github.com/alexanderbazhenoff/ansible-collection-linux/tree/main/roles/postgresql).
 
+<!-- docs-ci-cut-begin -->
 # Ссылки
 
 - Исходный код
   [**jenkins Universal Wrapper Pipeline**](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline).
+
+<!-- docs-ci-cut-end -->
