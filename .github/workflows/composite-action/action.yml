@@ -28,6 +28,7 @@ runs:
 
     - run: |
         cd wiki_${{ env.CI_WIKI_LANG }}
+        git config --unset-all http.https://github.com/.extraheader
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
         git add *.md
