@@ -21,7 +21,7 @@ runs:
       shell: bash
     - uses: actions/checkout@v4
       with:
-        token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+        token: ${{ env.GITHUB_TOKEN }}
         repository: ${{ env.CI_WIKI_REPO }}
         path: wiki_${{ env.CI_WIKI_LANG }}
     - run: |
