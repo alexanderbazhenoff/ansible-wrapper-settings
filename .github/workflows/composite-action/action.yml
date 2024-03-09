@@ -20,7 +20,7 @@ runs:
       shell: bash
     - uses: actions/checkout@v4
       with:
-        repository: ${{ CI_WIKI_REPO }}
+        repository: ${{ env.CI_WIKI_REPO }}
         path: wiki_${{ env.CI_WIKI_LANG }}
     - run: |
         ls -lha
