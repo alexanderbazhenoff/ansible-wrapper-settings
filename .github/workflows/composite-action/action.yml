@@ -4,6 +4,6 @@ runs:
   using: "composite"
   steps:
   - uses: actions/checkout@v4
-    run: |
+  - run: |
       echo "WORKFLOW_VARIABLE: $WORKFLOW_VARIABLE"
       echo "JOB_VARIABLE: $JOB_VARIABLE"

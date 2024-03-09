@@ -23,5 +23,5 @@ jobs:
     steps:
       - name: Checkout repository to run composite action
         uses: actions/checkout@v4
-      - name: Create $WORKFLOW_VARIABLE $JOB_VARIABLE
+      - name: Create ${WORKFLOW_VARIABLE} ${JOB_VARIABLE}
         uses: ./.github/workflows/composite-action
