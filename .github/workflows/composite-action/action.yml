@@ -38,6 +38,8 @@ runs:
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
         git add *.md
-        git commit -m "Automated Wiki Update"
-        git push --prune https://token:$token@github.com/${CI_WIKI_REPO}.git
+        if ! git diff-index --quiet HEAD; then
+          git commit -m "Automated Wiki Update"
+          git push --prune https://token:$token@github.com/${CI_WIKI_REPO}.git
+        fi
       shell: bash
