@@ -17,9 +17,10 @@ runs:
     - run: |
         mkdir wiki_${CI_WIKI_LANG}
         python3 .github/workflows/docs_parser.py
-        ls -A1 | grep -v "wiki_${CI_WIKI_LANG}" | xargs rm -rf
+        ls -A1 | grep -vE "(wiki_${CI_WIKI_LANG}|.github)" | xargs rm -rf
         ls -lha
         mv wiki_${CI_WIKI_LANG}/* .
+        ls -lha
       shell: bash
     - uses: actions/checkout@v4
       with:
