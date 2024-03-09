@@ -4,28 +4,31 @@ name: Build Wiki composite action
 description: Building Wiki docs for specified language
 runs:
   using: composite
+
   steps:
     - uses: actions/checkout@v4
       with:
         repository: alexanderbazhenoff/universal-wrapper-pipeline-settings
         ref: ${{ env.UWP_SETTINGS_BRANCH }}
+
     - uses: actions/checkout@v4
       with:
         repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline
         ref: ${{ env.UWP_JENKINS_BRANCH }}
         path: jenkins_src
-    - run: |
-        mkdir wiki_${CI_WIKI_LANG}
-        python3 .github/workflows/docs_parser.py
-        ls -A1 | grep -vE "(wiki_${CI_WIKI_LANG}|.github)" | xargs rm -rf
-      shell: bash
+
     - uses: actions/checkout@v4
       with:
         repository: ${{ env.CI_WIKI_REPO }}
         path: wiki_${{ env.CI_WIKI_LANG }}
+
+    - run: python3 .github/workflows/docs_parser.py
+
+      shell: bash
+
     - run: |
+        cd "wiki_${CI_WIKI_LANG}"
         ls -lha
-        mv wiki_${CI_WIKI_LANG}/* .
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
         git add *.md

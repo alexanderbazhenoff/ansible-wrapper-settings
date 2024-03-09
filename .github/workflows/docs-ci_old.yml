@@ -113,3 +113,5 @@
 #        with:
 #          commit_message: Automated Wiki update
 #          file_pattern: '*.md'
+
+# ls -A1 | grep -vE "(wiki_${CI_WIKI_LANG}|.github)" | xargs rm -rf
