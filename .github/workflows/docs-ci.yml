@@ -6,7 +6,7 @@ on:    # yamllint disable-line rule:truthy
 permissions: read-all
 
 env:
-  WORKFLOW_VARIABLE: WORKFLOW
+  WORKFLOW_VARIABLE: workflo
 
 jobs:
 
@@ -14,7 +14,7 @@ jobs:
     name: Build Wiki
     runs-on: ubuntu-latest
     env:
-      JOB_VARIABLE: JOB
+      JOB_VARIABLE: jobe
     permissions:
       contents: read
       packages: read
@@ -23,5 +23,5 @@ jobs:
     steps:
       - name: Checkout repository to run composite action
         uses: actions/checkout@v4
-      - name: Create ${WORKFLOW_VARIABLE} ${JOB_VARIABLE}
+      - name: Create ${{ env.WORKFLOW_VARIABLE }} ${{ env.JOB_VARIABLE }}
         uses: ./.github/workflows/composite-action

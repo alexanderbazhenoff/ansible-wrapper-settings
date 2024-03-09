@@ -7,6 +7,6 @@ runs:
       uses: actions/checkout@v4
     - name: print values
       run: |
-        echo "WORKFLOW_VARIABLE: $WORKFLOW_VARIABLE"
-        echo "JOB_VARIABLE: $JOB_VARIABLE"
+        echo "WORKFLOW_VARIABLE: ${WORKFLOW_VARIABLE}"
+        echo "JOB_VARIABLE: ${JOB_VARIABLE}"
       shell: bash
