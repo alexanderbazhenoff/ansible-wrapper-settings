@@ -33,4 +33,4 @@ jobs:
           DEFAULT_BRANCH: main
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FILTER_REGEX_EXCLUDE: .*.github/workflows/composite-actions/action.yml
+          FILTER_REGEX_EXCLUDE: .*/action.yml
