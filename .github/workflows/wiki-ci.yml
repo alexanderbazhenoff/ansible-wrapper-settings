@@ -28,3 +28,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Create Wiki (${{ env.CI_WIKI_LANG }})
         uses: ./.github/workflows/composite-action
+        with:
+          token: ${{ secrets.GH_PERSONAL_TOKEN }}
