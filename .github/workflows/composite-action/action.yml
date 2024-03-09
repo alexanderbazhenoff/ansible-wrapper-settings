@@ -24,6 +24,7 @@ runs:
         repository: ${{ env.CI_WIKI_REPO }}
         path: wiki_${{ env.CI_WIKI_LANG }}
     - run: |
+        ls -lha
         mv wiki_${CI_WIKI_LANG}/* .
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
