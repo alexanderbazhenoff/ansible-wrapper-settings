@@ -25,14 +25,14 @@ SETTINGS_URL = (
 SETTINGS_REGEX = "\\]\\(settings/"
 WIKI_FILES = ["Home.md", "Settings file format.md"]
 WIKI_PATH_PREFIX = "wiki_"
-LANG = os.environ.get("CI_DOCS_LANG", "eng")
+LANG = os.environ.get("CI_WIKI_LANG", "eng")
 README_POSTFIX = "_RUS" if LANG == "rus" else ""
 REGEX_PREFIX = "<!-- docs-ci-cut-"
 FORMAT_README = f"README{README_POSTFIX}.md"
 HOME_README = f"{JENKINS_SRC}/{FORMAT_README}"
 CUT_REGEX = f"\n{REGEX_PREFIX}begin -->(.*?){REGEX_PREFIX}end -->\n"
 
-home_head = load_and_replace_md_file(f".github/workflows/docs_head_{LANG}.md")
+home_head = load_and_replace_md_file(f".github/workflows/wiki_head_{LANG}.md")
 wiki_items = [f"{home_head}{load_and_replace_md_file(HOME_README, CUT_REGEX)}"]
 conf_md_raw = load_and_replace_md_file(FORMAT_README, CUT_REGEX)
 wiki_items.append(re.sub(SETTINGS_REGEX, f"]({SETTINGS_URL}", conf_md_raw))

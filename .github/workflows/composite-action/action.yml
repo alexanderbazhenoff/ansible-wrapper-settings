@@ -1,12 +1,24 @@
+---
+
 name: My composite action
 description: Create $WORKFLOW_VARIABLE $JOB_VARIABLE
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Checkout repository
+    - name: Checkout UWP settings repository branch ${{ env.UWP_SETTINGS_BRANCH }}
       uses: actions/checkout@v4
+      with:
+        repository: alexanderbazhenoff/universal-wrapper-pipeline-settings
+        ref: ${{ env.UWP_SETTINGS_BRANCH }}
+    - name: Checkout UWP for Jenkins repository branch ${{ env.UWP_JENKINS_BRANCH }}
+      uses: actions/checkout@v4
+      with:
+        repository: alexanderbazhenoff/jenkins-universal-wrapper-pipeline
+        ref: ${{ env.UWP_JENKINS_BRANCH }}
+        path: jenkins_src
     - name: print values
       run: |
-        echo "WORKFLOW_VARIABLE: ${WORKFLOW_VARIABLE}"
-        echo "JOB_VARIABLE: ${JOB_VARIABLE}"
+        mkdir wiki_${CI_WIKI_LANG}
+        pwd
+        ls -lh
       shell: bash
