@@ -26,8 +26,11 @@ runs:
     - run: python3 .github/workflows/docs_parser.py
       shell: bash
 
-    - uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        repository: wiki_${{ env.CI_WIKI_LANG }}
-        commit_message: Automated Wiki Update
-        file_pattern: '*.md'
+    - run: |
+        cd wiki_${{ env.CI_WIKI_LANG }}
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        git add *.md
+        git commit -m "Automated Wiki Update"
+        git push origin master
+      shell: bash
