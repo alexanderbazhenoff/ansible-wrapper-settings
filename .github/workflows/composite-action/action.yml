@@ -1,7 +1,7 @@
 ---
 
 name: Build Wiki composite action
-description: Building Wiki docs for specified language
+description: Build Wiki docs for specified language
 runs:
   using: composite
 
