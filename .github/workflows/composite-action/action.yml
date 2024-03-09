@@ -23,15 +23,10 @@ runs:
         path: wiki_${{ env.CI_WIKI_LANG }}
 
     - run: python3 .github/workflows/docs_parser.py
-
       shell: bash
 
-    - run: |
-        cd "wiki_${CI_WIKI_LANG}"
-        ls -lha
-        git config user.name "GitHub Actions Bot"
-        git config user.email "<>"
-        git add *.md
-        git commit -m "Automated wiki update"
-        git push origin master
-      shell: bash
+    - uses: stefanzweifel/git-auto-commit-action@v5
+      working-directory: wiki_${{ env.CI_WIKI_LANG }}
+      with:
+        commit_message: Automated Wiki Update
+        file_pattern: '*.md'
