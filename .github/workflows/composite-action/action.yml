@@ -17,6 +17,9 @@ runs:
     - run: |
         mkdir wiki_${CI_WIKI_LANG}
         python3 .github/workflows/docs_parser.py
+        find . not -name wiki_${CI_WIKI_LANG} -type d -exec rm -rf {} +
+        ls -lha
+        mv wiki_${CI_WIKI_LANG}/* .
       shell: bash
     - uses: actions/checkout@v4
       with:
