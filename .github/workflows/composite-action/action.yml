@@ -18,14 +18,17 @@ runs:
         mkdir wiki_${CI_WIKI_LANG}
         python3 .github/workflows/docs_parser.py
         ls -A1 | grep -vE "(wiki_${CI_WIKI_LANG}|.github)" | xargs rm -rf
-        ls -lha
-        mv wiki_${CI_WIKI_LANG}/* .
-        ls -lha
       shell: bash
     - uses: actions/checkout@v4
       with:
+        token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
         repository: ${{ env.CI_WIKI_REPO }}
         path: wiki_${{ env.CI_WIKI_LANG }}
     - run: |
-        ls -lha
+        mv wiki_${CI_WIKI_LANG}/* .
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        git add *.md
+        git commit -m "Automated wiki update"
+        git push origin master
       shell: bash
