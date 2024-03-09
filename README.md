@@ -16,7 +16,7 @@
 </div>
 <!-- docs-ci-cut-end -->
 
-The Universal Wrapper Pipeline configuration file should be corresponded to all
+The Universal Wrapper Pipeline configuration file must be written according to all
 [yaml syntax standards](https://yaml.org/). One single settings file for one single wrapper pipeline. But exceptions
 using [regular expressions](#example-1) in pipeline names are also possible: one configuration file can be used in
 several copies of pipeline with different names. The general structure of configuration files is described in section
