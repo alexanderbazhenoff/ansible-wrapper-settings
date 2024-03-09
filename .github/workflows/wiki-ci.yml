@@ -5,17 +5,11 @@ on:    # yamllint disable-line rule:truthy
   push:
     branches:
       - '**'
-  workflow_call:
-      secrets:
-        GH_PERSONAL_TOKEN:
-          description: Token for Wiki push
-          required: true
 permissions: read-all
 
 env:
   UWP_SETTINGS_BRANCH: ${{ github.head_ref || github.ref_name }}
   UWP_JENKINS_BRANCH: development
-
 
 jobs:
   build_english_docs:

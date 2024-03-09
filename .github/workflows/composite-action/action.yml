@@ -2,6 +2,12 @@
 
 name: Build Wiki composite action
 description: Build Wiki docs for specified language
+
+inputs:
+  UWP_SETTINGS_BRANCH:
+    description: Key for Wiki push
+    required: true
+
 runs:
   using: composite
 
@@ -22,7 +28,7 @@ runs:
         repository: ${{ env.CI_WIKI_REPO }}
         ref: master
         path: wiki_${{ env.CI_WIKI_LANG }}
-        token: ${{ secrets.GH_PERSONAL_TOKEN }}
+        token: ${{ inputs.GH_PERSONAL_TOKEN }}
 
     - run: python3 .github/workflows/docs_parser.py
       shell: bash
