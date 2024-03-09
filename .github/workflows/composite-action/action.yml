@@ -22,7 +22,7 @@ runs:
         repository: ${{ env.CI_WIKI_REPO }}
         ref: master
         path: wiki_${{ env.CI_WIKI_LANG }}
-        token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+        token: ${{ secrets.GH_PERSONAL_TOKEN }}
 
     - run: python3 .github/workflows/docs_parser.py
       shell: bash
