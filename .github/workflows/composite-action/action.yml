@@ -1,0 +1,9 @@
+name: My composite action
+description: Create $WORKFLOW_VARIABLE $JOB_VARIABLE
+runs:
+  using: "composite"
+  steps:
+  - uses: actions/checkout@v4
+    run: |
+      echo "WORKFLOW_VARIABLE: $WORKFLOW_VARIABLE"
+      echo "JOB_VARIABLE: $JOB_VARIABLE"
