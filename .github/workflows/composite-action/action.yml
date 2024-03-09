@@ -18,6 +18,6 @@ runs:
         mkdir wiki_${CI_WIKI_LANG}
         python3 .github/workflows/docs_parser.py
         shopt -s extglob
-        rm -- !(wiki_${CI_WIKI_LANG})
+        rm -rf -- !(wiki_${CI_WIKI_LANG})
         ls -lha
       shell: bash
