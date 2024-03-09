@@ -35,8 +35,6 @@ runs:
 
     - run: |
         cd wiki_${{ env.CI_WIKI_LANG }}
-        git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | \
-          xargs -L1 git config --unset-all
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
         git add *.md
