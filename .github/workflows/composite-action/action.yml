@@ -30,6 +30,8 @@ runs:
         cd wiki_${{ env.CI_WIKI_LANG }}
         git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | \
           xargs -L1 git config --unset-all
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
         git add *.md
         git commit -m "Automated Wiki Update"
         git push --prune https://token:$token@github.com/${CI_WIKI_REPO}.git
