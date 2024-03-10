@@ -796,8 +796,8 @@ actions:
 
 #### Отправка уведомлений в Telegram
 
-Данный функционал доступен начиная с Universal Wrapper Pipeline v1.0.1. Уведомления отправляются через
-[Telegram bot'а](https://core.telegram.org/bots/api#sendmessage).
+Данный функционал доступен для Universal Wrapper Pipeline начиная с версии 1.0.1. Уведомления отправляются через
+[Telegram бота](https://core.telegram.org/bots/api#sendmessage).
 
 - **bot_token** `[строка]` *(обязательный)* - [токен](https://core.telegram.org/bots/tutorial) для telegram-бота (см.
   [Пример 17](#пример-17)). Возможна [подстановка переменных](#подстановка-переменных).
