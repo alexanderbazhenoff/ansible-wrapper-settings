@@ -802,6 +802,11 @@ This functionality is available for Universal Wrapper Pipeline starting from ver
   no sound. Default is `false`.
 - **protect_content** `[boolean]` *(optional)* - protects the contents of the sent message from forwarding and saving.
   Default is `false`.
+- **api_url** `[string]` *(optional)* - Telegram Bot API URL. Used in cases where it is necessary to redirect http
+  requests (for example, through a http proxy). By default is `https://api.telegram.org/bot`, according to
+  [official Telegram documentation](https://core.telegram.org/bots/api). Specified by a global constant in
+  [Jenkins Shared Library](https://github.com/alexanderbazhenoff/jenkins-shared-library) (inside of `OrgAlxGlobals`
+  class).
 
 #### Example 17
 

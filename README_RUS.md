@@ -818,6 +818,11 @@ actions:
   `false`.
 - **protect_content** `[логический]` *(необязательный)* - запретить сохранять и пересылать содержимое сообщения.
   По умолчанию: `false`.
+- **api_url** `[строка]` *(необязательный)* - ссылка на Bot API в Telegram. Используется в тех случаях, когда требуется
+  перенаправить http-запросы (например, через http proxy). По умолчанию, согласно
+  [официальной документации Telegram](https://core.telegram.org/bots/api), `https://api.telegram.org/bot` и задается в
+  [Jenkins Shared Library](https://github.com/alexanderbazhenoff/jenkins-shared-library) глобальной константой (внутри
+  класса `OrgAlxGlobals`).
 
 #### Пример 17
 
