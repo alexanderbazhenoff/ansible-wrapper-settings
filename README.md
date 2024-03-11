@@ -710,6 +710,8 @@ actions:
   - [**via email**](#sending-notifications-via-email) (see [Example 16](#example-16)) - value is set to `email`,
   - [**via mattermost**](#sending-notifications-via-mattermost) (see [Example 17](#example-17)) - value is set to
     `mattermost`.
+  - [**via telegram**](#sending-notifications-via-telegram) (see [Example 17](#example-17)) - value is set to `telegram`
+    (available in Universal Wrapper Pipeline starting from version 1.0.1).
 
 The other keys parameters depend on the method of sending notifications.
 
@@ -777,11 +779,35 @@ actions:
   [Variable substitution](#variable-substitution) is possible.
 - **text** `[string]` *(mandatory)* - notification text. [Variable substitution](#variable-substitution) is possible.
 
+#### Sending notifications via Telegram
+
+This functionality is available for Universal Wrapper Pipeline starting from version 1.0.1. Notifications are sent via
+[Telegram bot](https://core.telegram.org/bots/api#sendmessage).
+
+- **bot_token** `[string]` *(mandatory)* - token for [Telegram bot](https://core.telegram.org/bots/tutorial) (see
+  [Example 17](#example-17)). [Variable substitution](#variable-substitution) is possible.
+- **chat_id** `[string]` *(mandatory)* - unique identifier for the target chat or username of the target channel.
+  [Variable substitution](#variable-substitution) is possible.
+- **text** `[string]` *(mandatory)* - text of the message to be sent, 1–4096 characters after entities parsing.
+  [Variable substitution](#variable-substitution) is possible.
+- **message_thread_id** `[string]` *(optional)* - unique identifier for the target message thread (topic) of the forum;
+  for forum supergroups only. [Variable substitution](#variable-substitution) is possible.
+- **parse_mode** `[string]` *(optional)* - mode for parsing entities in the message text, e.g.: markdown, html (see
+  ["Format options"](https://core.telegram.org/bots/api#formatting-options) in official Telegram documentation).
+  [Variable substitution](#variable-substitution) is possible.
+- **link_preview_options** `[string]` *(optional)* - link preview generation options for the message (see
+  ["Link preview options"](https://core.telegram.org/bots/api#linkpreviewoptions) in official Telegram documentation).
+  [Variable substitution](#variable-substitution) is possible.
+- **disable_notification** `[boolean]` *(optional)* - sends the message silently. Users will receive a notification with
+  no sound. Default is `false`.
+- **protect_content** `[boolean]` *(optional)* - protects the contents of the sent message from forwarding and saving.
+  Default is `false`.
+
 #### Example 17
 
 ```yaml
-# A part of the configuration file with the task of sending a notification to
-# Mattermost. URL and token are just for example.
+# A part of the configuration file with the tasks of sending a notifications to
+# Mattermost and Telegram. URL, tokens, and Chat ID are just for example.
 
 actions:
   mattermost_report_action_name:
@@ -794,6 +820,20 @@ actions:
       $multilineReport
       ```
       Please ignore this automatic report.
+
+  telegram_report_action_name:
+    report: telegram
+    bot_token: 4839574812:AAFD39kkdpWt3ywyRZergyOLMaJhac60qc
+    chat_id: '-213343255'
+    text: |
+      Hi, this is a silent Telegram message with
+      ```
+      markdown support.
+      ```
+      Forwarding and saving message options are disabled.
+    parse_mode: markdown
+    disable_notification: true
+    protect_content: true
 ```
 
 ## 'scripts' key
