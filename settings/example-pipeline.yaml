@@ -425,7 +425,7 @@ actions:
       Overall report is:
 
       ```
-      $multilineReport
+      Some markdown text block.
       ```
 
       Please ignore this automatic report.
