@@ -4,7 +4,7 @@
 
 # Описание формата конфигурационных файлов для [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
 <!-- markdown-link-check-disable -->
-[![Super-Linter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+[![MegaLinter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/mega-linter.yml/badge.svg?branch=main)](https://megalinter.io/)
 [![Wiki CI](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/wiki-ci.yml/badge.svg?branch=main)](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/wiki)
 [![Release for Jenkins](https://img.shields.io/github/v/release/alexanderbazhenoff/jenkins-universal-wrapper-pipeline?label=release%20for%20Jenkins)](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)

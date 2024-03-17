@@ -157,7 +157,7 @@ parameters:
 
 
   optional:
-    # Obviously, if boolean parameters are already injected to pipeline it will always be defined. So you don't need to
+    # If boolean parameters are already injected to pipeline it will always be defined. So you don't need to
     # set them as 'required'. These parameters are also less significant. So it's ok to add them after 'required'
     # parameters, which are always injected first on pipeline parameters update.
     - name: PERFORM_PING
@@ -172,7 +172,7 @@ parameters:
 
 stages:
   - name: stage_1
-  # Spaces in stage and action names are also allowed.
+    # Spaces in stage and action names are also allowed.
     actions:
       # Clone sources, install ansible galaxy collection, action defined in `PIPELINE_ACTION` variable, stash files,
       # unstash on node with label `ansible29` then finally archive artifacts on the same node. Actions are sequential.
@@ -398,9 +398,10 @@ actions:
   # table.
   mattermost report action name:
     report: mattermost
-    # So paste your mattermost URL and working token like this, or set as global variable inside the libraries
-    # (then set something like `$GlobalVariable`).
-    url: https://mattermost.com/hooks/31895e09lg2m0g44dk4qeb847s
+    # So paste your mattermost URL and working token in MATTERMOST_CHAT_TOKEN environment variable via node or pipeline
+    # settings (for example, in Jenkins you can do it via 'Prepare an environment for the run' pipeline settings).
+    # Otherwise, set as global variable inside the libraries.
+    url: https://mattermost.com/hooks/$MATTERMOST_CHAT_TOKEN
     text: |
       Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME.
       Overall report is:

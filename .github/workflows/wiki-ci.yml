@@ -5,11 +5,15 @@ on:    # yamllint disable-line rule:truthy
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+      - master
 permissions: read-all
 
 env:
   UWP_SETTINGS_BRANCH: ${{ github.head_ref || github.ref_name }}
-  UWP_JENKINS_BRANCH: development
+  UWP_JENKINS_BRANCH: main
 
 jobs:
   build_english_wiki:
