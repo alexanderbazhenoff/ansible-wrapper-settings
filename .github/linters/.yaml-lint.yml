@@ -1,11 +1,7 @@
 ---
-
 # yamllint settings for 'Universal Wrapper Pipeline Settings':
 # https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings
-
 extends: default
-ignore: |
-  README.md
 
 rules:
   braces:
