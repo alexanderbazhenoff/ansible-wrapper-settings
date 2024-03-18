@@ -1,11 +1,7 @@
 ---
-
 # yamllint settings for 'Universal Wrapper Pipeline Settings':
 # https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings
-
 extends: default
-ignore: |
-  README.md
 
 rules:
   braces:
@@ -21,7 +17,7 @@ rules:
     max-spaces-after: -1
     level: error
   comments: disable
-  comments-indentation: disable
+  comments-indentation: false
   document-start: enable
   empty-lines:
     max: 2
@@ -38,5 +34,5 @@ rules:
     type: unix
   trailing-spaces: enable
   truthy:
-    allowed-values: ['true', 'false']
+    allowed-values: ["true", "false"]
     check-keys: true

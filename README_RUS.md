@@ -3,15 +3,15 @@
 <div align='center'>
 
 # Описание формата конфигурационных файлов для [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
-
-[![Super-Linter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+<!-- markdown-link-check-disable -->
+[![MegaLinter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/mega-linter.yml/badge.svg?branch=main)](https://megalinter.io/)
 [![Wiki CI](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/wiki-ci.yml/badge.svg?branch=main)](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/wiki)
 [![Release for Jenkins](https://img.shields.io/github/v/release/alexanderbazhenoff/jenkins-universal-wrapper-pipeline?label=release%20for%20Jenkins)](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![GitHub License](https://img.shields.io/github/license/alexanderbazhenoff/universal-wrapper-pipeline-settings)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Create+your+pipelines+easier+and+faster%21%20&url=https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings&hashtags=devops,cicd,jenkins,ansible,yaml)
-
+<!-- markdown-link-check-enable -->
 <span style="font-size:0.8em;">[English](README.md) • [**Russian**](README_RUS.md)</span>
 </div>
 <!-- docs-ci-cut-end -->
@@ -721,6 +721,8 @@ actions:
   - [**на электронную почту**](#отправка-уведомлений-на-электронную-почту) (см. [Пример 16](#пример-16)) - значение
     `email`,
   - [**в Mattermost**](#отправка-уведомлений-в-mattermost) (см. [Пример 17](#пример-17)) - значение `mattermost`.
+  - [**в Telegram**](#отправка-уведомлений-в-telegram) (см. [Пример 17](#пример-17)) - значение `telegram` (доступно
+    для Universal Pipeline Wrapper начиная с версии 1.0.1).
 
 Параметры других ключей зависят от способа отправки уведомлений.
 
@@ -791,12 +793,42 @@ actions:
   `https://mattermost.com/hooks/<token>` (см. [Пример 17](#пример-17)). Возможна
   [подстановка переменных](#подстановка-переменных).
 - **text** `[строка]` *(обязательный)* - текст уведомления. Возможна [подстановка переменных](#подстановка-переменных).
+  Максимально допустимая длина сообщения - 4000 символов.
+
+#### Отправка уведомлений в Telegram
+
+Данный функционал доступен для Universal Wrapper Pipeline начиная с версии 1.0.1. Уведомления отправляются через
+[Telegram бота](https://core.telegram.org/bots/api#sendmessage).
+
+- **bot_token** `[строка]` *(обязательный)* - [токен](https://core.telegram.org/bots/tutorial) для telegram-бота (см.
+  [Пример 17](#пример-17)). Возможна [подстановка переменных](#подстановка-переменных).
+- **chat_id** `[строка]` *(обязательный)* - уникальный идентификатор целевого чата или имя пользователя целевого канала.
+  Возможна [подстановка переменных](#подстановка-переменных).
+- **text** `[строка]` *(обязательный)* - текст уведомления (или сообщения). Возможна
+  [подстановка переменных](#подстановка-переменных).
+- **message_thread_id** `[строка]` *(необязательный)* - уникальный идентификатор темы, в которую будет отправлено
+  сообщение (только для супергрупп). Возможна [подстановка переменных](#подстановка-переменных).
+- **parse_mode** `[строка]` *(необязательный)* - режим разметки текста: markdown, html (см.
+  ["Опции форматирования"](https://core.telegram.org/bots/api#formatting-options) в официальной документации Telegram).
+  Возможна [подстановка переменных](#подстановка-переменных).
+- **link_preview_options** `[строка]` *(необязательный)* - задает опции для генерации превью для ссылок (см.
+  ["Опции превью для ссылок"](https://core.telegram.org/bots/api#linkpreviewoptions) в официальной документации
+  Telegram). Возможна [подстановка переменных](#подстановка-переменных).
+- **disable_notification** `[логический]` *(необязательный)* - отправить сообщение без уведомления. По умолчанию:
+  `false`.
+- **protect_content** `[логический]` *(необязательный)* - запретить сохранять и пересылать содержимое сообщения.
+  По умолчанию: `false`.
+- **api_url** `[строка]` *(необязательный)* - ссылка на Bot API в Telegram. Используется в тех случаях, когда требуется
+  перенаправить http-запросы (например, через http proxy). По умолчанию, согласно
+  [официальной документации Telegram](https://core.telegram.org/bots/api), `https://api.telegram.org/bot` и задается в
+  [Jenkins Shared Library](https://github.com/alexanderbazhenoff/jenkins-shared-library) глобальной константой (внутри
+  класса `OrgAlxGlobals`).
 
 #### Пример 17
 
 ```yaml
-# Фрагмент конфигурационного файла с заданием действия отправки уведомления в
-# Mattermost. URL и токен указаны для примера.
+# Фрагмент конфигурационного файла с заданием действий отправки уведомлений в
+# Mattermost и Telegram. URL, токены и Chat ID указаны для примера.
 
 actions:
   mattermost_report_action_name:
@@ -809,7 +841,25 @@ actions:
       $multilineReport
       ```
       Please ignore this automatic report.
+      
+  telegram_report_action_name:
+    report: telegram
+    bot_token: 4839574812:AAFD39kkdpWt3ywyRZergyOLMaJhac60qc
+    chat_id: '-213343255'
+    text: |
+      Hi, this is a silent Telegram message with
+      ```
+      markdown support.
+      ```
+      Forwarding and saving message options are disabled.
+    parse_mode: markdown
+    disable_notification: true
+    protect_content: true
 ```
+
+Во избежание явного указания в конфигурационном файле ключей, идентификатором и токенов рекомендуется использовать
+[подстановку переменных](#подстановка-переменных) окружения (например, в Jenkins через "Prepare an environment for the
+run" в настройках pipeline).
 
 ## Ключ "scripts"
 

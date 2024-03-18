@@ -1,0 +1,2 @@
+# lychee config example: https://github.com/lycheeverse/lychee/blob/master/lychee.example.toml
+exclude = ['^https://mattermost\.com/hooks.+', 'github\.com/\$%7BCI_WIKI_REPO%7D\.git']

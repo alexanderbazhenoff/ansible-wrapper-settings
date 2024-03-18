@@ -1,8 +1,6 @@
 ---
-
 # 'Install Postgresql' Universal Wrapper Pipeline Settings,
 # a wrapper for alexanderbazhenoff.linux.postgresql ansible role.
-
 
 # Copyright (c) 2023-2024 Alexander Bazhenov.
 #
@@ -19,14 +17,13 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 parameters:
   required:
     - name: IP_ADDRESSES
       type: string
       description: Space separated IP or DNS list of the host(s) to perform ROLE_ACTION and ROLE_SUBJECT.
       regex_replace:
-        regex: ' '
+        regex: " "
         to: "\\\n"
     - name: SSH_LOGIN
       type: string
@@ -103,7 +100,7 @@ parameters:
         - web
         - desktop
         - all
-      description: 'pgadmin installation type: web, desktop or all (both web and desktop)'
+      description: "pgadmin installation type: web, desktop or all (both web and desktop)"
     - name: PGADMIN_EMAIL
       type: string
       regex:
@@ -229,11 +226,11 @@ parameters:
         <b>block</b> replace original file with.
     - name: HBA_CONF_CONTENT
       type: text
-      default: ''
+      default: ""
       description: pg_hba.conf block or lines for regex mode.<br><br><br><br>
     - name: POSTGRESQL_ADDITIONAL_PACKAGES
       type: string
-      default: ''
+      default: ""
       description: >-
         Space separated list of additional PostgreSQL related packages to install, e.g: 'postgresql-contrib' or
         'postgresql14-contrib' for <b>POSTGRESQL_RECOMMENDED_VERSION</b>=false (explore what packages available
@@ -384,7 +381,6 @@ parameters:
         <b>trust_input</b> (default: true): It makes sense only when SQL injections through the options are
         possible.<br><br><br><br>
 
-
 stages:
   - name: clone and install required ansible collection
     actions:
@@ -397,7 +393,6 @@ stages:
     actions:
       - action: $ROLE_ACTION
         success_only: true
-
 
 actions:
   install_community_postgresql_collection:
@@ -430,7 +425,6 @@ actions:
   restore:
     playbook: db_instance_management
 
-
 scripts:
   install_collection_script:
     script: |
@@ -441,87 +435,86 @@ scripts:
 
 playbooks:
   install_uninstall_configure: |
-      - hosts: all
-        become: true
-        become_method: sudo
-        gather_facts: true
+    - hosts: all
+      become: true
+      become_method: sudo
+      gather_facts: true
 
-        tasks:
+      tasks:
 
-          - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
-            ansible.builtin.assert:
-              that:
-                - ('$ROLE_ACTION' | regex_search('install') and '$ROLE_SUBJECT' | regex_search('^server|pgadmin')) or
-                  ('$ROLE_ACTION' == 'configure' and '$ROLE_SUBJECT' | regex_search('^hba_conf|postgresql_conf'))
-              fail_msg: >-
-                ROLE_SUBJECT=$ROLE_SUBJECT is not allowed for ROLE_ACTION=$ROLE_ACTION. Possible values are:
-                {% if '$ROLE_ACTION' == 'configure' and not '$ROLE_SUBJECT' | regex_search('^hba|postgresql') -%}
-                'hba_conf' or 'postgresql_conf'{% elif '$ROLE_ACTION' == 'install' and not '$ROLE_SUBJECT' |
-                regex_search('^server|pgadmin') %}'server' or 'pgadmin'{% endif %}
+        - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
+          ansible.builtin.assert:
+            that:
+              - ('$ROLE_ACTION' | regex_search('install') and '$ROLE_SUBJECT' | regex_search('^server|pgadmin')) or
+                ('$ROLE_ACTION' == 'configure' and '$ROLE_SUBJECT' | regex_search('^hba_conf|postgresql_conf'))
+            fail_msg: >-
+              ROLE_SUBJECT=$ROLE_SUBJECT is not allowed for ROLE_ACTION=$ROLE_ACTION. Possible values are:
+              {% if '$ROLE_ACTION' == 'configure' and not '$ROLE_SUBJECT' | regex_search('^hba|postgresql') -%}
+              'hba_conf' or 'postgresql_conf'{% elif '$ROLE_ACTION' == 'install' and not '$ROLE_SUBJECT' |
+              regex_search('^server|pgadmin') %}'server' or 'pgadmin'{% endif %}
 
-          - name: $ROLE_ACTION $ROLE_SUBJECT
-            ansible.builtin.include_role:
-              name: alexanderbazhenoff.linux.postgresql
-            vars:
-              role_action: $ROLE_ACTION
-              role_subject: $ROLE_SUBJECT
-              postgresql_version: $POSTGRESQL_VERSION
-              postgresql_recommended_version: $POSTGRESQL_RECOMMENDED_VERSION
-              clean_install: $CLEAN_INSTALL
-              cleanup_data_directory: $CLEAN_DATA_DIRECTORY
-              install_pgadmin: $INSTALL_PGADMIN
-              pgadmin_installation_type: $PGADMIN_INSTALLATION_TYPE
-              pgadmin_email: $PGADMIN_EMAIL
-              pgadmin_password: $PGADMIN_PASSWORD
-              install_psycopg2: $INSTALL_PSYCOPG2
-              postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
-              firewall_control: $FIREWALL_CONTROL
-              postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | from_yaml }}"
-              pg_conf_content_mode: $PG_CONF_CONTENT_MODE
-              hba_conf_content: |
-                {{ lookup('ansible.builtin.env', 'HBA_CONF_CONTENT') }}
-              postgresql_additional_packages: "{{ '$POSTGRESQL_ADDITIONAL_PACKAGES'.split(' ') | trim }}"
+        - name: $ROLE_ACTION $ROLE_SUBJECT
+          ansible.builtin.include_role:
+            name: alexanderbazhenoff.linux.postgresql
+          vars:
+            role_action: $ROLE_ACTION
+            role_subject: $ROLE_SUBJECT
+            postgresql_version: $POSTGRESQL_VERSION
+            postgresql_recommended_version: $POSTGRESQL_RECOMMENDED_VERSION
+            clean_install: $CLEAN_INSTALL
+            cleanup_data_directory: $CLEAN_DATA_DIRECTORY
+            install_pgadmin: $INSTALL_PGADMIN
+            pgadmin_installation_type: $PGADMIN_INSTALLATION_TYPE
+            pgadmin_email: $PGADMIN_EMAIL
+            pgadmin_password: $PGADMIN_PASSWORD
+            install_psycopg2: $INSTALL_PSYCOPG2
+            postgresql_default_timezone: $POSTGRESQL_DEFAULT_TIMEZONE
+            firewall_control: $FIREWALL_CONTROL
+            postgresql_conf: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_CONF') | from_yaml }}"
+            pg_conf_content_mode: $PG_CONF_CONTENT_MODE
+            hba_conf_content: |
+              {{ lookup('ansible.builtin.env', 'HBA_CONF_CONTENT') }}
+            postgresql_additional_packages: "{{ '$POSTGRESQL_ADDITIONAL_PACKAGES'.split(' ') | trim }}"
 
   db_instance_management: |
-      - hosts: all
-        become: true
-        become_method: sudo
-        gather_facts: true
+    - hosts: all
+      become: true
+      become_method: sudo
+      gather_facts: true
 
-        tasks:
+      tasks:
 
-          - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
-            ansible.builtin.assert:
-              that:
-                - ('$ROLE_SUBJECT' == 'users' and '$ROLE_ACTION' | regex_search('^create|drop')) or
-                  ('$ROLE_SUBJECT' == 'databases' and '$ROLE_ACTION'
-                  | regex_search('^create|drop|dump|rename|restore')) or
-                  ('$ROLE_SUBJECT' == 'schemas' and '$ROLE_ACTION' | regex_search('^create|grant|revoke|drop')) or
-                  ('$ROLE_SUBJECT' == 'privileges' and '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop')) or
-                  ('$ROLE_SUBJECT' == 'slots' and '$ROLE_ACTION' | regex_search('^create|drop'))
-              fail_msg: >-
-                ROLE_SUBJECT=$ROLE_SUBJECT is not allowed for ROLE_ACTION=$ROLE_ACTION. Possible values are:
-                {% if '$ROLE_SUBJECT' == 'users' and not '$ROLE_ACTION' | regex_search('^create|drop') -%}
-                'create' or 'drop'{% elif '$ROLE_SUBJECT' == 'databases' and not
-                '$ROLE_ACTION' | regex_search('^create|drop|dump|rename|restore') %}create|drop|dump|rename|restore
-                {% elif '$ROLE_SUBJECT' == 'schemas' and not
-                '$ROLE_ACTION' | regex_search('^create|grant|revoke|drop') %}create|grant|revoke|drop
-                {% elif '$ROLE_SUBJECT' == 'privileges' and not
-                '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop') %}grant|create|revoke|drop
-                {% elif '$ROLE_SUBJECT' == 'slots' and not '$ROLE_ACTION' | regex_search('^create|drop') %}{% endif %}
+        - name: Check ROLE_ACTION=$ROLE_ACTION is possible for ROLE_SUBJECT=$ROLE_SUBJECT
+          ansible.builtin.assert:
+            that:
+              - ('$ROLE_SUBJECT' == 'users' and '$ROLE_ACTION' | regex_search('^create|drop')) or
+                ('$ROLE_SUBJECT' == 'databases' and '$ROLE_ACTION'
+                | regex_search('^create|drop|dump|rename|restore')) or
+                ('$ROLE_SUBJECT' == 'schemas' and '$ROLE_ACTION' | regex_search('^create|grant|revoke|drop')) or
+                ('$ROLE_SUBJECT' == 'privileges' and '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop')) or
+                ('$ROLE_SUBJECT' == 'slots' and '$ROLE_ACTION' | regex_search('^create|drop'))
+            fail_msg: >-
+              ROLE_SUBJECT=$ROLE_SUBJECT is not allowed for ROLE_ACTION=$ROLE_ACTION. Possible values are:
+              {% if '$ROLE_SUBJECT' == 'users' and not '$ROLE_ACTION' | regex_search('^create|drop') -%}
+              'create' or 'drop'{% elif '$ROLE_SUBJECT' == 'databases' and not
+              '$ROLE_ACTION' | regex_search('^create|drop|dump|rename|restore') %}create|drop|dump|rename|restore
+              {% elif '$ROLE_SUBJECT' == 'schemas' and not
+              '$ROLE_ACTION' | regex_search('^create|grant|revoke|drop') %}create|grant|revoke|drop
+              {% elif '$ROLE_SUBJECT' == 'privileges' and not
+              '$ROLE_ACTION' | regex_search('^grant|create|revoke|drop') %}grant|create|revoke|drop
+              {% elif '$ROLE_SUBJECT' == 'slots' and not '$ROLE_ACTION' | regex_search('^create|drop') %}{% endif %}
 
-          - name: $ROLE_ACTION $ROLE_SUBJECT
-            ansible.builtin.include_role:
-              name: alexanderbazhenoff.linux.postgresql
-            vars:
-              role_action: $ROLE_ACTION
-              role_subject: $ROLE_SUBJECT
-              postgresql_users: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_USERS') | from_yaml }}"
-              postgresql_databases: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_DATABASES') | from_yaml }}"
-              postgresql_schemas: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_SCHEMAS') | from_yaml }}"
-              postgresql_privileges: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_PRIVILEGES') | from_yaml }}"
-              postgresql_slots: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_SLOTS') | from_yaml }}"
-
+        - name: $ROLE_ACTION $ROLE_SUBJECT
+          ansible.builtin.include_role:
+            name: alexanderbazhenoff.linux.postgresql
+          vars:
+            role_action: $ROLE_ACTION
+            role_subject: $ROLE_SUBJECT
+            postgresql_users: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_USERS') | from_yaml }}"
+            postgresql_databases: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_DATABASES') | from_yaml }}"
+            postgresql_schemas: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_SCHEMAS') | from_yaml }}"
+            postgresql_privileges: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_PRIVILEGES') | from_yaml }}"
+            postgresql_slots: "{{ lookup('ansible.builtin.env', 'POSTGRESQL_SLOTS') | from_yaml }}"
 
 inventories:
   default: |

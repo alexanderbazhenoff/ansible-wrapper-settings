@@ -3,20 +3,20 @@
 <div align='center'>
 
 # Settings file format description for [Universal Wrapper Pipeline](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline)
-
-[![Super-Linter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/super-linter.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+<!-- markdown-link-check-disable -->
+[![MegaLinter](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/mega-linter.yml/badge.svg?branch=main)](https://megalinter.io/)
 [![Wiki CI](https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/actions/workflows/wiki-ci.yml/badge.svg?branch=main)](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline/wiki)
 [![Release for Jenkins](https://img.shields.io/github/v/release/alexanderbazhenoff/jenkins-universal-wrapper-pipeline?label=release%20for%20Jenkins)](https://github.com/alexanderbazhenoff/jenkins-universal-wrapper-pipeline/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![GitHub License](https://img.shields.io/github/license/alexanderbazhenoff/universal-wrapper-pipeline-settings)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Create+your+pipelines+easier+and+faster%21%20&url=https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings&hashtags=devops,cicd,jenkins,ansible,yaml)
-
+<!-- markdown-link-check-enable -->
 <span style="font-size:0.8em;">[**English**](README.md) • [Russian](README_RUS.md)</span>
 </div>
 <!-- docs-ci-cut-end -->
 
-The Universal Wrapper Pipeline configuration file should be corresponded to all
+The Universal Wrapper Pipeline configuration file must be written according to all
 [yaml syntax standards](https://yaml.org/). One single settings file for one single wrapper pipeline. But exceptions
 using [regular expressions](#example-1) in pipeline names are also possible: one configuration file can be used in
 several copies of pipeline with different names. The general structure of configuration files is described in section
@@ -710,6 +710,8 @@ actions:
   - [**via email**](#sending-notifications-via-email) (see [Example 16](#example-16)) - value is set to `email`,
   - [**via mattermost**](#sending-notifications-via-mattermost) (see [Example 17](#example-17)) - value is set to
     `mattermost`.
+  - [**via telegram**](#sending-notifications-via-telegram) (see [Example 17](#example-17)) - value is set to `telegram`
+    (available in Universal Wrapper Pipeline starting from version 1.0.1).
 
 The other keys parameters depend on the method of sending notifications.
 
@@ -777,11 +779,40 @@ actions:
   [Variable substitution](#variable-substitution) is possible.
 - **text** `[string]` *(mandatory)* - notification text. [Variable substitution](#variable-substitution) is possible.
 
+#### Sending notifications via Telegram
+
+This functionality is available for Universal Wrapper Pipeline starting from version 1.0.1. Notifications are sent via
+[Telegram bot](https://core.telegram.org/bots/api#sendmessage).
+
+- **bot_token** `[string]` *(mandatory)* - token for [Telegram bot](https://core.telegram.org/bots/tutorial) (see
+  [Example 17](#example-17)). [Variable substitution](#variable-substitution) is possible.
+- **chat_id** `[string]` *(mandatory)* - unique identifier for the target chat or username of the target channel.
+  [Variable substitution](#variable-substitution) is possible.
+- **text** `[string]` *(mandatory)* - text of the message to be sent, 1–4096 characters after entities parsing.
+  [Variable substitution](#variable-substitution) is possible.
+- **message_thread_id** `[string]` *(optional)* - unique identifier for the target message thread (topic) of the forum;
+  for forum supergroups only. [Variable substitution](#variable-substitution) is possible.
+- **parse_mode** `[string]` *(optional)* - mode for parsing entities in the message text, e.g.: markdown, html (see
+  ["Format options"](https://core.telegram.org/bots/api#formatting-options) in official Telegram documentation).
+  [Variable substitution](#variable-substitution) is possible.
+- **link_preview_options** `[string]` *(optional)* - link preview generation options for the message (see
+  ["Link preview options"](https://core.telegram.org/bots/api#linkpreviewoptions) in official Telegram documentation).
+  [Variable substitution](#variable-substitution) is possible.
+- **disable_notification** `[boolean]` *(optional)* - sends the message silently. Users will receive a notification with
+  no sound. Default is `false`.
+- **protect_content** `[boolean]` *(optional)* - protects the contents of the sent message from forwarding and saving.
+  Default is `false`.
+- **api_url** `[string]` *(optional)* - Telegram Bot API URL. Used in cases where it is necessary to redirect http
+  requests (for example, through a http proxy). By default is `https://api.telegram.org/bot`, according to
+  [official Telegram documentation](https://core.telegram.org/bots/api). Specified by a global constant in
+  [Jenkins Shared Library](https://github.com/alexanderbazhenoff/jenkins-shared-library) (inside of `OrgAlxGlobals`
+  class).
+
 #### Example 17
 
 ```yaml
-# A part of the configuration file with the task of sending a notification to
-# Mattermost. URL and token are just for example.
+# A part of the configuration file with the tasks of sending a notifications to
+# Mattermost and Telegram. URL, tokens, and Chat ID are just for example.
 
 actions:
   mattermost_report_action_name:
@@ -794,6 +825,20 @@ actions:
       $multilineReport
       ```
       Please ignore this automatic report.
+
+  telegram_report_action_name:
+    report: telegram
+    bot_token: 4839574812:AAFD39kkdpWt3ywyRZergyOLMaJhac60qc
+    chat_id: '-213343255'
+    text: |
+      Hi, this is a silent Telegram message with
+      ```
+      markdown support.
+      ```
+      Forwarding and saving message options are disabled.
+    parse_mode: markdown
+    disable_notification: true
+    protect_content: true
 ```
 
 ## 'scripts' key

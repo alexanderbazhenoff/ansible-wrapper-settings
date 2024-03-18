@@ -1,12 +1,10 @@
 ---
-
 # Example settings of a downstream pipeline for 'universal wrapper pipeline' just to show how to configure and finally
 # test copy artifacts feature.
 
 # Please also read the detailed settings format documentation.
 # English: https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/blob/main/README.md
 # Russian: https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/blob/main/README_RUS.md
-
 
 # Copyright (c) 2023-2024 Alexander Bazhenov.
 #
@@ -23,7 +21,6 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 # Parameters are just to test pass from `example-pipeline` upstream pipeline.
 parameters:
   optional:
@@ -37,7 +34,6 @@ parameters:
       type: string
       description: Email just to check parameters pass.<br><br><br><br>
 
-
 stages:
   - name: first_stage
     actions:
@@ -47,14 +43,12 @@ stages:
       - before_message: Ready to archive artifacts file.
         action: archive_artifacts_action_name
 
-
 actions:
   run_script_action_name:
     script: script_name
   archive_artifacts_action_name:
     artifacts: test_file.txt
     allow_empty: false
-
 
 scripts:
   script_name:

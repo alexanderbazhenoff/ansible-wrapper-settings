@@ -1,11 +1,9 @@
 ---
-
 # Example settings for 'universal wrapper pipeline' with maximum number of possible features and parameters.
 
 # Please also read the detailed settings format documentation.
 # English: https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/blob/main/README.md
 # Russian: https://github.com/alexanderbazhenoff/universal-wrapper-pipeline-settings/blob/main/README_RUS.md
-
 
 # Copyright (c) 2023-2024 Alexander Bazhenov.
 #
@@ -22,7 +20,6 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 parameters:
   # Required parameters dictionary inside, but empty `EMAIL` parameter will not fail the whole pipeline. Also, the empty
   # `SSH_SUDO_PASSWORD` will be assigned from `SSH_PASSWORD` parameter.
@@ -32,7 +29,7 @@ parameters:
       type: string
       description: Space separated IP or DNS list of the host(s) to perform PIPELINE_ACTION and ROLE_SUBJECT.
       regex_replace:
-        regex: ' '
+        regex: " "
         to: \n
     # `SSH_LOGIN` value will be checked on regex match.
     - name: SSH_LOGIN
@@ -155,9 +152,8 @@ parameters:
       default: downstream-example-pipeline
       description: Downstream pipeline name.<br><br><br><br>
 
-
   optional:
-    # Obviously, if boolean parameters are already injected to pipeline it will always be defined. So you don't need to
+    # If boolean parameters are already injected to pipeline it will always be defined. So you don't need to
     # set them as 'required'. These parameters are also less significant. So it's ok to add them after 'required'
     # parameters, which are always injected first on pipeline parameters update.
     - name: PERFORM_PING
@@ -169,10 +165,9 @@ parameters:
       default: false
       description: Install lxcfs instead of lxc.<br><br><br><br>
 
-
 stages:
   - name: stage_1
-  # Spaces in stage and action names are also allowed.
+    # Spaces in stage and action names are also allowed.
     actions:
       # Clone sources, install ansible galaxy collection, action defined in `PIPELINE_ACTION` variable, stash files,
       # unstash on node with label `ansible29` then finally archive artifacts on the same node. Actions are sequential.
@@ -247,11 +242,11 @@ stages:
       # Send all pipeline reports.
       - action: email report action name
       - action: mattermost report action name
+      - action: telegram report action name
       # Save formatted reports. This action will save only previous action and stages reports.
       - action: save formatted reports script action name
       # And finally archive them as pipeline file artifacts.
       - action: archive reports files as artifacts action name
-
 
 # All possible kinds of actions set here.
 actions:
@@ -334,7 +329,6 @@ actions:
         type: string
         value: $EMAIL
 
-
   # Stash any file in any subdirectory of `subdirectory_in_workspace_for_repository` folder in workspace with
   # `stash_name` naming.
   stash files action name:
@@ -356,11 +350,11 @@ actions:
   # Archive the content of `settings` directory as pipeline artifact. There's no path specified, action already started
   # in `settings` directory.
   archive additional artifacts action name:
-    artifacts: '*.*'
+    artifacts: "*.*"
 
   # Archive reports artifacts.
   archive reports files as artifacts action name:
-    artifacts: 'actions_report.txt, stages_report.txt'
+    artifacts: "actions_report.txt, stages_report.txt"
 
   # Actions to run scripts.
   run custom code as a part of pipeline action name:
@@ -397,9 +391,10 @@ actions:
   # table.
   mattermost report action name:
     report: mattermost
-    # So paste your mattermost URL and working token like this, or set as global variable inside the libraries
-    # (then set something like `$GlobalVariable`).
-    url: https://mattermost.com/hooks/31895e09lg2m0g44dk4qeb847s
+    # So paste your mattermost URL and working token in MATTERMOST_CHAT_TOKEN environment variable via node or pipeline
+    # settings (for example, in Jenkins you can do it via 'Prepare an environment for the run' pipeline settings).
+    # Otherwise, set as global variable inside the libraries.
+    url: https://mattermost.com/hooks/$MATTERMOST_CHAT_TOKEN
     text: |
       Hi, I've just run a test for universal jenkins wrapper pipeline: $JOB_NAME.
       Overall report is:
@@ -410,6 +405,27 @@ actions:
 
       Please ignore this automatic report.
 
+  # Action that sends telegram report to the chat with ID, which defined in TELEGRAM_CHAT_ID environment variable.
+  # Bot token is specified in TELEGRAM_BOT_TOKEN environment variable. Report text contains pipeline name and stages
+  # and actions as a table.
+  telegram report action name:
+    report: telegram
+    # Please specify TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID environment variables via node or pipeline settings
+    # (for example, in Jenkins you can do it via 'Prepare an environment for the run' pipeline settings).
+    bot_token: $TELEGRAM_BOT_TOKEN
+    chat_id: $TELEGRAM_CHAT_ID
+    text: |
+      Hi, I've just run an example config for Universal Wrapper Pipeline using $JOB_NAME.
+      Overall report is:
+
+      ```
+      Some markdown text block.
+      ```
+      Please ignore this automatic report.
+    parse_mode: markdown
+    disable_notifications: true
+    protect_content: true
+
   # Run a script that exits with error (but this will be ignored by setting up the key `ignore_fail` in `stages`).
   run bash final script action name:
     script: script_name_3
@@ -417,10 +433,8 @@ actions:
   save formatted reports script action name:
     script: save_formatted_reports_script_script_name
 
-
 # All possible kinds of script running here.
 scripts:
-
   # Run a code as a part of pipeline including code for Jenkins and Teamcity that will be selected in the appropriate
   # environment.
   script_name_1:
@@ -453,10 +467,8 @@ scripts:
       echo "$multilineReport" > actions_report.txt
       echo "$multilineReportStages" > stages_report.txt
 
-
 # Playbooks are here, where ansible ping will be skipped when `PERFORM_PING` pipeline parameter wasn't set.
 playbooks:
-
   ping_playbook_name: |
     - hosts: all
 
@@ -486,7 +498,6 @@ playbooks:
 
 # The only inventory for both playbooks is here.
 inventories:
-
   default: |
     [all]
     $IP_ADDRESSES
